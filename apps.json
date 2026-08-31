@@ -1,0 +1,11 @@
+{
+  "apps": [
+    {
+      "title": "Reading Path",
+      "student": "David White",
+      "slug": "white-reading",
+      "description": "A Pre-K and Kindergarten digital coloring and beginning-sound literacy activity.",
+      "url": "/white-reading/"
+    }
+  ]
+}
