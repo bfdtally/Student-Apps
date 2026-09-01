@@ -1,0 +1,883 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Emotion Explorer helps elementary learners name emotions and practice helpful responses through fictional scenarios."
+    />
+    <title>Emotion Explorer</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #173e47;
+        --muted: #58757a;
+        --ocean: #287c86;
+        --ocean-dark: #1b5f68;
+        --sky: #dff3f5;
+        --cream: #fffaf0;
+        --coral: #ee8068;
+        --yellow: #f5d978;
+        --green: #5a9c76;
+        --purple: #8776bd;
+        --line: #d7e6e6;
+        font-family: "Trebuchet MS", ui-rounded, system-ui, sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-width: 320px;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 92% 3%, #fbe8a7 0 5%, transparent 20%),
+          linear-gradient(180deg, #edfafa 0%, var(--cream) 48%, #f8f3e8 100%);
+        color: var(--ink);
+      }
+
+      button,
+      a {
+        font: inherit;
+      }
+
+      button {
+        color: inherit;
+      }
+
+      .app-shell {
+        width: min(1080px, calc(100% - 30px));
+        margin: 0 auto;
+        padding: 20px 0 48px;
+      }
+
+      .topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 13px;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 55px;
+        height: 55px;
+        place-items: center;
+        border-radius: 18px;
+        background: var(--ocean);
+        color: white;
+        font-size: 29px;
+        box-shadow: 0 9px 24px rgba(40, 124, 134, 0.22);
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin-top: 0;
+      }
+
+      h1 {
+        margin-bottom: 1px;
+        font-size: clamp(23px, 4vw, 34px);
+      }
+
+      .brand p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .lab-link {
+        border: 2px solid white;
+        border-radius: 999px;
+        padding: 10px 15px;
+        background: rgba(255, 255, 255, 0.8);
+        color: var(--ocean-dark);
+        font-size: 13px;
+        font-weight: 800;
+        text-decoration: none;
+        box-shadow: 0 7px 18px rgba(27, 95, 104, 0.1);
+      }
+
+      .app-nav {
+        display: flex;
+        gap: 8px;
+        margin: 27px 0;
+        border: 2px solid white;
+        border-radius: 18px;
+        padding: 7px;
+        background: rgba(255, 255, 255, 0.72);
+      }
+
+      .nav-button {
+        min-height: 46px;
+        flex: 1;
+        border: 0;
+        border-radius: 13px;
+        background: transparent;
+        color: var(--muted);
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .nav-button.active {
+        background: var(--ocean);
+        color: white;
+        box-shadow: 0 6px 16px rgba(40, 124, 134, 0.22);
+      }
+
+      .screen[hidden] {
+        display: none;
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
+        gap: 24px;
+        align-items: stretch;
+      }
+
+      .hero-copy,
+      .hero-visual,
+      .panel {
+        border: 3px solid white;
+        border-radius: 28px;
+        background: rgba(255, 255, 255, 0.82);
+        box-shadow: 0 14px 36px rgba(31, 83, 91, 0.1);
+      }
+
+      .hero-copy {
+        padding: clamp(26px, 5vw, 50px);
+      }
+
+      .eyebrow {
+        margin-bottom: 14px;
+        color: var(--coral);
+        font-size: 13px;
+        font-weight: 900;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+
+      .hero h2 {
+        max-width: 620px;
+        margin-bottom: 18px;
+        font-size: clamp(38px, 7vw, 66px);
+        line-height: 1;
+      }
+
+      .hero-copy > p:not(.eyebrow) {
+        max-width: 650px;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.6;
+      }
+
+      .primary-button,
+      .secondary-button {
+        display: inline-flex;
+        min-height: 52px;
+        align-items: center;
+        justify-content: center;
+        gap: 9px;
+        border-radius: 15px;
+        padding: 0 22px;
+        font-size: 16px;
+        font-weight: 900;
+        cursor: pointer;
+      }
+
+      .primary-button {
+        border: 0;
+        background: var(--ocean);
+        color: white;
+        box-shadow: 0 8px 20px rgba(40, 124, 134, 0.25);
+      }
+
+      .primary-button:hover,
+      .primary-button:focus-visible {
+        background: var(--ocean-dark);
+      }
+
+      .secondary-button {
+        border: 2px solid var(--line);
+        background: white;
+        color: var(--ocean-dark);
+      }
+
+      .hero-visual {
+        display: grid;
+        min-height: 310px;
+        place-items: center;
+        overflow: hidden;
+        padding: 30px;
+        background: linear-gradient(150deg, #dff3f5, #fff4c8);
+      }
+
+      .face-cluster {
+        display: grid;
+        grid-template-columns: repeat(2, 105px);
+        gap: 14px;
+        rotate: 3deg;
+      }
+
+      .face-cluster span {
+        display: grid;
+        width: 105px;
+        height: 105px;
+        place-items: center;
+        border: 5px solid white;
+        border-radius: 32px;
+        background: var(--yellow);
+        font-size: 60px;
+        box-shadow: 0 8px 18px rgba(48, 83, 88, 0.12);
+      }
+
+      .face-cluster span:nth-child(2) {
+        translate: 0 18px;
+        background: #cce8f4;
+      }
+
+      .face-cluster span:nth-child(3) {
+        background: #dddcf5;
+      }
+
+      .face-cluster span:nth-child(4) {
+        translate: 0 18px;
+        background: #f8d5c9;
+      }
+
+      .section-heading {
+        margin: 38px 0 18px;
+      }
+
+      .section-heading h2 {
+        margin-bottom: 7px;
+        font-size: 31px;
+      }
+
+      .section-heading p {
+        margin-bottom: 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      .emotion-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+      }
+
+      .emotion-card {
+        border: 2px solid var(--line);
+        border-radius: 22px;
+        padding: 22px 14px;
+        background: white;
+        text-align: center;
+      }
+
+      .emotion-card span {
+        display: block;
+        font-size: 52px;
+      }
+
+      .emotion-card strong {
+        display: block;
+        margin-top: 8px;
+        font-size: 18px;
+      }
+
+      .emotion-card small {
+        display: block;
+        min-height: 34px;
+        margin-top: 6px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+
+      .practice-layout {
+        display: grid;
+        grid-template-columns: 0.72fr 1.28fr;
+        gap: 20px;
+      }
+
+      .panel {
+        padding: clamp(22px, 4vw, 34px);
+      }
+
+      .journey-panel {
+        background: linear-gradient(180deg, #e3f5f5, #f8fbf9);
+      }
+
+      .journey-panel small {
+        color: var(--ocean-dark);
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .journey-panel h2 {
+        margin: 10px 0 14px;
+        font-size: 30px;
+      }
+
+      .journey-panel p {
+        color: var(--muted);
+        line-height: 1.55;
+      }
+
+      .scenario-progress {
+        display: flex;
+        gap: 8px;
+        margin-top: 24px;
+      }
+
+      .scenario-progress span {
+        height: 9px;
+        flex: 1;
+        border-radius: 999px;
+        background: #cbdede;
+      }
+
+      .scenario-progress span.done,
+      .scenario-progress span.current {
+        background: var(--ocean);
+      }
+
+      .scenario-progress span.current {
+        outline: 3px solid rgba(40, 124, 134, 0.2);
+        outline-offset: 2px;
+      }
+
+      .scenario-icon {
+        display: grid;
+        width: 82px;
+        height: 82px;
+        place-items: center;
+        margin-bottom: 18px;
+        border-radius: 26px;
+        background: #fff2c3;
+        font-size: 47px;
+      }
+
+      .scenario-title {
+        margin-bottom: 10px;
+        font-size: clamp(25px, 4vw, 36px);
+      }
+
+      .scenario-text {
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+
+      .question-block {
+        margin-top: 24px;
+        border-top: 2px solid #edf2f1;
+        padding-top: 22px;
+      }
+
+      .question-block h3 {
+        font-size: 21px;
+      }
+
+      .answer-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 11px;
+      }
+
+      .answer-button {
+        min-height: 58px;
+        border: 2px solid var(--line);
+        border-radius: 16px;
+        padding: 10px 14px;
+        background: #fbfdfc;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+
+      .answer-button:hover,
+      .answer-button:focus-visible {
+        border-color: var(--ocean);
+        background: var(--sky);
+      }
+
+      .feedback {
+        margin-top: 17px;
+        border-left: 5px solid var(--ocean);
+        border-radius: 13px;
+        padding: 15px 17px;
+        background: var(--sky);
+        color: var(--ocean-dark);
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.45;
+      }
+
+      .feedback.try-again {
+        border-color: var(--coral);
+        background: #fff0eb;
+        color: #854735;
+      }
+
+      .next-row {
+        display: flex;
+        justify-content: flex-end;
+        margin-top: 18px;
+      }
+
+      .progress-card {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .progress-ring {
+        display: grid;
+        width: 160px;
+        height: 160px;
+        place-items: center;
+        border-radius: 50%;
+        background: conic-gradient(var(--ocean) var(--progress), #dfeceb 0);
+      }
+
+      .progress-ring::before {
+        content: "";
+        grid-area: 1 / 1;
+        width: 125px;
+        height: 125px;
+        border-radius: 50%;
+        background: white;
+      }
+
+      .progress-ring strong {
+        z-index: 1;
+        grid-area: 1 / 1;
+        font-size: 32px;
+      }
+
+      .progress-copy h2 {
+        margin-bottom: 8px;
+        font-size: 34px;
+      }
+
+      .progress-copy p {
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1.55;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin: 20px 0;
+      }
+
+      .stat {
+        border-radius: 16px;
+        padding: 17px;
+        background: #eef7f5;
+      }
+
+      .stat strong,
+      .stat span {
+        display: block;
+      }
+
+      .stat strong {
+        font-size: 27px;
+      }
+
+      .stat span {
+        margin-top: 3px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+
+      .privacy-note {
+        margin-top: 25px;
+        border-radius: 16px;
+        padding: 15px 17px;
+        background: #f4f1fb;
+        color: #62538b;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 790px) {
+        .hero,
+        .practice-layout,
+        .progress-card {
+          grid-template-columns: 1fr;
+        }
+
+        .emotion-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .progress-ring {
+          margin: 0 auto;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .brand p,
+        .lab-link {
+          display: none;
+        }
+
+        .app-nav {
+          position: sticky;
+          z-index: 5;
+          top: 8px;
+        }
+
+        .nav-button {
+          font-size: 13px;
+        }
+
+        .hero-visual {
+          min-height: 250px;
+        }
+
+        .face-cluster {
+          grid-template-columns: repeat(2, 82px);
+        }
+
+        .face-cluster span {
+          width: 82px;
+          height: 82px;
+          border-radius: 25px;
+          font-size: 47px;
+        }
+
+        .answer-grid,
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">♡</span>
+          <div>
+            <h1>Emotion Explorer</h1>
+            <p>Notice feelings. Choose helpful responses.</p>
+          </div>
+        </div>
+        <a class="lab-link" href="/">All student apps</a>
+      </header>
+
+      <nav class="app-nav" aria-label="Emotion Explorer sections">
+        <button class="nav-button active" data-screen="home">Home</button>
+        <button class="nav-button" data-screen="practice">Practice</button>
+        <button class="nav-button" data-screen="progress">My Progress</button>
+      </nav>
+
+      <section id="home-screen" class="screen">
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">A calm place to practice</p>
+            <h2>Every feeling tells us something.</h2>
+            <p>
+              Explore short, made-up situations. Notice how a character might
+              feel, then choose a kind and helpful next step.
+            </p>
+            <button class="primary-button" data-go="practice">
+              Start exploring <span aria-hidden="true">→</span>
+            </button>
+          </div>
+          <div class="hero-visual" aria-label="Four illustrated emotion faces">
+            <div class="face-cluster" aria-hidden="true">
+              <span>😊</span><span>😟</span><span>😠</span><span>😌</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="section-heading">
+          <h2>Four feelings to explore</h2>
+          <p>Faces, body clues, and situations can help us name a feeling.</p>
+        </div>
+        <div class="emotion-grid">
+          <article class="emotion-card">
+            <span aria-hidden="true">😊</span><strong>Happy</strong>
+            <small>Smiling, bright eyes, relaxed body</small>
+          </article>
+          <article class="emotion-card">
+            <span aria-hidden="true">😟</span><strong>Worried</strong>
+            <small>Tight shoulders, busy thoughts, unsure feeling</small>
+          </article>
+          <article class="emotion-card">
+            <span aria-hidden="true">😠</span><strong>Frustrated</strong>
+            <small>Warm face, tense hands, ready to react</small>
+          </article>
+          <article class="emotion-card">
+            <span aria-hidden="true">😌</span><strong>Calm</strong>
+            <small>Slow breathing, relaxed body, clear thoughts</small>
+          </article>
+        </div>
+      </section>
+
+      <section id="practice-screen" class="screen" hidden>
+        <div class="practice-layout">
+          <aside class="panel journey-panel">
+            <small>Learning journey</small>
+            <h2>Name it. Think. Choose.</h2>
+            <p>
+              Read each fictional situation. First identify the feeling. Then
+              choose a response that could help.
+            </p>
+            <div id="scenario-progress" class="scenario-progress" aria-label="Scenario progress"></div>
+          </aside>
+
+          <article class="panel" aria-live="polite">
+            <div id="scenario-icon" class="scenario-icon" aria-hidden="true">🎨</div>
+            <h2 id="scenario-title" class="scenario-title"></h2>
+            <p id="scenario-text" class="scenario-text"></p>
+            <div class="question-block">
+              <h3 id="question-text"></h3>
+              <div id="answer-grid" class="answer-grid"></div>
+              <div id="feedback" class="feedback" role="status">
+                Choose the answer that fits best.
+              </div>
+              <div class="next-row">
+                <button id="next-button" class="primary-button" hidden>
+                  Next step <span aria-hidden="true">→</span>
+                </button>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="progress-screen" class="screen" hidden>
+        <div class="panel progress-card">
+          <div id="progress-ring" class="progress-ring" style="--progress: 0%">
+            <strong id="progress-percent">0%</strong>
+          </div>
+          <div class="progress-copy">
+            <p class="eyebrow">Your practice summary</p>
+            <h2>Small steps build emotional skills.</h2>
+            <p id="progress-message">
+              Complete a fictional scenario to begin your progress summary.
+            </p>
+            <div class="stats">
+              <div class="stat">
+                <strong id="completed-count">0</strong>
+                <span>scenarios completed</span>
+              </div>
+              <div class="stat">
+                <strong id="emotion-count">0</strong>
+                <span>emotion words practiced</span>
+              </div>
+            </div>
+            <button id="continue-button" class="primary-button">Continue practicing</button>
+            <button id="reset-button" class="secondary-button">Reset practice</button>
+            <p class="privacy-note">
+              <strong>Privacy note:</strong> This prototype saves only activity
+              progress in this browser. It does not ask for a name or collect
+              student information.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      const scenarios = [
+        {
+          icon: "🎨",
+          title: "The picture changed",
+          text: "Jordan worked carefully on a drawing. A cup of water tipped over and made the colors run.",
+          emotion: "Frustrated",
+          emotionAnswers: ["Happy", "Frustrated", "Calm", "Proud"],
+          response: "Take a slow breath and ask for help making a new plan.",
+          responseAnswers: [
+            "Rip the paper and yell.",
+            "Hide the spill and walk away.",
+            "Take a slow breath and ask for help making a new plan.",
+            "Blame someone nearby.",
+          ],
+          emotionFeedback: "Jordan may feel frustrated because careful work changed unexpectedly.",
+          responseFeedback: "A slow breath helps the body settle, and asking for help supports a new plan.",
+        },
+        {
+          icon: "🏫",
+          title: "A new classroom",
+          text: "Sam is visiting a new classroom and does not know where to sit or who to talk with yet.",
+          emotion: "Worried",
+          emotionAnswers: ["Worried", "Silly", "Angry", "Bored"],
+          response: "Ask the teacher where to begin and take three gentle breaths.",
+          responseAnswers: [
+            "Run out of the room.",
+            "Ask the teacher where to begin and take three gentle breaths.",
+            "Pretend no one else is there.",
+            "Push into the first seat you see.",
+          ],
+          emotionFeedback: "New places can bring worried feelings when we do not know what will happen next.",
+          responseFeedback: "A clear question and slow breathing can make a new situation feel more manageable.",
+        },
+        {
+          icon: "⚽",
+          title: "Invited to play",
+          text: "A classmate asks Lee to join a favorite playground game after Lee has been waiting nearby.",
+          emotion: "Happy",
+          emotionAnswers: ["Lonely", "Worried", "Happy", "Frustrated"],
+          response: "Smile, say thank you, and join the game respectfully.",
+          responseAnswers: [
+            "Smile, say thank you, and join the game respectfully.",
+            "Tell everyone they must follow your rules.",
+            "Ignore the invitation.",
+            "Take the ball away.",
+          ],
+          emotionFeedback: "Being included in something we enjoy can bring a happy feeling.",
+          responseFeedback: "Showing appreciation and joining respectfully helps everyone enjoy the game.",
+        },
+      ];
+
+      const state = {
+        scenario: 0,
+        step: "emotion",
+        completed: Number(localStorage.getItem("emotionExplorerCompleted") || 0),
+        emotions: new Set(JSON.parse(localStorage.getItem("emotionExplorerWords") || "[]")),
+      };
+
+      const navButtons = document.querySelectorAll(".nav-button");
+      const screens = document.querySelectorAll(".screen");
+      const answerGrid = document.querySelector("#answer-grid");
+      const feedback = document.querySelector("#feedback");
+      const nextButton = document.querySelector("#next-button");
+
+      function showScreen(name) {
+        screens.forEach((screen) => {
+          screen.hidden = screen.id !== `${name}-screen`;
+        });
+        navButtons.forEach((button) => {
+          button.classList.toggle("active", button.dataset.screen === name);
+        });
+        if (name === "practice") renderScenario();
+        if (name === "progress") renderProgress();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function renderScenario() {
+        const scenario = scenarios[state.scenario];
+        document.querySelector("#scenario-icon").textContent = scenario.icon;
+        document.querySelector("#scenario-title").textContent = scenario.title;
+        document.querySelector("#scenario-text").textContent = scenario.text;
+        const isEmotionStep = state.step === "emotion";
+        document.querySelector("#question-text").textContent = isEmotionStep
+          ? "How might the character feel?"
+          : "What could be a helpful next step?";
+        const answers = isEmotionStep ? scenario.emotionAnswers : scenario.responseAnswers;
+        answerGrid.innerHTML = "";
+        answers.forEach((answer) => {
+          const button = document.createElement("button");
+          button.className = "answer-button";
+          button.textContent = answer;
+          button.addEventListener("click", () => checkAnswer(answer));
+          answerGrid.append(button);
+        });
+        feedback.className = "feedback";
+        feedback.textContent = "Choose the answer that fits best.";
+        nextButton.hidden = true;
+        nextButton.textContent = isEmotionStep ? "Choose a helpful response →" : "Next scenario →";
+        renderScenarioProgress();
+      }
+
+      function checkAnswer(answer) {
+        const scenario = scenarios[state.scenario];
+        const isEmotionStep = state.step === "emotion";
+        const correct = answer === (isEmotionStep ? scenario.emotion : scenario.response);
+        feedback.className = correct ? "feedback" : "feedback try-again";
+        if (!correct) {
+          feedback.textContent = "That choice may not fit as well. Look at the clues and try another answer.";
+          return;
+        }
+        feedback.textContent = isEmotionStep ? scenario.emotionFeedback : scenario.responseFeedback;
+        answerGrid.querySelectorAll("button").forEach((button) => {
+          button.disabled = true;
+          if (button.textContent === answer) {
+            button.style.borderColor = "var(--green)";
+            button.style.background = "#e8f5ec";
+          }
+        });
+        nextButton.hidden = false;
+      }
+
+      function advance() {
+        const scenario = scenarios[state.scenario];
+        if (state.step === "emotion") {
+          state.emotions.add(scenario.emotion);
+          state.step = "response";
+          renderScenario();
+          return;
+        }
+        state.completed = Math.max(state.completed, state.scenario + 1);
+        localStorage.setItem("emotionExplorerCompleted", String(state.completed));
+        localStorage.setItem("emotionExplorerWords", JSON.stringify([...state.emotions]));
+        if (state.scenario < scenarios.length - 1) {
+          state.scenario += 1;
+          state.step = "emotion";
+          renderScenario();
+        } else {
+          showScreen("progress");
+        }
+      }
+
+      function renderScenarioProgress() {
+        const holder = document.querySelector("#scenario-progress");
+        holder.innerHTML = scenarios
+          .map((_, index) => `<span class="${index < state.scenario ? "done" : index === state.scenario ? "current" : ""}"></span>`)
+          .join("");
+        holder.setAttribute("aria-label", `Scenario ${state.scenario + 1} of ${scenarios.length}`);
+      }
+
+      function renderProgress() {
+        const completed = Math.min(state.completed, scenarios.length);
+        const percent = Math.round((completed / scenarios.length) * 100);
+        document.querySelector("#progress-ring").style.setProperty("--progress", `${percent}%`);
+        document.querySelector("#progress-percent").textContent = `${percent}%`;
+        document.querySelector("#completed-count").textContent = completed;
+        document.querySelector("#emotion-count").textContent = state.emotions.size;
+        document.querySelector("#progress-message").textContent = completed
+          ? `You have practiced ${state.emotions.size} emotion word${state.emotions.size === 1 ? "" : "s"} and explored ${completed} fictional scenario${completed === 1 ? "" : "s"}.`
+          : "Complete a fictional scenario to begin your progress summary.";
+      }
+
+      navButtons.forEach((button) => button.addEventListener("click", () => showScreen(button.dataset.screen)));
+      document.querySelectorAll("[data-go]").forEach((button) => button.addEventListener("click", () => showScreen(button.dataset.go)));
+      nextButton.addEventListener("click", advance);
+      document.querySelector("#continue-button").addEventListener("click", () => {
+        state.scenario = Math.min(state.completed, scenarios.length - 1);
+        state.step = "emotion";
+        showScreen("practice");
+      });
+      document.querySelector("#reset-button").addEventListener("click", () => {
+        localStorage.removeItem("emotionExplorerCompleted");
+        localStorage.removeItem("emotionExplorerWords");
+        state.completed = 0;
+        state.emotions.clear();
+        state.scenario = 0;
+        state.step = "emotion";
+        renderProgress();
+      });
+    </script>
+  </body>
+</html>

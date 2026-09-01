@@ -1,6 +1,13 @@
 {
   "apps": [
     {
+      "title": "Emotion Explorer",
+      "student": "David White",
+      "slug": "emotion-explorer",
+      "description": "A guided social-emotional learning experience that helps elementary learners name emotions and practice helpful responses.",
+      "url": "/emotion-explorer/"
+    },
+    {
       "title": "Reading Path",
       "student": "David White",
       "slug": "white-reading",
