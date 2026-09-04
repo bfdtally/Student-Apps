@@ -10,10 +10,11 @@
     },
     {
       "title": "Reading Path",
-      "student": "David White",
+      "student": "David WHite",
       "slug": "white-reading",
-      "description": "A Pre-K and Kindergarten digital coloring and beginning-sound literacy activity.",
-      "url": "/white-reading/"
+      "description": "I want to make a digitaL COLORINGBOOK for prek and k that has some educatiinal value",
+      "url": "/white-reading/",
+      "projectId": "494c32e1-d689-4ce6-a9f9-212774619963"
     }
   ]
 }

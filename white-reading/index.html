@@ -5,45 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Reading Path — a beginning-sound and digital coloring activity for early learners."
+      content="Reading Path is a beginning-sounds and digital coloring activity for Pre-K and Kindergarten learners."
     />
     <title>Reading Path</title>
     <style>
       :root {
         color-scheme: light;
-        --navy: #173f4c;
-        --blue: #4b9ec9;
-        --sky: #dff4fa;
+        --ink: #123f4a;
+        --muted: #496b73;
+        --blue: #2f8eb8;
+        --sky: #dff5fb;
         --cream: #fffaf0;
-        --orange: #f28b50;
-        --green: #63a66f;
-        --purple: #8a70c7;
+        --orange: #ed7940;
+        --green: #3f8a52;
+        --purple: #7159b5;
+        --yellow: #ffe17d;
+        --white: #ffffff;
         font-family: "Trebuchet MS", ui-rounded, system-ui, sans-serif;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
       body {
         margin: 0;
         min-width: 320px;
         min-height: 100vh;
         background:
-          radial-gradient(circle at 10% 10%, #fff3b7 0 5%, transparent 18%),
-          linear-gradient(180deg, #e8f8fb, var(--cream));
-        color: var(--navy);
+          radial-gradient(circle at 8% 8%, #fff0a8 0 4%, transparent 15%),
+          radial-gradient(circle at 92% 14%, #d9f1f6 0 7%, transparent 20%),
+          linear-gradient(180deg, #edfafd, var(--cream));
+        color: var(--ink);
       }
 
-      button,
-      a {
-        font: inherit;
-      }
+      button, a { font: inherit; }
+      button { touch-action: manipulation; }
 
-      .app-shell {
-        width: min(980px, calc(100% - 28px));
+      .shell {
+        width: min(1040px, calc(100% - 28px));
         margin: 0 auto;
-        padding: 22px 0 50px;
+        padding: 20px 0 48px;
       }
 
       header {
@@ -53,97 +53,89 @@
         gap: 16px;
       }
 
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
+      .brand { display: flex; align-items: center; gap: 12px; }
 
       .brand-icon {
         display: grid;
-        width: 54px;
-        height: 54px;
+        width: 58px;
+        height: 58px;
         place-items: center;
         border-radius: 18px;
         background: var(--orange);
-        color: white;
-        font-size: 28px;
-        box-shadow: 0 8px 18px rgba(242, 139, 80, 0.28);
+        color: var(--white);
+        font-size: 30px;
+        box-shadow: 0 9px 20px rgb(237 121 64 / 26%);
       }
 
-      h1,
-      h2,
-      p {
-        margin-top: 0;
-      }
+      h1, h2, h3, p { margin-top: 0; }
+      h1 { margin-bottom: 2px; font-size: clamp(1.7rem, 5vw, 2.35rem); }
+      .brand p { margin: 0; color: var(--muted); font-size: 1rem; }
 
-      h1 {
-        margin-bottom: 2px;
-        font-size: clamp(24px, 5vw, 34px);
-      }
-
-      .brand p {
-        margin-bottom: 0;
-        color: #56727a;
-        font-size: 14px;
-      }
-
-      .back-link {
+      .catalog-link, .sound-button, .next-button, .restart-button {
+        min-height: 48px;
+        border: 0;
         border-radius: 999px;
-        padding: 10px 14px;
-        background: white;
-        color: var(--navy);
-        font-size: 13px;
+        padding: 12px 18px;
         font-weight: 800;
-        text-decoration: none;
-        box-shadow: 0 6px 20px rgba(27, 70, 81, 0.1);
+        cursor: pointer;
       }
 
-      .welcome {
+      .catalog-link {
+        background: var(--white);
+        color: var(--ink);
+        text-decoration: none;
+        box-shadow: 0 6px 18px rgb(23 63 76 / 10%);
+      }
+
+      .intro {
         display: grid;
         grid-template-columns: 1fr auto;
         gap: 24px;
         align-items: center;
-        margin: 34px 0 22px;
-        border: 3px solid white;
-        border-radius: 28px;
-        padding: 30px;
-        background: rgba(255, 255, 255, 0.74);
-        box-shadow: 0 14px 36px rgba(42, 93, 104, 0.11);
+        margin: 30px 0 20px;
+        border: 3px solid var(--white);
+        border-radius: 30px;
+        padding: clamp(24px, 5vw, 36px);
+        background: rgb(255 255 255 / 78%);
+        box-shadow: 0 14px 36px rgb(42 93 104 / 11%);
       }
 
-      .welcome h2 {
-        margin-bottom: 8px;
-        font-size: clamp(30px, 6vw, 48px);
-        line-height: 1;
+      .intro h2 {
+        margin-bottom: 10px;
+        font-size: clamp(2rem, 6vw, 3.25rem);
+        line-height: 1.02;
       }
 
-      .welcome p {
-        margin-bottom: 0;
-        color: #56727a;
-        font-size: 18px;
-        line-height: 1.55;
+      .intro p {
+        max-width: 680px;
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-size: clamp(1.1rem, 2.2vw, 1.35rem);
+        line-height: 1.5;
       }
+
+      .sound-button { background: var(--ink); color: var(--white); }
 
       .letter-bubble {
         display: grid;
-        width: 110px;
-        height: 110px;
+        width: 122px;
+        height: 122px;
         place-items: center;
-        border-radius: 36px;
-        rotate: 4deg;
-        background: #ffe07a;
-        color: #345f6b;
-        font-size: 70px;
+        border-radius: 38px;
+        rotate: 3deg;
+        background: var(--yellow);
+        color: var(--ink);
+        font-size: 5rem;
         font-weight: 900;
+        box-shadow: inset 0 -8px 0 rgb(0 0 0 / 5%);
       }
 
-      .activity-card {
-        border: 3px solid white;
-        border-radius: 28px;
-        padding: clamp(20px, 4vw, 34px);
-        background: white;
-        box-shadow: 0 14px 36px rgba(42, 93, 104, 0.11);
+      .activity {
+        border: 3px solid var(--white);
+        border-radius: 30px;
+        padding: clamp(22px, 4vw, 38px);
+        background: var(--white);
+        box-shadow: 0 14px 36px rgb(42 93 104 / 11%);
       }
 
       .progress-row {
@@ -151,198 +143,142 @@
         align-items: center;
         justify-content: space-between;
         gap: 16px;
-        margin-bottom: 24px;
+        margin-bottom: 26px;
+        color: var(--muted);
+        font-size: 1.05rem;
       }
 
-      .progress-dots {
-        display: flex;
-        gap: 8px;
-      }
-
-      .progress-dots span {
-        width: 13px;
-        height: 13px;
+      .progress-dots { display: flex; gap: 10px; }
+      .progress-dot {
+        width: 18px;
+        height: 18px;
+        border: 2px solid #b9cfd3;
         border-radius: 50%;
-        background: #dbe8e9;
+        background: #e4eff1;
       }
+      .progress-dot.active { border-color: var(--orange); background: var(--orange); }
+      .progress-dot.complete { border-color: var(--green); background: var(--green); }
 
-      .progress-dots span.active {
-        background: var(--orange);
-      }
-
-      .prompt {
-        text-align: center;
-      }
-
+      .prompt { text-align: center; }
       .prompt small {
         color: var(--purple);
-        font-size: 14px;
+        font-size: 1rem;
         font-weight: 900;
-        letter-spacing: 0.08em;
+        letter-spacing: .08em;
         text-transform: uppercase;
       }
-
       .prompt h2 {
-        margin: 10px auto 26px;
-        font-size: clamp(27px, 5vw, 40px);
+        margin: 10px auto 28px;
+        font-size: clamp(2rem, 5vw, 2.85rem);
+        line-height: 1.15;
       }
 
       .choices {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
+        gap: 18px;
       }
 
       .choice {
-        min-height: 170px;
-        border: 3px solid #e7eff0;
-        border-radius: 24px;
-        padding: 18px;
+        min-height: 190px;
+        border: 4px solid #e3edef;
+        border-radius: 26px;
+        padding: 20px;
         background: #fbfdfd;
-        color: var(--navy);
+        color: var(--ink);
         cursor: pointer;
-        transition:
-          transform 140ms ease,
-          border-color 140ms ease,
-          background 140ms ease;
+        transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
       }
-
-      .choice:hover,
-      .choice:focus-visible {
-        transform: translateY(-4px);
-        border-color: var(--blue);
-      }
-
-      .choice .picture {
-        display: block;
-        margin-bottom: 9px;
-        font-size: 70px;
-        line-height: 1;
-      }
-
-      .choice strong {
-        font-size: 22px;
-      }
-
-      .choice.correct {
-        border-color: var(--green);
-        background: #eaf7ec;
-      }
-
-      .choice.try-again {
-        border-color: var(--orange);
-        background: #fff3eb;
-      }
+      .choice:hover, .choice:focus-visible { transform: translateY(-4px); border-color: var(--blue); }
+      .choice:focus-visible, button:focus-visible, a:focus-visible { outline: 4px solid #ffc446; outline-offset: 3px; }
+      .choice .picture { display: block; margin-bottom: 10px; font-size: 5rem; line-height: 1; }
+      .choice strong { font-size: 1.55rem; }
+      .choice.correct { border-color: var(--green); background: #e6f6e9; }
+      .choice.try-again { border-color: var(--orange); background: #fff0e7; }
 
       .feedback {
-        min-height: 52px;
-        margin-top: 20px;
-        border-radius: 16px;
-        padding: 14px 18px;
+        min-height: 66px;
+        margin-top: 22px;
+        border-radius: 18px;
+        padding: 16px 20px;
         background: var(--sky);
-        color: #315f6c;
-        font-size: 17px;
+        color: #244f59;
+        font-size: 1.18rem;
         font-weight: 800;
+        line-height: 1.45;
         text-align: center;
       }
 
-      .coloring {
-        display: grid;
-        grid-template-columns: 1fr 1.2fr;
-        gap: 20px;
-        margin-top: 22px;
+      .reward {
+        display: none;
+        grid-template-columns: 1fr 1.25fr;
+        gap: 22px;
+        margin-top: 24px;
       }
-
-      .palette,
-      .coloring-page {
-        border-radius: 22px;
-        padding: 22px;
-        background: #f5f9f8;
-      }
-
-      .palette h3,
-      .coloring-page h3 {
-        margin: 0 0 14px;
-        font-size: 20px;
-      }
-
-      .swatches {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
+      .reward.visible { display: grid; }
+      .palette, .coloring-page { border-radius: 24px; padding: 24px; background: #f4f9f8; }
+      .palette h3, .coloring-page h3 { margin-bottom: 14px; font-size: 1.35rem; }
+      .swatches { display: flex; flex-wrap: wrap; gap: 14px; }
       .swatch {
-        width: 46px;
-        height: 46px;
-        border: 4px solid white;
+        width: 54px;
+        height: 54px;
+        border: 4px solid var(--white);
         border-radius: 50%;
         cursor: pointer;
-        box-shadow: 0 3px 10px rgba(23, 63, 76, 0.16);
+        box-shadow: 0 3px 10px rgb(23 63 76 / 18%);
       }
-
-      .swatch.selected {
-        outline: 4px solid var(--navy);
-        outline-offset: 2px;
-      }
-
+      .swatch.selected { outline: 4px solid var(--ink); outline-offset: 2px; }
       .picture-to-color {
         display: grid;
-        min-height: 170px;
+        min-height: 190px;
+        width: 100%;
         place-items: center;
-        border: 3px dashed #b7ced1;
-        border-radius: 18px;
-        background: white;
+        border: 4px dashed #a9c5ca;
+        border-radius: 20px;
+        background: var(--white);
         cursor: pointer;
-        user-select: none;
+      }
+      .picture-to-color span { filter: grayscale(1); font-size: 7rem; transition: filter 180ms ease, transform 180ms ease; }
+      .picture-to-color.colored span { filter: none; transform: scale(1.07) rotate(-3deg); }
+
+      .actions { display: flex; justify-content: center; margin-top: 24px; }
+      .next-button { display: none; background: var(--green); color: var(--white); font-size: 1.15rem; }
+      .next-button.visible { display: inline-flex; align-items: center; gap: 8px; }
+
+      .celebration { display: none; padding: 30px; text-align: center; }
+      .celebration.visible { display: block; }
+      .celebration .stars { font-size: 3rem; }
+      .celebration h2 { margin: 12px 0; font-size: clamp(2.2rem, 6vw, 3.5rem); }
+      .celebration p { color: var(--muted); font-size: 1.25rem; line-height: 1.5; }
+      .restart-button { background: var(--orange); color: var(--white); font-size: 1.15rem; }
+
+      .helper {
+        margin: 18px 0 0;
+        color: var(--muted);
+        font-size: 1rem;
+        text-align: center;
       }
 
-      .picture-to-color span {
-        filter: grayscale(1);
-        font-size: 105px;
-        transition: filter 180ms ease;
+      @media (max-width: 700px) {
+        header { align-items: flex-start; }
+        .brand p { display: none; }
+        .catalog-link { padding: 11px 13px; font-size: 1rem; }
+        .intro { grid-template-columns: 1fr; }
+        .letter-bubble { width: 92px; height: 92px; border-radius: 28px; font-size: 3.9rem; }
+        .choices { grid-template-columns: 1fr; }
+        .choice { min-height: 128px; }
+        .choice .picture { font-size: 4.5rem; }
+        .reward { grid-template-columns: 1fr; }
+        .progress-row { align-items: flex-start; flex-direction: column; }
       }
 
-      .picture-to-color.colored span {
-        filter: none;
-      }
-
-      @media (max-width: 680px) {
-        header {
-          align-items: flex-start;
-        }
-
-        .brand p {
-          display: none;
-        }
-
-        .welcome {
-          grid-template-columns: 1fr;
-        }
-
-        .letter-bubble {
-          width: 82px;
-          height: 82px;
-          border-radius: 26px;
-          font-size: 52px;
-        }
-
-        .choices {
-          grid-template-columns: 1fr;
-        }
-
-        .choice {
-          min-height: 120px;
-        }
-
-        .coloring {
-          grid-template-columns: 1fr;
-        }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; }
       }
     </style>
   </head>
   <body>
-    <main class="app-shell">
+    <main class="shell">
       <header>
         <div class="brand">
           <span class="brand-icon" aria-hidden="true">★</span>
@@ -351,105 +287,213 @@
             <p>Beginning sounds and creative learning</p>
           </div>
         </div>
-        <a class="back-link" href="/">All student apps</a>
+        <a class="catalog-link" href="/">All student apps</a>
       </header>
 
-      <section class="welcome">
+      <section class="intro" aria-labelledby="welcome-title">
         <div>
-          <h2>Listen, choose, and color!</h2>
-          <p>
-            Find the picture that begins with the letter B. Then add color to
-            celebrate your answer.
-          </p>
+          <h2 id="welcome-title">Listen, choose, and color!</h2>
+          <p>Find the picture that begins with the featured sound. Then add color to celebrate your answer.</p>
+          <button class="sound-button" id="speakButton" type="button">🔊 Hear the directions</button>
         </div>
-        <div class="letter-bubble" aria-label="Letter B">B</div>
+        <div class="letter-bubble" id="letterBubble" aria-live="polite">B</div>
       </section>
 
-      <section class="activity-card" aria-labelledby="activity-title">
+      <section class="activity" id="activityCard" aria-labelledby="activityTitle">
         <div class="progress-row">
-          <strong>Sound activity</strong>
-          <div class="progress-dots" aria-label="Activity 1 of 3">
-            <span class="active"></span><span></span><span></span>
+          <strong id="roundLabel">Sound activity 1 of 3</strong>
+          <div class="progress-dots" id="progressDots" aria-label="Three sound activities"></div>
+        </div>
+
+        <div id="roundContent">
+          <div class="prompt">
+            <small>Beginning sound</small>
+            <h2 id="activityTitle">Which picture begins with B?</h2>
           </div>
-        </div>
+          <div class="choices" id="choices"></div>
+          <div class="feedback" id="feedback" role="status" aria-live="polite">Choose a picture to begin.</div>
 
-        <div class="prompt">
-          <small>Beginning sound</small>
-          <h2 id="activity-title">Which picture begins with B?</h2>
-        </div>
-
-        <div class="choices">
-          <button class="choice" data-answer="wrong">
-            <span class="picture" aria-hidden="true">☀️</span>
-            <strong>Sun</strong>
-          </button>
-          <button class="choice" data-answer="correct">
-            <span class="picture" aria-hidden="true">⚽</span>
-            <strong>Ball</strong>
-          </button>
-          <button class="choice" data-answer="wrong">
-            <span class="picture" aria-hidden="true">🐱</span>
-            <strong>Cat</strong>
-          </button>
-        </div>
-
-        <div id="feedback" class="feedback" role="status">
-          Choose a picture to begin.
-        </div>
-
-        <div class="coloring">
-          <div class="palette">
-            <h3>Choose a color</h3>
-            <div class="swatches" aria-label="Color choices">
-              <button class="swatch selected" style="background: #f28b50" aria-label="Orange"></button>
-              <button class="swatch" style="background: #4b9ec9" aria-label="Blue"></button>
-              <button class="swatch" style="background: #63a66f" aria-label="Green"></button>
-              <button class="swatch" style="background: #8a70c7" aria-label="Purple"></button>
+          <div class="reward" id="reward">
+            <div class="palette">
+              <h3>Choose a color</h3>
+              <div class="swatches" id="swatches" aria-label="Color choices"></div>
+            </div>
+            <div class="coloring-page">
+              <h3 id="coloringTitle">Tap the picture to color it</h3>
+              <button class="picture-to-color" id="pictureToColor" type="button" aria-label="Color the picture">
+                <span id="rewardPicture" aria-hidden="true">⚽</span>
+              </button>
             </div>
           </div>
-          <div class="coloring-page">
-            <h3>Tap the ball to color it</h3>
-            <button class="picture-to-color" aria-label="Color the ball">
-              <span aria-hidden="true">⚽</span>
-            </button>
+          <div class="actions">
+            <button class="next-button" id="nextButton" type="button">Next sound <span aria-hidden="true">→</span></button>
           </div>
         </div>
+
+        <div class="celebration" id="celebration" aria-live="polite">
+          <div class="stars" aria-hidden="true">⭐ ⭐ ⭐</div>
+          <h2>You completed the path!</h2>
+          <p>You listened for the beginning sounds B, M, and S. Great reading practice!</p>
+          <button class="restart-button" id="restartButton" type="button">Practice again</button>
+        </div>
       </section>
+      <p class="helper">Grown-ups can read the directions aloud, or learners can select “Hear the directions.”</p>
     </main>
 
     <script>
-      const choices = document.querySelectorAll(".choice");
+      const rounds = [
+        { letter: "B", answer: "Ball", picture: "⚽", choices: [["Sun", "☀️"], ["Ball", "⚽"], ["Cat", "🐱"]] },
+        { letter: "M", answer: "Moon", picture: "🌙", choices: [["Fish", "🐟"], ["Moon", "🌙"], ["Apple", "🍎"]] },
+        { letter: "S", answer: "Star", picture: "⭐", choices: [["Star", "⭐"], ["Book", "📘"], ["Dog", "🐶"]] }
+      ];
+      const colors = [
+        ["Orange", "#ed7940"], ["Blue", "#2f8eb8"], ["Green", "#3f8a52"], ["Purple", "#7159b5"]
+      ];
+      let roundIndex = 0;
+      let selectedColor = colors[0][1];
+      let answerFound = false;
+      let rewardColored = false;
+
+      const letterBubble = document.querySelector("#letterBubble");
+      const roundLabel = document.querySelector("#roundLabel");
+      const progressDots = document.querySelector("#progressDots");
+      const activityTitle = document.querySelector("#activityTitle");
+      const choices = document.querySelector("#choices");
       const feedback = document.querySelector("#feedback");
-      const swatches = document.querySelectorAll(".swatch");
-      const picture = document.querySelector(".picture-to-color");
+      const reward = document.querySelector("#reward");
+      const swatches = document.querySelector("#swatches");
+      const rewardPicture = document.querySelector("#rewardPicture");
+      const pictureToColor = document.querySelector("#pictureToColor");
+      const coloringTitle = document.querySelector("#coloringTitle");
+      const nextButton = document.querySelector("#nextButton");
+      const roundContent = document.querySelector("#roundContent");
+      const celebration = document.querySelector("#celebration");
 
-      choices.forEach((choice) => {
-        choice.addEventListener("click", () => {
-          choices.forEach((item) => item.classList.remove("correct", "try-again"));
-          if (choice.dataset.answer === "correct") {
-            choice.classList.add("correct");
-            feedback.textContent = "Great listening! Ball begins with the B sound.";
-          } else {
-            choice.classList.add("try-again");
-            feedback.textContent = "Good try. Say each word slowly and listen for B.";
-          }
+      function speakDirections() {
+        const round = rounds[roundIndex];
+        if (!("speechSynthesis" in window)) {
+          feedback.textContent = `Listen for the ${round.letter} sound. Which picture begins with ${round.letter}?`;
+          return;
+        }
+        window.speechSynthesis.cancel();
+        const message = new SpeechSynthesisUtterance(`Which picture begins with the letter ${round.letter}?`);
+        message.rate = 0.82;
+        window.speechSynthesis.speak(message);
+      }
+
+      function drawProgress() {
+        progressDots.innerHTML = "";
+        rounds.forEach((_, index) => {
+          const dot = document.createElement("span");
+          dot.className = `progress-dot ${index < roundIndex ? "complete" : index === roundIndex ? "active" : ""}`;
+          dot.setAttribute("aria-label", index < roundIndex ? `Activity ${index + 1} complete` : index === roundIndex ? `Activity ${index + 1} current` : `Activity ${index + 1} not started`);
+          progressDots.append(dot);
         });
-      });
+      }
 
-      swatches.forEach((swatch) => {
-        swatch.addEventListener("click", () => {
-          swatches.forEach((item) => item.classList.remove("selected"));
-          swatch.classList.add("selected");
-          picture.style.background = swatch.style.background;
+      function drawSwatches() {
+        swatches.innerHTML = "";
+        colors.forEach(([name, value], index) => {
+          const button = document.createElement("button");
+          button.className = `swatch ${index === 0 ? "selected" : ""}`;
+          button.type = "button";
+          button.style.background = value;
+          button.setAttribute("aria-label", name);
+          button.addEventListener("click", () => {
+            selectedColor = value;
+            swatches.querySelectorAll(".swatch").forEach((item) => item.classList.remove("selected"));
+            button.classList.add("selected");
+            pictureToColor.style.background = `${value}33`;
+          });
+          swatches.append(button);
         });
+      }
+
+      function chooseAnswer(button, word) {
+        choices.querySelectorAll(".choice").forEach((item) => item.classList.remove("correct", "try-again"));
+        const round = rounds[roundIndex];
+        if (word === round.answer) {
+          answerFound = true;
+          button.classList.add("correct");
+          feedback.textContent = `Great listening! ${round.answer} begins with the ${round.letter} sound. Now color the picture!`;
+          reward.classList.add("visible");
+          pictureToColor.focus();
+        } else {
+          button.classList.add("try-again");
+          feedback.textContent = `Good try. Say ${word} slowly. Listen again for the ${round.letter} sound.`;
+        }
+      }
+
+      function renderRound() {
+        const round = rounds[roundIndex];
+        answerFound = false;
+        rewardColored = false;
+        selectedColor = colors[0][1];
+        letterBubble.textContent = round.letter;
+        letterBubble.setAttribute("aria-label", `Letter ${round.letter}`);
+        roundLabel.textContent = `Sound activity ${roundIndex + 1} of ${rounds.length}`;
+        activityTitle.textContent = `Which picture begins with ${round.letter}?`;
+        feedback.textContent = "Choose a picture to begin.";
+        reward.classList.remove("visible");
+        nextButton.classList.remove("visible");
+        pictureToColor.classList.remove("colored");
+        pictureToColor.style.background = "#ffffff";
+        rewardPicture.textContent = round.picture;
+        coloringTitle.textContent = `Tap the ${round.answer.toLowerCase()} to color it`;
+        pictureToColor.setAttribute("aria-label", `Color the ${round.answer.toLowerCase()}`);
+        drawProgress();
+        drawSwatches();
+        choices.innerHTML = "";
+        round.choices.forEach(([word, picture]) => {
+          const button = document.createElement("button");
+          button.className = "choice";
+          button.type = "button";
+          button.innerHTML = `<span class="picture" aria-hidden="true">${picture}</span><strong>${word}</strong>`;
+          button.setAttribute("aria-label", word);
+          button.addEventListener("click", () => chooseAnswer(button, word));
+          choices.append(button);
+        });
+      }
+
+      pictureToColor.addEventListener("click", () => {
+        if (!answerFound) return;
+        rewardColored = true;
+        pictureToColor.classList.add("colored");
+        pictureToColor.style.background = `${selectedColor}55`;
+        feedback.textContent = roundIndex === rounds.length - 1
+          ? "Beautiful coloring! You finished the final sound."
+          : "Beautiful coloring! You are ready for the next sound.";
+        nextButton.textContent = roundIndex === rounds.length - 1 ? "See my results →" : "Next sound →";
+        nextButton.classList.add("visible");
+        nextButton.focus();
       });
 
-      picture.addEventListener("click", () => {
-        picture.classList.toggle("colored");
-        feedback.textContent = picture.classList.contains("colored")
-          ? "Beautiful coloring! You found the B sound."
-          : "Tap the ball again when you are ready to color it.";
+      nextButton.addEventListener("click", () => {
+        if (!rewardColored) return;
+        if (roundIndex < rounds.length - 1) {
+          roundIndex += 1;
+          renderRound();
+          document.querySelector("#activityCard").scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          roundContent.hidden = true;
+          celebration.classList.add("visible");
+          roundLabel.textContent = "Reading Path complete";
+          progressDots.querySelectorAll(".progress-dot").forEach((dot) => {
+            dot.classList.remove("active");
+            dot.classList.add("complete");
+          });
+          document.querySelector("#restartButton").focus();
+        }
       });
+
+      document.querySelector("#restartButton").addEventListener("click", () => {
+        roundIndex = 0;
+        celebration.classList.remove("visible");
+        roundContent.hidden = false;
+        renderRound();
+      });
+      document.querySelector("#speakButton").addEventListener("click", speakDirections);
+      renderRound();
     </script>
   </body>
 </html>
