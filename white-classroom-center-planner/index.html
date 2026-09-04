@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Classroom Center Planner</title>
+  <style>
+    :root{--ink:#123f3a;--teal:#176b63;--aqua:#dff4f0;--blue:#dcecfb;--orange:#f47b45;--paper:#fbfcf8;--line:#cbded8;--muted:#526b67;--shadow:0 18px 48px rgba(18,63,58,.12)}
+    *{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#f3faf7,#edf5fb);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:18px;line-height:1.55}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}.shell{max-width:1240px;margin:auto;padding:24px}.top{display:flex;gap:20px;align-items:center;justify-content:space-between;margin-bottom:26px}.brand h1{font-family:Georgia,serif;font-size:clamp(2rem,4vw,3.4rem);margin:0}.brand p{margin:2px 0;color:var(--muted)}.badge{background:var(--aqua);padding:10px 16px;border-radius:999px;font-weight:800}.layout{display:grid;grid-template-columns:280px 1fr;gap:24px}.sidebar,.card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}.sidebar{padding:18px;height:max-content;position:sticky;top:20px}.step{width:100%;border:0;background:transparent;text-align:left;padding:15px;border-radius:14px;color:var(--muted);margin:3px 0}.step.active{background:var(--ink);color:#fff}.step.done::after{content:' ✓';color:#8ad4be}.panel{padding:clamp(22px,4vw,42px)}h2{font-family:Georgia,serif;font-size:clamp(1.7rem,3vw,2.5rem);margin:0 0 8px}.lead{color:var(--muted);margin:0 0 28px}.field{margin:22px 0}.field label{display:block;font-weight:850;margin-bottom:8px}.field small{display:block;color:var(--muted);margin-top:7px}input,select,textarea{width:100%;padding:15px 16px;border:2px solid var(--line);border-radius:13px;background:#fff;color:var(--ink)}textarea{min-height:100px;resize:vertical}:focus{outline:4px solid #f9c5ab;outline-offset:2px}.row{display:grid;grid-template-columns:1fr 1fr;gap:16px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}.primary,.secondary{border-radius:13px;padding:14px 20px;font-weight:850}.primary{border:2px solid var(--ink);background:var(--ink);color:#fff}.secondary{border:2px solid var(--line);background:#fff;color:var(--ink)}.center-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.center{border:2px solid var(--line);border-radius:18px;padding:18px;background:var(--paper)}.center h3{margin:0 0 8px}.center input{margin-top:8px}.check{display:flex;gap:10px;align-items:flex-start;margin:10px 0}.check input{width:22px;height:22px;margin-top:3px}.week{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.day{background:var(--paper);border:1px solid var(--line);border-radius:18px;padding:16px}.day strong{display:block;margin-bottom:10px}.rotation{padding:9px 10px;margin:7px 0;border-radius:10px;background:var(--blue)}.notice{background:#fff3e9;border-left:6px solid var(--orange);padding:16px;border-radius:12px;margin:20px 0}.hidden{display:none!important}.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}.metric{padding:18px;border-radius:16px;background:var(--aqua)}.metric b{font-size:1.7rem;display:block}.footer{text-align:center;color:var(--muted);font-size:1rem;margin:30px 0 10px}@media(max-width:820px){.layout{grid-template-columns:1fr}.sidebar{position:static;display:flex;overflow-x:auto}.step{min-width:160px}.row,.center-grid,.week,.summary{grid-template-columns:1fr}.shell{padding:14px}.top{align-items:flex-start;flex-direction:column}}
+  </style>
+</head>
+<body>
+<main class="shell">
+  <header class="top"><div class="brand"><h1>Classroom Center Planner</h1><p>Turn an instructional goal into a clear, ready-to-use center plan.</p></div><span class="badge">Sample class groups only</span></header>
+  <div class="layout">
+    <nav class="sidebar" aria-label="Planning steps">
+      <button class="step active" data-step="0">1. Set the goal</button>
+      <button class="step" data-step="1">2. Plan centers</button>
+      <button class="step" data-step="2">3. Build rotations</button>
+      <button class="step" data-step="3">4. Review plan</button>
+    </nav>
+    <section class="card">
+      <div class="panel screen" data-screen="0">
+        <h2>What are students working toward?</h2><p class="lead">Begin with one focused goal. Your center plan will stay connected to it.</p>
+        <div class="field"><label for="goal">Instructional goal</label><textarea id="goal">Students will identify the main idea and two supporting details in a short informational passage.</textarea><small>Use a goal you could observe during a lesson.</small></div>
+        <div class="row"><div class="field"><label for="grade">Grade or course</label><input id="grade" value="Grade 4" /></div><div class="field"><label for="minutes">Minutes per rotation</label><select id="minutes"><option>10</option><option selected>15</option><option>20</option><option>25</option></select></div></div>
+        <div class="field"><label for="groups">Number of groups</label><select id="groups"><option>2</option><option selected>3</option><option>4</option></select></div>
+        <div class="actions"><button class="primary next">Plan my centers →</button></div>
+      </div>
+      <div class="panel screen hidden" data-screen="1">
+        <h2>Build a manageable set of centers</h2><p class="lead">Each center needs a purpose, a clear student action, and the essential materials.</p>
+        <div id="centerGrid" class="center-grid"></div>
+        <div class="notice" id="centerNotice">A focused first plan uses three centers. You can revise the names and directions.</div>
+        <div class="actions"><button class="secondary back">← Back</button><button id="addCenter" class="secondary">+ Add a center</button><button class="primary next">Create rotations →</button></div>
+      </div>
+      <div class="panel screen hidden" data-screen="2">
+        <h2>Preview student rotations</h2><p class="lead">The sample groups help you check timing without using real student information.</p>
+        <div id="week" class="week"></div>
+        <div class="field"><label>Preparation check</label><label class="check"><input type="checkbox" class="ready" /> Directions are clear at every center.</label><label class="check"><input type="checkbox" class="ready" /> Materials are collected and labeled.</label><label class="check"><input type="checkbox" class="ready" /> Students know how to move between centers.</label></div>
+        <div id="prepMessage" class="notice">Complete the preparation check before reviewing the final plan.</div>
+        <div class="actions"><button class="secondary back">← Back</button><button id="review" class="primary">Review my plan →</button></div>
+      </div>
+      <div class="panel screen hidden" data-screen="3">
+        <h2>Your center plan is ready</h2><p class="lead">Review the essentials, then use the plan as a starting point for classroom preparation.</p>
+        <div class="summary"><div class="metric"><b id="summaryCenters">3</b>learning centers</div><div class="metric"><b id="summaryGroups">3</b>sample groups</div><div class="metric"><b id="summaryTime">45</b>minutes total</div></div>
+        <div class="field"><label>Instructional goal</label><p id="summaryGoal"></p></div><div class="field"><label>Center overview</label><div id="summaryList"></div></div>
+        <div class="notice">Planning reminder: adjust timing and directions after observing how the lesson works with your learners.</div>
+        <div class="actions"><button class="secondary back">← Revise plan</button><button id="print" class="primary">Print or save plan</button></div>
+      </div>
+    </section>
+  </div>
+  <p class="footer">Classroom Center Planner • Educational prototype • No student information is collected</p>
+</main>
+<script>
+const centers=[
+ {name:'Teacher Table',purpose:'Read a short passage and model how to find the main idea.',materials:'Passage cards, highlighters'},
+ {name:'Evidence Match',purpose:'Match supporting details to the correct main-idea card.',materials:'Detail cards, recording sheet'},
+ {name:'Independent Response',purpose:'Read independently and write the main idea with two details.',materials:'Short text, response page'}
+];
+let current=0;
+const screens=[...document.querySelectorAll('.screen')],steps=[...document.querySelectorAll('.step')];
+function show(n){current=n;screens.forEach((x,i)=>x.classList.toggle('hidden',i!==n));steps.forEach((x,i)=>{x.classList.toggle('active',i===n);x.classList.toggle('done',i<n)});window.scrollTo({top:0,behavior:'smooth'});if(n===2)renderRotations();if(n===3)renderSummary()}
+function renderCenters(){const box=document.querySelector('#centerGrid');box.innerHTML='';centers.forEach((c,i)=>{const el=document.createElement('article');el.className='center';el.innerHTML=`<h3>Center ${i+1}</h3><label>Name<input data-key="name" data-i="${i}" value="${c.name}"></label><label>What students do<textarea data-key="purpose" data-i="${i}">${c.purpose}</textarea></label><label>Materials<input data-key="materials" data-i="${i}" value="${c.materials}"></label>`;box.append(el)});box.querySelectorAll('input,textarea').forEach(x=>x.addEventListener('input',e=>centers[e.target.dataset.i][e.target.dataset.key]=e.target.value))}
+function renderRotations(){const groups=Number(document.querySelector('#groups').value),box=document.querySelector('#week');box.innerHTML='';for(let round=0;round<centers.length;round++){const d=document.createElement('div');d.className='day';d.innerHTML=`<strong>Rotation ${round+1} • ${document.querySelector('#minutes').value} min</strong>`;for(let g=0;g<groups;g++){const c=centers[(g+round)%centers.length];d.innerHTML+=`<div class="rotation">Group ${String.fromCharCode(65+g)} → ${c.name}</div>`}box.append(d)}}
+function renderSummary(){const groups=Number(document.querySelector('#groups').value),minutes=Number(document.querySelector('#minutes').value);document.querySelector('#summaryCenters').textContent=centers.length;document.querySelector('#summaryGroups').textContent=groups;document.querySelector('#summaryTime').textContent=centers.length*minutes;document.querySelector('#summaryGoal').textContent=document.querySelector('#goal').value;document.querySelector('#summaryList').innerHTML=centers.map((c,i)=>`<p><strong>${i+1}. ${c.name}</strong><br>${c.purpose}<br><span style="color:var(--muted)">Materials: ${c.materials}</span></p>`).join('')}
+document.querySelectorAll('.next').forEach(x=>x.addEventListener('click',()=>{if(current===0&&!document.querySelector('#goal').value.trim()){alert('Add an instructional goal before continuing.');return}show(current+1)}));document.querySelectorAll('.back').forEach(x=>x.addEventListener('click',()=>show(current-1)));steps.forEach((x,i)=>x.addEventListener('click',()=>{if(i<=current)show(i)}));document.querySelector('#addCenter').addEventListener('click',()=>{if(centers.length>=4){document.querySelector('#centerNotice').textContent='Four centers is a practical limit for this first plan.';return}centers.push({name:'New Center',purpose:'Describe what students will do.',materials:'List essential materials'});renderCenters()});document.querySelector('#review').addEventListener('click',()=>{if([...document.querySelectorAll('.ready')].some(x=>!x.checked)){document.querySelector('#prepMessage').textContent='Check each preparation item when it is ready. You can revise the plan at any time.';return}show(3)});document.querySelector('#print').addEventListener('click',()=>window.print());renderCenters();
+</script>
+</body>
+</html>

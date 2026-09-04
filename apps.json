@@ -1,6 +1,14 @@
 {
   "apps": [
     {
+      "title": "Classroom Center Planner",
+      "student": "David WHite",
+      "slug": "white-classroom-center-planner",
+      "description": "Help teachers organize classroom learning centers, prepare materials, and plan clear student rotations.",
+      "url": "/white-classroom-center-planner/",
+      "projectId": "4cdebae7-f6e4-4b6e-98c5-f959b80f66ac"
+    },
+    {
       "title": "Emotion Explorer",
       "student": "David WHite",
       "slug": "emotion-explorer",
