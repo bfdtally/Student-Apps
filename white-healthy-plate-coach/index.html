@@ -1,26 +1,77 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Healthy Plate Coach</title>
-<style>
-:root{--navy:#123d45;--teal:#13847b;--mint:#e0f5ed;--orange:#f47b45;--gold:#f6c857;--paper:#fffdf8;--line:#c9ddd9;--muted:#526b6c;--red:#a64736}*{box-sizing:border-box}body{margin:0;background:linear-gradient(150deg,#f4fbf8,#fff8eb);font:18px/1.55 Inter,ui-sans-serif,system-ui,sans-serif;color:var(--navy)}button{font:inherit;cursor:pointer}.wrap{max-width:1180px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:20px}.top h1{font:700 clamp(2.2rem,5vw,4rem)/1 Georgia,serif;margin:0}.top p{margin:8px 0;color:var(--muted)}.pill{background:var(--mint);padding:10px 15px;border-radius:999px;font-weight:800}.progress{height:14px;background:#dae9e5;border-radius:999px;margin:26px 0;overflow:hidden}.bar{height:100%;width:0;background:linear-gradient(90deg,var(--teal),#5eb3a7);transition:.35s}.card{background:#fff;border:2px solid var(--line);border-radius:28px;padding:clamp(22px,4vw,42px);box-shadow:0 20px 55px rgba(18,61,69,.12)}h2{font:700 clamp(1.8rem,3.5vw,2.8rem)/1.15 Georgia,serif;margin:0 0 8px}.lead{color:var(--muted);margin:0 0 24px}.challenge{display:flex;gap:16px;align-items:center;padding:18px;background:#fff3df;border-radius:18px;margin:20px 0}.challenge span{font-size:2.5rem}.foods{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.food{border:2px solid var(--line);background:var(--paper);border-radius:18px;padding:16px 10px;min-height:126px;color:var(--navy)}.food:hover,.food:focus-visible{border-color:var(--teal);transform:translateY(-2px)}.food.selected{background:var(--mint);border-color:var(--teal)}.food .emoji{font-size:2.4rem;display:block}.food small{display:block;color:var(--muted)}.plate-wrap{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;margin-top:28px}.plate{aspect-ratio:1;border:16px solid #e6efec;border-radius:50%;background:conic-gradient(#ffe0d3 0 25%,#e0f5ed 25% 50%,#fff1bd 50% 75%,#dcecff 75%);display:grid;place-items:center;padding:38px;text-align:center;box-shadow:inset 0 0 0 4px #fff}.plate-items{font-size:2.6rem}.groups{display:grid;gap:10px}.group{padding:12px 14px;border-radius:12px;background:#eef4f2;color:var(--muted)}.group.met{background:var(--mint);color:var(--navy);font-weight:800}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.primary,.secondary{padding:14px 20px;border-radius:13px;font-weight:850}.primary{background:var(--navy);color:white;border:2px solid var(--navy)}.secondary{background:white;color:var(--navy);border:2px solid var(--line)}.feedback{padding:18px;border-radius:16px;margin-top:20px;background:#eef4f2}.feedback.good{background:var(--mint);border-left:6px solid var(--teal)}.feedback.try{background:#fff1e8;border-left:6px solid var(--orange)}.hidden{display:none}.results{text-align:center}.score{font:700 5rem/1 Georgia,serif;color:var(--teal);margin:20px}.review{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}.review div{background:var(--mint);padding:16px;border-radius:16px}:focus{outline:4px solid var(--gold);outline-offset:3px}.footer{text-align:center;color:var(--muted);font-size:1rem;margin:28px}@media(max-width:800px){.foods{grid-template-columns:repeat(2,1fr)}.plate-wrap{grid-template-columns:1fr}.plate{max-width:430px;margin:auto}.review{grid-template-columns:1fr}.top{align-items:flex-start;flex-direction:column}.wrap{padding:14px}}
-</style></head>
-<body><main class="wrap"><header class="top"><div><h1>Healthy Plate Coach</h1><p>Build balanced meals through three everyday challenges.</p></div><span class="pill">Grades 6–8</span></header><div class="progress" aria-label="Challenge progress"><div id="bar" class="bar"></div></div>
-<section id="activity" class="card"><h2 id="title"></h2><p class="lead">Choose foods that work together. You can change your choices before asking the coach.</p><div class="challenge"><span id="challengeIcon"></span><div><strong id="challengeName"></strong><br><span id="challengeText"></span></div></div><div id="foods" class="foods"></div><div class="plate-wrap"><div class="plate"><div><strong>My plate</strong><div id="plateItems" class="plate-items">Choose foods</div></div></div><div><h3>Food-group check</h3><div id="groups" class="groups"></div></div></div><div id="feedback" class="feedback" role="status">Your coach will explain the strengths of your plate and what you could add.</div><div class="actions"><button id="check" class="primary">Check my plate</button><button id="clear" class="secondary">Clear choices</button><button id="next" class="primary hidden">Next challenge →</button></div></section>
-<section id="results" class="card results hidden"><h2>Meal challenge complete!</h2><p class="lead">You practiced building balanced meals for three different situations.</p><div id="score" class="score"></div><div id="review" class="review"></div><div class="feedback good"><strong>Coach’s next step:</strong> Try changing one food while keeping all four groups represented. Explain how the new plate still supports a balanced meal.</div><div class="actions" style="justify-content:center"><button id="restart" class="primary">Try the challenges again</button></div></section><p class="footer">Educational prototype • Uses fictional meal challenges • No personal information is collected</p></main>
-<script>
-const groupInfo={fruit:'Fruit',vegetable:'Vegetable',grain:'Grain',protein:'Protein'};
-const foods=[['Apple','🍎','fruit'],['Berries','🫐','fruit'],['Broccoli','🥦','vegetable'],['Carrots','🥕','vegetable'],['Brown rice','🍚','grain'],['Whole-grain bread','🍞','grain'],['Beans','🫘','protein'],['Egg','🥚','protein'],['Cookie','🍪','extra'],['Soda','🥤','extra'],['French fries','🍟','extra'],['Candy','🍬','extra']];
-const challenges=[
- {icon:'🎒',name:'School lunch',text:'Build a lunch that could help a learner feel ready for an afternoon class.'},
- {icon:'⚽',name:'After-practice meal',text:'Build a meal with variety after an active afternoon.'},
- {icon:'🥪',name:'Quick family meal',text:'Build a practical meal using choices from several food groups.'}
-];
-let round=0,selected=new Set(),scores=[];
-function render(){const c=challenges[round];document.querySelector('#title').textContent=`Challenge ${round+1} of ${challenges.length}`;document.querySelector('#challengeIcon').textContent=c.icon;document.querySelector('#challengeName').textContent=c.name;document.querySelector('#challengeText').textContent=c.text;document.querySelector('#bar').style.width=`${round/challenges.length*100}%`;const box=document.querySelector('#foods');box.innerHTML='';foods.forEach(([name,emoji,group],i)=>{const b=document.createElement('button');b.className='food'+(selected.has(i)?' selected':'');b.innerHTML=`<span class="emoji">${emoji}</span><strong>${name}</strong><small>${groupInfo[group]||'Sometimes food'}</small>`;b.setAttribute('aria-pressed',selected.has(i));b.onclick=()=>{selected.has(i)?selected.delete(i):selected.add(i);renderSelections();b.classList.toggle('selected');b.setAttribute('aria-pressed',selected.has(i))};box.append(b)});renderSelections();document.querySelector('#next').classList.add('hidden');document.querySelector('#check').classList.remove('hidden');document.querySelector('#feedback').className='feedback';document.querySelector('#feedback').textContent='Your coach will explain the strengths of your plate and what you could add.'}
-function renderSelections(){const chosen=[...selected].map(i=>foods[i]);document.querySelector('#plateItems').textContent=chosen.length?chosen.map(x=>x[1]).join(' '):'Choose foods';const met=new Set(chosen.map(x=>x[2]));document.querySelector('#groups').innerHTML=Object.entries(groupInfo).map(([k,v])=>`<div class="group ${met.has(k)?'met':''}">${met.has(k)?'✓':'○'} ${v}</div>`).join('')}
-document.querySelector('#clear').onclick=()=>{selected.clear();renderSelections();document.querySelectorAll('.food').forEach(x=>{x.classList.remove('selected');x.setAttribute('aria-pressed','false')})};
-document.querySelector('#check').onclick=()=>{const chosen=[...selected].map(i=>foods[i]),met=new Set(chosen.map(x=>x[2])),needed=Object.keys(groupInfo).filter(x=>!met.has(x));const complete=needed.length===0;const fb=document.querySelector('#feedback');fb.className='feedback '+(complete?'good':'try');fb.innerHTML=complete?'<strong>Balanced thinking!</strong> Your plate represents fruit, vegetables, grains, and protein. Can you explain how two of your choices support this meal?':`<strong>You have a strong start.</strong> Add ${needed.map(x=>groupInfo[x].toLowerCase()).join(' and ')} to represent more of the major food groups.`;if(complete){scores.push({name:challenges[round].name,count:met.size});document.querySelector('#check').classList.add('hidden');document.querySelector('#next').classList.remove('hidden')}};
-document.querySelector('#next').onclick=()=>{if(round<challenges.length-1){round++;selected.clear();render()}else{document.querySelector('#activity').classList.add('hidden');document.querySelector('#results').classList.remove('hidden');document.querySelector('#bar').style.width='100%';document.querySelector('#score').textContent='3 / 3';document.querySelector('#review').innerHTML=scores.map(x=>`<div><strong>✓ ${x.name}</strong><br>${x.count} major food groups represented</div>`).join('')}};
-document.querySelector('#restart').onclick=()=>{round=0;selected.clear();scores=[];document.querySelector('#results').classList.add('hidden');document.querySelector('#activity').classList.remove('hidden');render()};render();
-</script></body></html>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Healthy Plate Coach</title>
+<meta name="description" content="Healthy Plate Coach helps middle school students plan balanced meals by comparing food choices and building a realistic healthy plate." />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%23E8F6FB' stroke='%230B4F6C' stroke-width='3'/%3E%3Ccircle cx='32' cy='32' r='18' fill='none' stroke='%236EC6E8' stroke-width='3'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to main content</a>
+
+<div class="app-shell">
+
+  <!-- Mobile top bar -->
+  <header class="topbar">
+    <button class="hamburger" id="hamburger-btn" aria-expanded="false" aria-controls="sidebar" aria-label="Open navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="topbar-brand">
+      <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <circle cx="32" cy="32" r="30" fill="#E8F6FB" stroke="#0B4F6C" stroke-width="3"/>
+        <circle cx="32" cy="32" r="18" fill="none" stroke="#6EC6E8" stroke-width="3"/>
+        <circle cx="32" cy="32" r="6" fill="#FFC857"/>
+      </svg>
+      <span>Healthy Plate Coach</span>
+    </div>
+    <div class="topbar-spacer" aria-hidden="true"></div>
+  </header>
+
+  <!-- Overlay for mobile drawer -->
+  <div class="sidebar-overlay" id="sidebar-overlay" hidden></div>
+
+  <!-- Sidebar navigation -->
+  <nav class="sidebar" id="sidebar" aria-label="Main navigation">
+    <div class="sidebar-brand">
+      <svg width="36" height="36" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+        <circle cx="32" cy="32" r="30" fill="#E8F6FB" stroke="#0B4F6C" stroke-width="3"/>
+        <circle cx="32" cy="32" r="18" fill="none" stroke="#6EC6E8" stroke-width="3"/>
+        <circle cx="32" cy="32" r="6" fill="#FFC857"/>
+      </svg>
+      <div class="sidebar-brand-text">
+        <strong>Healthy Plate</strong>
+        <span>Coach</span>
+      </div>
+    </div>
+    <ul class="nav-list" id="nav-list">
+      <li><a href="#/home" data-route="home"><span class="nav-icon" aria-hidden="true">🏠</span>Home</a></li>
+      <li><a href="#/learn" data-route="learn"><span class="nav-icon" aria-hidden="true">📘</span>Learn</a></li>
+      <li><a href="#/activity" data-route="activity"><span class="nav-icon" aria-hidden="true">🍽️</span>Activity</a></li>
+      <li><a href="#/results" data-route="results"><span class="nav-icon" aria-hidden="true">✅</span>Results &amp; Feedback</a></li>
+      <li><a href="#/resources" data-route="resources"><span class="nav-icon" aria-hidden="true">🧭</span>Resources</a></li>
+      <li><a href="#/progress" data-route="progress"><span class="nav-icon" aria-hidden="true">📈</span>My Progress</a></li>
+      <li><a href="#/about" data-route="about"><span class="nav-icon" aria-hidden="true">❓</span>About &amp; Help</a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <p>Grades 6–8 · Health &amp; CTE</p>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main id="main-content" class="content" tabindex="-1">
+    <div id="app-content"><!-- screens render here --></div>
+  </main>
+</div>
+
+<div aria-live="polite" class="visually-hidden" id="live-region"></div>
+
+<script src="js/icons.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
