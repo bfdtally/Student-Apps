@@ -1,20 +1,219 @@
 <!doctype html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Math Fact Quest</title>
-<style>
-:root{--ink:#153f42;--teal:#176d68;--mint:#dcf3ed;--blue:#dceeff;--orange:#f47742;--yellow:#ffd869;--paper:#fbfcf8;--line:#c8deda;--muted:#526b6b}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top right,#dceeff,transparent 38%),linear-gradient(145deg,#f6fbf8,#fff8e9);color:var(--ink);font:18px/1.5 Inter,ui-sans-serif,system-ui,sans-serif}button,select{font:inherit}.wrap{max-width:1120px;margin:auto;padding:24px}.top{display:flex;justify-content:space-between;align-items:center;gap:18px}.top h1{font:700 clamp(2.3rem,5vw,4.2rem)/1 Georgia,serif;margin:0}.top p{margin:6px 0;color:var(--muted)}.stars{font-size:2rem}.card{background:#fff;border:2px solid var(--line);border-radius:28px;padding:clamp(24px,5vw,48px);box-shadow:0 20px 55px rgba(21,63,66,.12);margin-top:26px}h2{font:700 clamp(1.8rem,4vw,3rem)/1.15 Georgia,serif;margin:0 0 10px}.lead{font-size:1.12rem;color:var(--muted)}.families{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}.family{min-height:90px;border:2px solid var(--line);background:var(--paper);border-radius:18px;font-weight:900;font-size:1.35rem;color:var(--ink);cursor:pointer}.family:hover,.family:focus-visible{background:var(--mint);border-color:var(--teal);transform:translateY(-2px)}.quest-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.badge{padding:10px 15px;border-radius:999px;background:var(--mint);font-weight:850}.progress{height:15px;background:#e4eeeb;border-radius:99px;margin:20px 0;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--teal),#66baa8);transition:.35s}.problem{text-align:center;margin:28px 0}.equation{font-size:clamp(3.4rem,10vw,7rem);font-weight:900;line-height:1.1}.answers{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:720px;margin:auto}.answer{min-height:86px;border-radius:18px;border:3px solid var(--line);background:white;color:var(--ink);font-size:1.8rem;font-weight:900;cursor:pointer}.answer:hover,.answer:focus-visible{border-color:var(--teal);background:var(--mint)}.feedback{max-width:720px;margin:20px auto 0;padding:18px;border-radius:16px;text-align:center;background:#eef4f2}.feedback.good{background:var(--mint);border-left:7px solid var(--teal)}.feedback.try{background:#fff0e8;border-left:7px solid var(--orange)}.actions{display:flex;justify-content:center;gap:12px;margin-top:22px;flex-wrap:wrap}.primary,.secondary{padding:14px 22px;border-radius:14px;font-weight:900;cursor:pointer}.primary{border:2px solid var(--ink);background:var(--ink);color:white}.secondary{border:2px solid var(--line);background:#fff;color:var(--ink)}.hidden{display:none}.results{text-align:center}.score{font:700 5rem/1 Georgia,serif;color:var(--teal);margin:24px}.facts{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:24px 0}.fact-result{background:var(--blue);border-radius:14px;padding:14px}.fact-result b{display:block;font-size:1.4rem}:focus{outline:4px solid var(--yellow);outline-offset:3px}.footer{text-align:center;color:var(--muted);font-size:1rem;margin:30px}@media(max-width:720px){.families{grid-template-columns:repeat(2,1fr)}.answers{grid-template-columns:1fr}.facts{grid-template-columns:repeat(2,1fr)}.top{align-items:flex-start;flex-direction:column}.wrap{padding:14px}}
-</style></head><body><main class="wrap"><header class="top"><div><h1>Math Fact Quest</h1><p>Short multiplication practice with helpful feedback.</p></div><div class="stars" aria-label="Three quest stars">★ ★ ★</div></header>
-<section id="choose" class="card"><h2>Choose today’s fact-family goal</h2><p class="lead">Every quest has five questions. Pick a family you want to strengthen.</p><div id="families" class="families"></div><div class="feedback">Tip: Choose a fact family that feels challenging enough to be useful, but not overwhelming.</div></section>
-<section id="quest" class="card hidden"><div class="quest-head"><div><strong id="questionLabel">Question 1 of 5</strong><h2 id="familyTitle">The 3s quest</h2></div><span id="scoreBadge" class="badge">0 correct</span></div><div class="progress"><div id="bar" class="bar"></div></div><div class="problem"><div id="equation" class="equation"></div><p class="lead">Choose the product.</p></div><div id="answers" class="answers"></div><div id="feedback" class="feedback" role="status">Take your time and use a strategy that makes sense to you.</div><div class="actions"><button id="next" class="primary hidden">Next question →</button><button id="change" class="secondary">Choose a different goal</button></div></section>
-<section id="results" class="card results hidden"><h2>Quest complete!</h2><p class="lead" id="resultLead"></p><div id="finalScore" class="score"></div><div id="facts" class="facts"></div><div id="nextStep" class="feedback good"></div><div class="actions"><button id="again" class="primary">Practice this family again</button><button id="newFamily" class="secondary">Choose a new family</button></div></section><p class="footer">Educational prototype • Practice progress stays only in this browser session • No personal information is collected</p></main>
-<script>
-const families=[2,3,4,5,6,7,8,9,10,11,12];let family=3,index=0,score=0,items=[];
-const $=s=>document.querySelector(s);
-function buildFamilies(){$('#families').innerHTML='';families.forEach(n=>{const b=document.createElement('button');b.className='family';b.textContent=`× ${n}`;b.setAttribute('aria-label',`Practice the ${n} multiplication facts`);b.onclick=()=>start(n);$('#families').append(b)})}
-function start(n){family=n;index=0;score=0;items=[];$('#choose').classList.add('hidden');$('#results').classList.add('hidden');$('#quest').classList.remove('hidden');renderQuestion()}
-function makeChoices(answer){const set=new Set([answer]);while(set.size<4){const offset=Math.floor(Math.random()*9)-4;const value=Math.max(0,answer+offset);set.add(value)}return [...set].sort(()=>Math.random()-.5)}
-function renderQuestion(){const factor=[2,4,5,7,8][index],answer=family*factor;items.push({factor,answer,correct:false});$('#questionLabel').textContent=`Question ${index+1} of 5`;$('#familyTitle').textContent=`The ${family}s quest`;$('#scoreBadge').textContent=`${score} correct`;$('#bar').style.width=`${index/5*100}%`;$('#equation').textContent=`${family} × ${factor} = ?`;$('#feedback').className='feedback';$('#feedback').textContent='Take your time and use a strategy that makes sense to you.';$('#next').classList.add('hidden');const box=$('#answers');box.innerHTML='';makeChoices(answer).forEach(value=>{const b=document.createElement('button');b.className='answer';b.textContent=value;b.onclick=()=>check(value,answer,b);box.append(b)})}
-function check(value,answer,button){if(items[index].correct)return;if(value===answer){items[index].correct=true;score++;$('#scoreBadge').textContent=`${score} correct`;$('#feedback').className='feedback good';$('#feedback').innerHTML=`<strong>Correct!</strong> ${family} groups of ${items[index].factor} equals ${answer}.`;[...document.querySelectorAll('.answer')].forEach(x=>x.disabled=true);$('#next').classList.remove('hidden');$('#next').focus()}else{$('#feedback').className='feedback try';$('#feedback').innerHTML=`<strong>Good try.</strong> Think of ${items[index].factor} groups of ${family}, then choose again.`;button.disabled=true}}
-$('#next').onclick=()=>{if(index<4){index++;renderQuestion()}else{finish()}};
-function finish(){$('#quest').classList.add('hidden');$('#results').classList.remove('hidden');$('#finalScore').textContent=`${score} / 5`;$('#resultLead').textContent=`You completed a five-question practice round with the ${family} facts.`;$('#facts').innerHTML=items.map(x=>`<div class="fact-result"><b>${family} × ${x.factor}</b>${x.answer} ✓</div>`).join('');$('#nextStep').innerHTML=score===5?'<strong>Strong fluency!</strong> Try another fact family or repeat this one to build confidence.':'<strong>Keep building.</strong> Repeat this family and say each complete fact aloud as you answer.'}
-$('#change').onclick=()=>{$('#quest').classList.add('hidden');$('#choose').classList.remove('hidden')};$('#again').onclick=()=>start(family);$('#newFamily').onclick=()=>{$('#results').classList.add('hidden');$('#choose').classList.remove('hidden')};buildFamilies();
-</script></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0f6f8f" />
+  <meta name="description" content="Math Fact Quest helps students in grades 3–5 practice multiplication facts from 0 through 12 with immediate feedback." />
+  <title>Math Fact Quest</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header class="site-header">
+    <div class="brand" aria-label="Math Fact Quest home">
+      <div class="brand-mark" aria-hidden="true">×</div>
+      <div>
+        <strong>Math Fact Quest</strong>
+        <span>Build fact power, one short quest at a time.</span>
+      </div>
+    </div>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <button class="nav-btn" data-screen="home">Home</button>
+      <button class="nav-btn" data-screen="goals">Choose a Goal</button>
+      <button class="nav-btn" data-screen="progress">My Progress</button>
+      <button class="nav-btn" data-screen="help">About &amp; Help</button>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section id="screen-home" class="screen active" aria-labelledby="home-title">
+      <div class="hero card">
+        <div class="hero-copy">
+          <p class="eyebrow">MULTIPLICATION • GRADES 3–5</p>
+          <h1 id="home-title">Ready for a quick math quest?</h1>
+          <p>Choose one multiplication fact family, answer 8 short questions, and get helpful feedback right away.</p>
+          <div class="hero-actions">
+            <button id="start-quest" class="primary large">Start a Quest</button>
+            <button class="secondary large" data-screen="progress">See My Progress</button>
+          </div>
+          <p class="microcopy">No sign-in. Progress stays on this device.</p>
+        </div>
+        <div class="quest-visual" aria-hidden="true">
+          <div class="cloud cloud-a"></div>
+          <div class="cloud cloud-b"></div>
+          <div class="island">
+            <div class="flag">12×</div>
+            <div class="path-dot p1">3×</div>
+            <div class="path-dot p2">6×</div>
+            <div class="path-dot p3">9×</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="feature-grid" aria-label="How Math Fact Quest works">
+        <article class="mini-card"><span class="icon" aria-hidden="true">🎯</span><h2>Pick one goal</h2><p>Focus on a single fact family from 0 through 12.</p></article>
+        <article class="mini-card"><span class="icon" aria-hidden="true">💡</span><h2>Get feedback</h2><p>See an encouraging explanation after every answer.</p></article>
+        <article class="mini-card"><span class="icon" aria-hidden="true">📈</span><h2>Watch growth</h2><p>Track accuracy, completed rounds, and the best next step.</p></article>
+      </div>
+    </section>
+
+    <section id="screen-goals" class="screen" aria-labelledby="goals-title">
+      <div class="section-heading">
+        <p class="eyebrow">CHOOSE A GOAL</p>
+        <h1 id="goals-title">Which fact family will you practice?</h1>
+        <p>Pick one number. Your quest will use that number in every multiplication problem.</p>
+      </div>
+      <div id="family-grid" class="family-grid" role="group" aria-label="Multiplication fact families"></div>
+      <div class="goal-tip card" aria-live="polite">
+        <span aria-hidden="true">🌊</span>
+        <div><strong id="goal-tip-title">Tip:</strong> <span id="goal-tip-text">Choose a family you want to make faster and more accurate.</span></div>
+      </div>
+    </section>
+
+    <section id="screen-activity" class="screen" aria-labelledby="activity-title">
+      <div class="activity-topline">
+        <button class="text-btn" id="quit-round">← Change goal</button>
+        <div class="round-label" id="round-label">Fact family</div>
+      </div>
+
+      <div class="progress-track" aria-label="Round progress">
+        <div id="progress-fill" class="progress-fill"></div>
+      </div>
+      <p id="question-count" class="question-count">Question 1 of 8</p>
+
+      <div class="question-card card">
+        <div class="question-copy">
+          <p class="eyebrow">YOUR CHALLENGE</p>
+          <h1 id="activity-title" class="math-question">3 × 4 = ?</h1>
+          <p id="question-hint" class="question-hint">Think: 3 groups of 4.</p>
+        </div>
+        <div class="visual-wrap">
+          <div id="array-label" class="array-label">3 rows of 4</div>
+          <div id="dot-array" class="dot-array" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div id="answer-grid" class="answer-grid" role="group" aria-label="Answer choices"></div>
+
+      <div id="feedback-panel" class="feedback-panel card" hidden aria-live="polite" aria-atomic="true">
+        <div id="feedback-icon" class="feedback-icon" aria-hidden="true">✓</div>
+        <div class="feedback-copy">
+          <h2 id="feedback-title">Nice work!</h2>
+          <p id="feedback-message"></p>
+        </div>
+        <button id="next-question" class="primary">Next Question</button>
+      </div>
+    </section>
+
+    <section id="screen-results" class="screen" aria-labelledby="results-title">
+      <div class="results-hero card">
+        <div class="trophy" aria-hidden="true">🏆</div>
+        <p class="eyebrow">QUEST COMPLETE</p>
+        <h1 id="results-title">Great effort!</h1>
+        <p id="results-summary">You practiced the 6s fact family.</p>
+        <div class="score-ring" aria-label="Accuracy score">
+          <span id="result-percent">0%</span>
+          <small>accuracy</small>
+        </div>
+      </div>
+
+      <div class="results-grid">
+        <article class="stat-card"><strong id="result-correct">0 / 8</strong><span>Correct answers</span></article>
+        <article class="stat-card"><strong id="result-streak">0</strong><span>Best streak</span></article>
+        <article class="stat-card"><strong id="result-rounds">1</strong><span>Rounds completed</span></article>
+      </div>
+
+      <div class="next-step card">
+        <span class="next-icon" aria-hidden="true">🧭</span>
+        <div>
+          <p class="eyebrow">SUGGESTED NEXT STEP</p>
+          <h2 id="next-step-title">Keep building this family</h2>
+          <p id="next-step-text"></p>
+        </div>
+      </div>
+
+      <div class="center-actions">
+        <button id="practice-again" class="primary large">Practice This Family Again</button>
+        <button class="secondary large" data-screen="progress">Go to My Progress</button>
+      </div>
+    </section>
+
+    <section id="screen-progress" class="screen" aria-labelledby="progress-title">
+      <div class="section-heading">
+        <p class="eyebrow">MY PROGRESS</p>
+        <h1 id="progress-title">Your multiplication map</h1>
+        <p>Accuracy is based on the rounds completed on this device.</p>
+      </div>
+
+      <div class="progress-summary-grid">
+        <article class="summary-card"><span>Completed rounds</span><strong id="total-rounds">0</strong></article>
+        <article class="summary-card"><span>Questions answered</span><strong id="total-questions">0</strong></article>
+        <article class="summary-card"><span>Overall accuracy</span><strong id="overall-accuracy">—</strong></article>
+      </div>
+
+      <div class="card progress-card">
+        <div class="card-heading-row">
+          <div><h2>Accuracy by fact family</h2><p>Choose a family below to practice it again.</p></div>
+          <div class="legend"><span class="legend-dot"></span>Needs practice → Strong</div>
+        </div>
+        <div id="progress-family-list" class="progress-family-list"></div>
+      </div>
+
+      <div class="next-step card">
+        <span class="next-icon" aria-hidden="true">⭐</span>
+        <div>
+          <p class="eyebrow">YOUR NEXT QUEST</p>
+          <h2 id="progress-next-title">Start with any family</h2>
+          <p id="progress-next-text">Pick a multiplication family from 0 through 12 and complete one short round.</p>
+        </div>
+      </div>
+
+      <div class="center-actions">
+        <button class="primary large" data-screen="goals">Choose a New Goal</button>
+        <button id="reset-progress" class="text-btn danger">Reset progress on this device</button>
+      </div>
+    </section>
+
+    <section id="screen-help" class="screen" aria-labelledby="help-title">
+      <div class="section-heading">
+        <p class="eyebrow">ABOUT &amp; HELP</p>
+        <h1 id="help-title">How Math Fact Quest works</h1>
+        <p>A simple practice tool for multiplication facts from 0 through 12.</p>
+      </div>
+
+      <div class="help-grid">
+        <article class="card help-card"><span aria-hidden="true">1️⃣</span><h2>Choose</h2><p>Select one fact family to focus on.</p></article>
+        <article class="card help-card"><span aria-hidden="true">2️⃣</span><h2>Practice</h2><p>Answer 8 short questions. Use the dot array when it helps.</p></article>
+        <article class="card help-card"><span aria-hidden="true">3️⃣</span><h2>Learn</h2><p>Read the quick feedback after each answer before moving on.</p></article>
+        <article class="card help-card"><span aria-hidden="true">4️⃣</span><h2>Grow</h2><p>Check your progress and follow the suggested next step.</p></article>
+      </div>
+
+      <div class="card help-details">
+        <h2>Helpful reminders</h2>
+        <ul>
+          <li>Multiplication can be thought of as equal groups.</li>
+          <li>Facts with 0 always have a product of 0.</li>
+          <li>Facts with 1 keep the other factor the same.</li>
+          <li>You can use the commutative property: 4 × 7 and 7 × 4 have the same product.</li>
+          <li>Speed can grow with practice, but accuracy comes first.</li>
+        </ul>
+      </div>
+
+      <div class="card privacy-note">
+        <strong>Privacy:</strong> This version uses no accounts, ads, analytics, database, or internet services. Practice progress is stored only in this browser using local storage.
+      </div>
+      <div class="center-actions"><button class="primary large" data-screen="goals">Start Practicing</button></div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Math Fact Quest</span>
+    <span>Designed for elementary multiplication practice • Sample educational app</span>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
