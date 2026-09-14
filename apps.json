@@ -39,6 +39,14 @@
       "description": "Reading Path helps Pre-K and kindergarten learners practice beginning sounds through picture choices, supportive feedback, and a simple digital coloring reward.",
       "url": "/white-reading/",
       "projectId": "494c32e1-d689-4ce6-a9f9-212774619963"
+    },
+    {
+      "title": "Table Timez",
+      "student": "Denaria Pringley",
+      "slug": "pringley-table-timez",
+      "description": "An app that teaches and helps students with multiplication facts. It will track progress using a multiplication table with it being blank when a kid has not learned a fact, red if they are bad at it, yellow if they are just learning, and gr",
+      "url": "/pringley-table-timez/",
+      "projectId": "f5e8ef64-e479-4621-bdba-67b1c6aad5ea"
     }
   ]
 }
