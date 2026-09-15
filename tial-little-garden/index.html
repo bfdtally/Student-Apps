@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Little Garden - Botanical Learning Engine</title>
+  <style>
+    :root {
+      --forest-dark: #1b4332;
+      --forest-mid: #2d6a4f;
+      --forest-light: #52b788;
+      --forest-subtle: #d8f3dc;
+      --coral-primary: #e07a5f;
+      --coral-hover: #f4a261;
+      --coral-soft: #fceade;
+      --bg-neutral: #f8f9fa;
+      --card-bg: #ffffff;
+      --text-dark: #212529;
+      --text-muted: #6c757d;
+      --border-radius: 16px;
+      --shadow: 0 4px 12px rgba(0,0,0,0.06);
+
+      /* Rarity Palette */
+      --common-color: #6c757d;
+      --uncommon-color: #2d6a4f;
+      --rare-color: #0284c7;
+      --epic-color: #7c3aed;
+      --legendary-color: #d97706;
+      --mythic-color: #dc2626;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+    body { background-color: var(--bg-neutral); color: var(--text-dark); display: flex; flex-direction: column; min-height: 100vh; }
+
+    .app-header {
+      background-color: var(--forest-dark);
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .app-brand { display: flex; align-items: center; gap: 0.75rem; font-size: 1.5rem; font-weight: 700; }
+    .app-container { display: flex; flex: 1; }
+
+    .sidebar-nav {
+      width: 260px;
+      background-color: var(--card-bg);
+      border-right: 1px solid #e9ecef;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1rem;
+      border: none;
+      background: none;
+      border-radius: 12px;
+      color: var(--text-dark);
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .nav-btn:hover { background-color: var(--forest-subtle); color: var(--forest-dark); }
+    .nav-btn.active { background-color: var(--forest-mid); color: white; }
+
+    .main-content { flex: 1; padding: 2rem; max-width: 1280px; margin: 0 auto; width: 100%; }
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+      border: 1px solid #f0f0f0;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+
+    .btn-primary {
+      background-color: var(--coral-primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background-color: var(--coral-hover); }
+
+    .btn-secondary {
+      background-color: var(--common-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-secondary:hover { background-color: #495057; }
+
+    .pot-display {
+      background: #fdf8f5;
+      border-radius: var(--border-radius);
+      padding: 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      border: 2px dashed var(--coral-primary);
+    }
+
+    .quiz-option {
+      display: block;
+      width: 100%;
+      padding: 0.85rem 1rem;
+      margin: 0.5rem 0;
+      text-align: left;
+      background: var(--bg-neutral);
+      border: 2px solid #e9ecef;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+    .quiz-option:hover:not(:disabled) { border-color: var(--forest-light); background: #f0fff4; }
+    .quiz-option:disabled { cursor: not-allowed; opacity: 0.6; }
+
+    .badge-rarity {
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      display: inline-block;
+      color: white;
+    }
+    .rarity-common { background: var(--common-color); }
+    .rarity-uncommon { background: var(--uncommon-color); }
+    .rarity-rare { background: var(--rare-color); }
+    .rarity-epic { background: var(--epic-color); }
+    .rarity-legendary { background: var(--legendary-color); }
+    .rarity-mythic { background: var(--mythic-color); }
+
+    .badge-category {
+      background: #e9ecef;
+      color: #495057;
+      padding: 0.2rem 0.5rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-left: 0.25rem;
+    }
+
+    .gallery-card {
+      border-radius: var(--border-radius);
+      padding: 1.25rem;
+      background: white;
+      box-shadow: var(--shadow);
+      border: 1px solid #e9ecef;
+      position: relative;
+      transition: transform 0.2s ease;
+    }
+    .gallery-card.locked { opacity: 0.6; background: #f1f3f5; border-style: dashed; }
+    .gallery-card:hover { transform: translateY(-3px); }
+
+    .missed-card {
+      border-left: 4px solid var(--coral-primary);
+      padding: 1rem;
+      margin-bottom: 1rem;
+      background: #fffdfc;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    }
+
+    .seed-box {
+      background: #f8f9fa;
+      border: 2px dashed var(--forest-mid);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .lock-banner {
+      background: #fff3cd;
+      color: #664d03;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      margin-top: 0.75rem;
+      border: 1px solid #ffecb5;
+    }
+
+    @media (max-width: 768px) {
+      .app-container { flex-direction: column; }
+      .sidebar-nav { width: 100%; flex-direction: row; overflow-x: auto; padding: 0.5rem; }
+      .nav-btn { padding: 0.5rem 0.75rem; font-size: 0.85rem; white-space: nowrap; }
+      .main-content { padding: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="app-brand"><span>🪴</span> Little Garden</div>
+    <div id="user-badge" style="font-size: 0.85rem; background: var(--forest-mid); padding: 0.4rem 0.8rem; border-radius: 12px;">
+      Grade: <span id="badge-grade">Middle School</span> | Subject: <span id="badge-subject">Botany</span>
+    </div>
+  </header>
+
+  <div class="app-container">
+    <nav class="sidebar-nav">
+      <button class="nav-btn active" onclick="switchScreen('home', event)">🏠 Home</button>
+      <button class="nav-btn" onclick="switchScreen('activity', event)">🧪 Plant Activity</button>
+      <button class="nav-btn" onclick="switchScreen('missed', event)">❌ Missed Questions (<span id="missed-count-badge">0</span>)</button>
+      <button class="nav-btn" onclick="switchScreen('botany-info', event)">🔍 Species Guide</button>
+      <button class="nav-btn" onclick="switchScreen('results', event)">✨ Garden Gallery</button>
+      <button class="nav-btn" onclick="switchScreen('progress', event)">📊 Progress</button>
+    </nav>
+
+    <main class="main-content">
+
+      <!-- HOME -->
+      <section id="screen-home" class="screen active">
+        <div class="card" style="background: var(--coral-soft); border-left: 6px solid var(--coral-primary);">
+          <h2>Welcome to Little Garden! 🌱</h2>
+          <p style="margin-top: 0.5rem;">Explore 60 unique real-world plants across 6 rarity tiers. High-rarity plants require unbroken correct streaks!</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="card">
+            <h3>Configuration & Calibration</h3>
+            
+            <label for="grade-select" style="font-weight:600; display:block; margin-top:0.75rem; margin-bottom:0.25rem;">Grade Level:</label>
+            <select id="grade-select" style="width:100%; padding:0.6rem; margin-bottom:1rem; border-radius:8px;" onchange="updateProfile()">
+              <option value="Middle School">Middle School (Grades 6–8)</option>
+              <option value="High School">High School (Grades 9–12)</option>
+            </select>
+
+            <label for="topic-select" style="font-weight:600; display:block; margin-bottom:0.25rem;">Science Subject:</label>
+            <select id="topic-select" style="width:100%; padding:0.6rem; margin-bottom:1rem; border-radius:8px;" onchange="updateProfile()">
+              <option value="Botany">Botany & Plant Physiology</option>
+              <option value="Biology">Biology & Ecology</option>
+              <option value="Chemistry">Chemistry & Soil Science</option>
+              <option value="Earth Science">Earth & Atmospheric Science</option>
+            </select>
+
+            <button class="btn-primary" onclick="switchScreen('activity', event)" style="width:100%;">Go to Pot 🌱</button>
+          </div>
+
+          <div class="card">
+            <h3>Current Seed Target</h3>
+            <div id="seed-selector-area" class="seed-box">
+              <div id="home-emoji" style="font-size: 3rem;">🌻</div>
+              <h3 id="home-flower-name" style="margin-top:0.5rem;">Common Sunflower</h3>
+              <p><span id="home-cat" class="badge-category">Flower</span></p>
+              <p style="margin-top:0.5rem;">Rarity: <span id="home-rarity" class="badge-rarity rarity-common">Common</span></p>
+              <p style="margin-top:0.5rem; font-size:0.85rem; color:var(--text-muted);" id="home-rule-text">Requires 3 Correct Answers</p>
+
+              <div id="lock-status-container"></div>
+
+              <div style="display:flex; gap:0.5rem; justify-content:center; margin-top:1.25rem;">
+                <button class="btn-primary" id="btn-plant-seed" onclick="acceptSeed()">Plant Seed 🪴</button>
+                <button class="btn-secondary" onclick="drawRandomSeed()">Draw New Seed 🎲</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ACTIVITY -->
+      <section id="screen-activity" class="screen">
+        <div class="grid-2">
+          <div class="card pot-display">
+            <div style="display:flex; align-items:center; gap:0.5rem;">
+              <h3 id="current-plant-title">Common Sunflower</h3>
+              <span id="category-badge" class="badge-category">Flower</span>
+            </div>
+            <p style="font-size:0.85rem; color:var(--text-muted); font-style:italic;" id="current-scientific-name">Helianthus annuus</p>
+            <div style="margin: 0.5rem 0;">
+              <span id="rarity-badge" class="badge-rarity rarity-common">Common</span>
+            </div>
+            
+            <svg id="plant-svg" width="220" height="250" viewBox="0 0 200 250">
+              <path d="M45,180 L155,180 L140,235 L60,235 Z" fill="#b06d4e" />
+              <rect x="40" y="170" width="120" height="15" rx="3" fill="#8c5035" />
+              <ellipse cx="100" cy="175" rx="55" ry="6" fill="#4a2c11" />
+              
+              <path id="svg-stem" d="M100,175 L100,175" stroke="#2d6a4f" stroke-width="6" fill="none" stroke-linecap="round"/>
+              <path id="svg-leaf-left" d="M100,140 Q70,120 75,145 Z" fill="#52b788" opacity="0"/>
+              <path id="svg-leaf-right" d="M100,120 Q130,100 125,125 Z" fill="#52b788" opacity="0"/>
+              
+              <g id="svg-flower-head" transform="translate(100,75) scale(0)">
+                <g id="svg-petals"></g>
+                <circle id="svg-center" cx="0" cy="0" r="14" fill="#3a2218" />
+              </g>
+            </svg>
+
+            <div style="width:100%; background:#e9ecef; border-radius:10px; height:14px; overflow:hidden; margin-top:0.5rem;">
+              <div id="progress-bar-fill" style="width:0%; background:var(--forest-light); height:100%; transition:width 0.4s;"></div>
+            </div>
+            <p id="progress-text" style="font-size:0.85rem; margin-top:0.5rem; font-weight:600;">0/3 Questions Answered</p>
+          </div>
+
+          <div class="card">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <h3>Knowledge Check 🧪</h3>
+              <span id="q-difficulty-tag" style="font-size:0.75rem; background:var(--forest-subtle); padding:0.2rem 0.5rem; border-radius:8px;">Common Tier</span>
+            </div>
+            <p id="question-text" style="margin:0.75rem 0; font-weight:600; min-height:48px; line-height:1.4;">Loading question...</p>
+            <div id="quiz-options"></div>
+            
+            <div id="feedback-box" style="margin-top:1rem; padding:0.75rem; border-radius:8px; display:none; font-size:0.9rem; line-height:1.4;"></div>
+            <p id="tries-left" style="font-size:0.8rem; color:var(--text-muted); margin-top:0.5rem;"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- MISSED QUESTIONS REVIEW HUB -->
+      <section id="screen-missed" class="screen">
+        <div class="card">
+          <h2>Missed Questions Review Hub ❌</h2>
+          <p>Review questions you answered incorrectly during active learning modules. Practice them here to reinforce learning.</p>
+        </div>
+        <div id="missed-questions-list"></div>
+      </section>
+
+      <!-- SPECIES GUIDE -->
+      <section id="screen-botany-info" class="screen">
+        <div class="card">
+          <h2>Botanical Field Guide 🔍</h2>
+          <p>Explore structural profiles, natural habitats, and characteristics across Flowers, Herbs, Plants, Trees, Fruits, and Vegetables.</p>
+        </div>
+        <div id="species-guide-container" class="grid-2"></div>
+      </section>
+
+      <!-- UNLOCK GALLERY -->
+      <section id="screen-results" class="screen">
+        <div class="card">
+          <h2>Botanical Collection & Gallery 🌸</h2>
+          <p>Track your progress across 60 species in 6 rarity tiers. Cultivated specimens render in color; locked species display unlock criteria.</p>
+        </div>
+        
+        <!-- Filter Tabs -->
+        <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;" id="rarity-filter-bar">
+          <button class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.85rem;" onclick="filterGallery('All')">All (60)</button>
+          <button class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.85rem; background:var(--common-color);" onclick="filterGallery('Common')">Common</button>
+          <button class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.85rem; background:var(--uncommon-color);" onclick="filterGallery('Uncommon')">Uncommon</button>
+          <button class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.85rem; background:var(--rare-color);" onclick="filterGallery('Rare')">Rare</button>
+          <button class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.85rem; background:var(--epic-color);" onclick="filterGallery('Epic')">Epic</button>
+          <button class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.85rem; background:var(--legendary-color);" onclick="filterGallery('Legendary')">Legendary</button>
+          <button class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.85rem; background:var(--mythic-color);" onclick="filterGallery('Mythic')">Mythic</button>
+        </div>
+
+        <div id="garden-gallery-grid" class="grid-3"></div>
+      </section>
+
+      <!-- PROGRESS -->
+      <section id="screen-progress" class="screen">
+        <div class="card">
+          <h2>Learning Dashboard 📊</h2>
+          <div class="grid-3" style="margin-top:1rem; text-align:center;">
+            <div style="background:var(--forest-subtle); padding:1rem; border-radius:12px;">
+              <h3 id="stat-grown">1 / 60</h3>
+              <p style="font-size:0.85rem;">Species Unlocked</p>
+            </div>
+            <div style="background:var(--coral-soft); padding:1rem; border-radius:12px;">
+              <h3 id="stat-correct">0</h3>
+              <p style="font-size:0.85rem;">Questions Mastered</p>
+            </div>
+            <div style="background:var(--bg-neutral); padding:1rem; border-radius:12px;">
+              <h3 id="stat-accuracy">100%</h3>
+              <p style="font-size:0.85rem;">Accuracy Rate</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
+    /* 60 SPECIMENS: 10 PER RARITY TIER ACROSS 6 CATEGORIES */
+    const botanicalDatabase = [
+      // COMMON TIER (10 Plants)
+      { id: "sunflower", name: "Common Sunflower", scientific: "Helianthus annuus", category: "Flower", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🌻", stemColor: "#2d6a4f", petalColor: "#f4a261", centerColor: "#3a2218", petalCount: 16, petalType: "oval", nativeTo: "North America", identifiers: "Broad golden ray florets around a central seed disk.", habitat: "Sunny prairies." },
+      { id: "basil", name: "Sweet Basil", scientific: "Ocimum basilicum", category: "Herb", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🌿", stemColor: "#52b788", petalColor: "#ffffff", centerColor: "#52b788", petalCount: 6, petalType: "slender", nativeTo: "Central Africa / SE Asia", identifiers: "Aromatic glossy green leaves with small white flower spikes.", habitat: "Warm tropical regions." },
+      { id: "dandelion", name: "Common Dandelion", scientific: "Taraxacum officinale", category: "Plant", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🌼", stemColor: "#74c69d", petalColor: "#ffb703", centerColor: "#fb8500", petalCount: 20, petalType: "spiked", nativeTo: "Eurasia", identifiers: "Bright yellow composite heads transforming into spherical seed pappi.", habitat: "Lawns and fields." },
+      { id: "oak_sapling", name: "English Oak", scientific: "Quercus robur", category: "Tree", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🌳", stemColor: "#582f0e", petalColor: "#70e000", centerColor: "#38b000", petalCount: 8, petalType: "lobed", nativeTo: "Europe", identifiers: "Lobed deciduous leaves producing acorns.", habitat: "Temperate broadleaf forests." },
+      { id: "tomato", name: "Garden Tomato", scientific: "Solanum lycopersicum", category: "Vegetable", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🍅", stemColor: "#38b000", petalColor: "#ff0000", centerColor: "#d00000", petalCount: 5, petalType: "berry", nativeTo: "South America", identifiers: "Red fleshy berry fruit with serrated compound leaves.", habitat: "Cultivated soils." },
+      { id: "apple_tree", name: "Wild Apple", scientific: "Malus domestica", category: "Fruit", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🍎", stemColor: "#6c584c", petalColor: "#ffb3c6", centerColor: "#ff4d6d", petalCount: 5, petalType: "oval", nativeTo: "Central Asia", identifiers: "Pink-white blossoms yielding sweet fleshy pome fruit.", habitat: "Orchards and woodlands." },
+      { id: "mint_common", name: "Spearmint", scientific: "Mentha spicata", category: "Herb", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🌱", stemColor: "#2b9348", petalColor: "#e0aaff", centerColor: "#7b2cbf", petalCount: 8, petalType: "spiked", nativeTo: "Europe / Asia", identifiers: "Serrated aromatic leaves with pale purple flower spikes.", habitat: "Moist river banks." },
+      { id: "marigold", name: "French Marigold", scientific: "Tagetes patula", category: "Flower", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🏵️", stemColor: "#2d6a4f", petalColor: "#ff7b00", centerColor: "#9e2a2b", petalCount: 14, petalType: "ruffled", nativeTo: "Mexico", identifiers: "Dense double-blooming orange/yellow carnation-like heads.", habitat: "Sunlit gardens." },
+      { id: "carrot", name: "Wild Carrot", scientific: "Daucus carota", category: "Vegetable", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "🥕", stemColor: "#52b788", petalColor: "#ff6b35", centerColor: "#f7b801", petalCount: 5, petalType: "taproot", nativeTo: "Europe", identifiers: "Feathery foliage with deep orange taproot.", habitat: "Disturbed open soils." },
+      { id: "clover", name: "White Clover", scientific: "Trifolium repens", category: "Plant", rarity: "Common", questionsReq: 3, strictMistake: false, emoji: "☘️", stemColor: "#74c69d", petalColor: "#f8f9fa", centerColor: "#d8f3dc", petalCount: 12, petalType: "globular", nativeTo: "Europe", identifiers: "Trifoliate leaves with white spherical flower heads.", habitat: "Grassy pastures." },
+
+      // UNCOMMON TIER (10 Plants)
+      { id: "lavender", name: "English Lavender", scientific: "Lavandula angustifolia", category: "Herb", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🪻", stemColor: "#40916c", petalColor: "#9d4edd", centerColor: "#5a189a", petalCount: 10, petalType: "spiked", nativeTo: "Mediterranean", identifiers: "Fragrant purple flower spikes atop grey-green stems.", habitat: "Dry, rocky soil." },
+      { id: "columbine", name: "Wild Columbine", scientific: "Aquilegia canadensis", category: "Flower", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🌺", stemColor: "#2d6a4f", petalColor: "#e07a5f", centerColor: "#f4a261", petalCount: 5, petalType: "spurred", nativeTo: "North America", identifiers: "Nodding red/yellow flowers with distinct backward spurs.", habitat: "Woodland slopes." },
+      { id: "birch", name: "Paper Birch", scientific: "Betula papyrifera", category: "Tree", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🪵", stemColor: "#d8f3dc", petalColor: "#e9ecef", centerColor: "#2d6a4f", petalCount: 8, petalType: "oval", nativeTo: "Northern North America", identifiers: "Peeling white bark with hanging catkin inflorescences.", habitat: "Boreal forests." },
+      { id: "strawberry", name: "Wild Strawberry", scientific: "Fragaria vesca", category: "Fruit", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🍓", stemColor: "#52b788", petalColor: "#ff0054", centerColor: "#ffbd00", petalCount: 5, petalType: "berry", nativeTo: "Northern Hemisphere", identifiers: "White 5-petaled bloom developing into red seed-speckled accessory fruit.", habitat: "Forest margins." },
+      { id: "bell_pepper", name: "Sweet Bell Pepper", scientific: "Capsicum annuum", category: "Vegetable", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🫑", stemColor: "#2d6a4f", petalColor: "#38b000", centerColor: "#ccff00", petalCount: 6, petalType: "hollow", nativeTo: "Central / South America", identifiers: "Glossy bell-shaped hollow fruit on sturdy stems.", habitat: "Warm sunlit garden beds." },
+      { id: "rosemary", name: "Rosemary", scientific: "Salvia rosmarinus", category: "Herb", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🌿", stemColor: "#52b788", petalColor: "#a2d2ff", centerColor: "#0077b6", petalCount: 4, petalType: "needle", nativeTo: "Mediterranean", identifiers: "Needle-like aromatic evergreen leaves with blue-purple blooms.", habitat: "Coastal rocky cliffs." },
+      { id: "pine", name: "Scots Pine", scientific: "Pinus sylvestris", category: "Tree", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🌲", stemColor: "#4a2c11", petalColor: "#2d6a4f", centerColor: "#1b4332", petalCount: 6, petalType: "cone", nativeTo: "Eurasia", identifiers: "Paired needle bundles and woody seed cones.", habitat: "Highland forests." },
+      { id: "aloe", name: "Aloe Vera", scientific: "Aloe barbadensis", category: "Plant", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🪴", stemColor: "#52b788", petalColor: "#74c69d", centerColor: "#2d6a4f", petalCount: 6, petalType: "succulent", nativeTo: "Arabian Peninsula", identifiers: "Fleshy serrated succulent leaves containing soothing hydrogel.", habitat: "Arid climates." },
+      { id: "zucchini", name: "Courgette Zucchini", scientific: "Cucurbita pepo", category: "Vegetable", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🥒", stemColor: "#2d6a4f", petalColor: "#ff9e00", centerColor: "#ff6000", petalCount: 5, petalType: "trumpet", nativeTo: "Mesoamerica", identifiers: "Large golden trumpet blooms yielding elongated green squash.", habitat: "Rich garden loam." },
+      { id: "peach", name: "Peach Blossom", scientific: "Prunus persica", category: "Fruit", rarity: "Uncommon", questionsReq: 4, strictMistake: false, emoji: "🍑", stemColor: "#6c584c", petalColor: "#ffb3c6", centerColor: "#ff0054", petalCount: 5, petalType: "oval", nativeTo: "China", identifiers: "Delicate pink spring blossoms preceding velvety drupe fruit.", habitat: "Temperate valleys." },
+
+      // RARE TIER (10 Plants - Flawless Streak Threshold Begins)
+      { id: "cherry", name: "Japanese Cherry Blossom", scientific: "Prunus serrulata", category: "Tree", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🌸", stemColor: "#582f0e", petalColor: "#ffb3c6", centerColor: "#fb6f92", petalCount: 5, petalType: "notched", nativeTo: "East Asia", identifiers: "Pink notched petals blooming in dense spring clusters.", habitat: "Temperate valleys." },
+      { id: "mint", name: "Peppermint", scientific: "Mentha x piperita", category: "Herb", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🌱", stemColor: "#2d6a4f", petalColor: "#d8f3dc", centerColor: "#2d6a4f", petalCount: 8, petalType: "spiked", nativeTo: "Europe", identifiers: "Serrated aromatic leaves with purple terminal flower spikes.", habitat: "Moist stream margins." },
+      { id: "pitcher", name: "Purple Pitcher Plant", scientific: "Sarracenia purpurea", category: "Plant", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🪴", stemColor: "#2d6a4f", petalColor: "#a2d2ff", centerColor: "#0284c7", petalCount: 5, petalType: "pitcher", nativeTo: "North American Bogs", identifiers: "Fluid-filled modified pitcher leaves for trapping insects.", habitat: "Nutrient-poor peat bogs." },
+      { id: "blueberry", name: "Highbush Blueberry", scientific: "Vaccinium corymbosum", category: "Fruit", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🫐", stemColor: "#40916c", petalColor: "#3a0ca3", centerColor: "#4cc9f0", petalCount: 5, petalType: "bell", nativeTo: "Eastern North America", identifiers: "Bell-shaped white blooms maturing into indigo berry clusters.", habitat: "Acidic bogs and barrens." },
+      { id: "eggplant", name: "Black Beauty Eggplant", scientific: "Solanum melongena", category: "Vegetable", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🍆", stemColor: "#2d6a4f", petalColor: "#7209b7", centerColor: "#f72585", petalCount: 6, petalType: "star", nativeTo: "South Asia", identifiers: "Star-shaped purple flowers producing deep purple glossy fruit.", habitat: "Warm subtropical plains." },
+      { id: "lotus", name: "Sacred Lotus", scientific: "Nelumbo nucifera", category: "Flower", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🪷", stemColor: "#52b788", petalColor: "#ffccd5", centerColor: "#ffb703", petalCount: 16, petalType: "layered", nativeTo: "Tropical Asia", identifiers: "Water-repellent emergent leaves with large multi-petaled pink blooms.", habitat: "Quiet ponds and lakes." },
+      { id: "fig", name: "Common Fig Tree", scientific: "Ficus carica", category: "Fruit", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🫒", stemColor: "#6c584c", petalColor: "#52b788", centerColor: "#80b918", petalCount: 4, petalType: "syconium", nativeTo: "Mediterranean / West Asia", identifiers: "Inverted floral syconium developing into sweet multi-seeded fruit.", habitat: "Rocky sunny hillsides." },
+      { id: "ginseng_rare", name: "Wild American Ginseng", scientific: "Panax quinquefolius", category: "Herb", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🌿", stemColor: "#2d6a4f", petalColor: "#d8f3dc", centerColor: "#ae2012", petalCount: 5, petalType: "palmate", nativeTo: "Appalachia", identifiers: "Palmate 5-foliate leaves with bright scarlet berries.", habitat: "Deep deciduous slope shade." },
+      { id: "redwood_sapling", name: "Coast Redwood", scientific: "Sequoia sempervirens", category: "Tree", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🌲", stemColor: "#3a2218", petalColor: "#1b4332", centerColor: "#081c15", petalCount: 6, petalType: "evergreen", nativeTo: "Pacific Coast USA", identifiers: "Flat dark green needles with thick fibrous fire-resistant bark.", habitat: "Foggy coastal valleys." },
+      { id: "venus_flytrap", name: "Venus Flytrap", scientific: "Dionaea muscipula", category: "Plant", rarity: "Rare", questionsReq: 5, strictMistake: true, emoji: "🪴", stemColor: "#2d6a4f", petalColor: "#74c69d", centerColor: "#d90429", petalCount: 6, petalType: "trap", nativeTo: "Coastal Carolinas", identifiers: "Hinged leaf lobes lined with sensitive trigger hairs.", habitat: "Nitrogen-poor coastal bogs." },
+
+      // EPIC TIER (10 Plants - Strict Streak)
+      { id: "orchid_ghost", name: "Ghost Orchid", scientific: "Dendrophylax lindenii", category: "Flower", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🤍", stemColor: "#52b788", petalColor: "#ffffff", centerColor: "#e0e1dd", petalCount: 5, petalType: "slender", nativeTo: "Florida / Cuba", identifiers: "Leafless epiphyte with white froglike blooms.", habitat: "Deep swamp forests." },
+      { id: "ginkgo", name: "Ginkgo Biloba", scientific: "Ginkgo biloba", category: "Tree", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🍂", stemColor: "#582f0e", petalColor: "#ca6702", centerColor: "#ee9b00", petalCount: 4, petalType: "fan", nativeTo: "China", identifiers: "Fan-shaped leaves on an ancient gymnosperm tree lineage.", habitat: "Temperate valleys." },
+      { id: "dragonfruit", name: "Pitaya Dragonfruit", scientific: "Selenicereus undatus", category: "Fruit", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🐉", stemColor: "#2d6a4f", petalColor: "#ff006e", centerColor: "#ffbe0b", petalCount: 12, petalType: "scaled", nativeTo: "Central America", identifiers: "Night-blooming climbing cactus with vibrant scaled pink fruit.", habitat: "Tropical dry forests." },
+      { id: "saffron", name: "Saffron Crocus", scientific: "Crocus sativus", category: "Herb", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🪻", stemColor: "#40916c", petalColor: "#7209b7", centerColor: "#d90429", petalCount: 6, petalType: "oval", nativeTo: "Greece", identifiers: "Purple 6-lobed flower bearing three valuable crimson stigmas.", habitat: "Arid Mediterranean scrub." },
+      { id: "artichoke", name: "Globe Artichoke", scientific: "Cynara cardunculus", category: "Vegetable", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🥦", stemColor: "#2d6a4f", petalColor: "#38b000", centerColor: "#7209b7", petalCount: 16, petalType: "bract", nativeTo: "Mediterranean", identifiers: "Edible immature flower bud with spiky purple thistle florets.", habitat: "Coastal Mediterranean soils." },
+      { id: "bamboo", name: "Moso Bamboo", scientific: "Phyllostachys edulis", category: "Plant", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🎍", stemColor: "#52b788", petalColor: "#74c69d", centerColor: "#1b4332", petalCount: 4, petalType: "culm", nativeTo: "China", identifiers: "Rapidly growing hollow wooden culms with lanceolate leaves.", habitat: "Subtropical bamboo groves." },
+      { id: "cacao", name: "Cacao Tree", scientific: "Theobroma cacao", category: "Tree", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🍫", stemColor: "#4a2c11", petalColor: "#ffb703", centerColor: "#6a040f", petalCount: 5, petalType: "cauliflory", nativeTo: "Amazon Basin", identifiers: "Cauliflorous trunk blooms producing chocolate-yielding seed pods.", habitat: "Tropical rainforest understory." },
+      { id: "passion_fruit", name: "Passion Flower", scientific: "Passiflora edulis", category: "Fruit", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🫛", stemColor: "#2d6a4f", petalColor: "#8338ec", centerColor: "#ff006e", petalCount: 10, petalType: "corona", nativeTo: "South America", identifiers: "Intricate floral ring with fringe filaments and purple aromatic fruit.", habitat: "Subtropical thickets." },
+      { id: "wasabi", name: "Wild Wasabi", scientific: "Eutrema japonicum", category: "Herb", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🥬", stemColor: "#38b000", petalColor: "#ffffff", centerColor: "#70e000", petalCount: 4, petalType: "cross", nativeTo: "Japan", identifiers: "Heart-shaped leaves with pungent ground rhizomes.", habitat: "Shaded mountain river beds." },
+      { id: "sensitive_plant", name: "Mimosa Pudica", scientific: "Mimosa pudica", category: "Plant", rarity: "Epic", questionsReq: 6, strictMistake: true, emoji: "🌿", stemColor: "#2d6a4f", petalColor: "#ff006e", centerColor: "#ffb703", petalCount: 12, petalType: "puff", nativeTo: "Central & South America", identifiers: "Thigmonastic leaflets that fold inward upon physical contact.", habitat: "Disturbed tropical soils." },
+
+      // LEGENDARY TIER (10 Plants - Strict Streak)
+      { id: "corpse_flower", name: "Corpse Flower", scientific: "Amorphophallus titanum", category: "Flower", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🥀", stemColor: "#2d6a4f", petalColor: "#6a040f", centerColor: "#ffb703", petalCount: 1, petalType: "spadix", nativeTo: "Sumatra", identifiers: "Massive foul-odored inflorescence with central spadix.", habitat: "Equatorial rainforests." },
+      { id: "baobab", name: "Grandidier's Baobab", scientific: "Adansonia grandidieri", category: "Tree", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🪵", stemColor: "#6c584c", petalColor: "#ffffff", centerColor: "#ffb703", petalCount: 5, petalType: "massive", nativeTo: "Madagascar", identifiers: "Massive barrel-like water-storing trunk with high crowns.", habitat: "Dry deciduous thickets." },
+      { id: "rafflesia", name: "Monster Flower", scientific: "Rafflesia arnoldii", category: "Flower", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🌺", stemColor: "#6a040f", petalColor: "#d90429", centerColor: "#ffb703", petalCount: 5, petalType: "mottled", nativeTo: "Borneo & Sumatra", identifiers: "World's largest individual flower; stemless parasitic bloom.", habitat: "Primary rainforest vines." },
+      { id: "vanilla", name: "Vanilla Orchid", scientific: "Vanilla planifolia", category: "Herb", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🍦", stemColor: "#52b788", petalColor: "#fff3b0", centerColor: "#e07a5f", petalCount: 6, petalType: "trumpet", nativeTo: "Mesoamerica", identifiers: "Climbing vine orchid whose cured seed pods yield vanilla.", habitat: "Hot humid rainforests." },
+      { id: "miracle_fruit", name: "Miracle Berry", scientific: "Synsepalum dulcificum", category: "Fruit", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🍒", stemColor: "#2d6a4f", petalColor: "#ff0054", centerColor: "#9e2a2b", petalCount: 5, petalType: "oval", nativeTo: "West Africa", identifiers: "Red berry containing miraculin, transforming sour tastes to sweet.", habitat: "Tropical lowland soils." },
+      { id: "black_truffle", name: "Périgord Black Truffle", scientific: "Tuber melanosporum", category: "Vegetable", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🧆", stemColor: "#3a2218", petalColor: "#212529", centerColor: "#495057", petalCount: 4, petalType: "subterranean", nativeTo: "Southern Europe", identifiers: "Subterranean fruiting body forming mycorrhizal oak associations.", habitat: "Calcareous oak roots." },
+      { id: "welwitschia", name: "Welwitschia", scientific: "Welwitschia mirabilis", category: "Plant", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🌵", stemColor: "#6c584c", petalColor: "#ca6702", centerColor: "#9b2226", petalCount: 2, petalType: "strap", nativeTo: "Namib Desert", identifiers: "Produces only two continuously growing strap leaves over centuries.", habitat: "Hyper-arid desert plains." },
+      { id: "bristlecone", name: "Bristlecone Pine", scientific: "Pinus longaeva", category: "Tree", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🌲", stemColor: "#3a2218", petalColor: "#2d6a4f", centerColor: "#000000", petalCount: 5, petalType: "gnarled", nativeTo: "Western USA", identifiers: "Gnarled ancient resinous wood surviving several millennia.", habitat: "High subalpine dolomite ridges." },
+      { id: "black_lotus", name: "Black Velvet Lotus", scientific: "Lotus niger", category: "Flower", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🖤", stemColor: "#1b4332", petalColor: "#2b2b2b", centerColor: "#d90429", petalCount: 12, petalType: "layered", nativeTo: "Highland Asia", identifiers: "Ultra-rare deep violet-black velvet petals.", habitat: "Alpine glacial lakes." },
+      { id: "sundew", name: "Cape Sundew", scientific: "Drosera capensis", category: "Plant", rarity: "Legendary", questionsReq: 7, strictMistake: true, emoji: "🪄", stemColor: "#2d6a4f", petalColor: "#ff006e", centerColor: "#ffffff", petalCount: 5, petalType: "glandular", nativeTo: "South Africa", identifiers: "Linear leaves covered in mucilaginous insect-trapping tentacles.", habitat: "Fynbos mountain bogs." },
+
+      // MYTHIC TIER (10 Plants - Strict Streak)
+      { id: "tree_of_life", name: "Tree of Life", scientific: "Arbor vitae mythica", category: "Tree", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "✨", stemColor: "#d97706", petalColor: "#70e000", centerColor: "#ffffff", petalCount: 12, petalType: "glowing", nativeTo: "Ancient Mythos", identifiers: "Eternal glowing golden foliage said to bestow vitality.", habitat: "Primordial Sanctuaries." },
+      { id: "golden_apple", name: "Hesperidean Apple", scientific: "Malus aurum", category: "Fruit", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "🍏", stemColor: "#b45309", petalColor: "#fbbf24", centerColor: "#ffffff", petalCount: 5, petalType: "golden", nativeTo: "Ancient Mythos", identifiers: "Radiant solid golden pome glowing with internal light.", habitat: "Enchanted Groves." },
+      { id: "philosophers_herb", name: "Philosopher's Herb", scientific: "Herba alchemica", category: "Herb", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "🧪", stemColor: "#7c3aed", petalColor: "#c084fc", centerColor: "#38bdf8", petalCount: 7, petalType: "crystalline", nativeTo: "Alchemical Lore", identifiers: "Crystalline leaves capable of transmuting soil nutrients.", habitat: "High-energy Ley Lines." },
+      { id: "starlight_flower", name: "Astral Starlight Bloom", scientific: "Astra nitens", category: "Flower", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "⭐", stemColor: "#0284c7", petalColor: "#38bdf8", centerColor: "#fef08a", petalCount: 8, petalType: "stellar", nativeTo: "Cosmic Realm", identifiers: "Petals shimmering like distant stellar constellations.", habitat: "High Alpine Peaks." },
+      { id: "phoenix_plant", name: "Phoenix Fern", scientific: "Pyrrhus revitalis", category: "Plant", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "🔥", stemColor: "#dc2626", petalColor: "#f97316", centerColor: "#fef08a", petalCount: 10, petalType: "fiery", nativeTo: "Volcano Slopes", identifiers: "Erupts into harmless embers before regenerating instantly.", habitat: "Active Geothermal Vents." },
+      { id: "ambrosia_root", name: "Ambrosial Root", scientific: "Radix ambrosia", category: "Vegetable", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "🍠", stemColor: "#059669", petalColor: "#a7f3d0", centerColor: "#f59e0b", petalCount: 6, petalType: "luminous", nativeTo: "Olympian Valleys", identifiers: "Sweet nectar-dripping taproot cultivated by ancients.", habitat: "Cloud Forest Terraces." },
+      { id: "moonlight_moss", name: "Luminescent Moonmoss", scientific: "Bryum lunaris", category: "Plant", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "🌙", stemColor: "#0d9488", petalColor: "#99f6e4", centerColor: "#ffffff", petalCount: 12, petalType: "spore", nativeTo: "Lunar Crag Caves", identifiers: "Emits a soft blue bioluminescent glow in total dark.", habitat: "Subterranean Grottoes." },
+      { id: "solar_orchid", name: "Solar Flare Orchid", scientific: "Orchis solaris", category: "Flower", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "☀️", stemColor: "#ea580c", petalColor: "#facc15", centerColor: "#dc2626", petalCount: 6, petalType: "flame", nativeTo: "Equatorial Crests", identifiers: "Absorbs sunlight to radiate warm ambient thermal energy.", habitat: "High Desert Mesas." },
+      { id: "dragon_heart_tree", name: "Dragon Blood Sovereign", scientific: "Dracaena cinnabari rex", category: "Tree", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "🐉", stemColor: "#78350f", petalColor: "#991b1b", centerColor: "#ef4444", petalCount: 8, petalType: "umbrella", nativeTo: "Socotra Island", identifiers: "Umbrella canopy exuding deep crimson resin sap.", habitat: "Arid Granite Peaks." },
+      { id: "chronos_vine", name: "Chronos Time-Vine", scientific: "Vitis temporalis", category: "Fruit", rarity: "Mythic", questionsReq: 8, strictMistake: true, emoji: "⏳", stemColor: "#4c1d95", petalColor: "#a855f7", centerColor: "#e0e7ff", petalCount: 5, petalType: "spiral", nativeTo: "Temporal Rift", identifiers: "Flowered grapes blooming and fruiting simultaneously.", habitat: "Ancient Sundial Terraces." }
+    ];
+
+    /* QUESTION BANK ACCORDING TO SUBJECT AND GRADE */
+    const questionBank = {
+      "Botany": {
+        "Middle School": [
+          { q: "What is the primary green pigment in plants responsible for absorbing light energy during photosynthesis?", options: ["Chlorophyll", "Carotenoid", "Anthocyanin", "Xanthophyll"], correct: 0, exp: "Chlorophyll is the green pigment in chloroplasts that absorbs light energy for photosynthesis." },
+          { q: "Which plant vascular tissue is responsible for transporting water and dissolved minerals upward from roots?", options: ["Phloem", "Xylem", "Cambium", "Epidermis"], correct: 1, exp: "Xylem transports water and minerals up from the roots, while phloem transports sugars." },
+          { q: "What tiny openings on the underside of leaves regulate gas exchange and water transpiration?", options: ["Stomata", "Lenticels", "Trichomes", "Cuticles"], correct: 0, exp: "Stomata are microscopic pores flanked by guard cells that control gas exchange and water loss." },
+          { q: "Which part of a flower becomes the fruit after successful fertilization?", options: ["Petal", "Ovary", "Stigma", "Anther"], correct: 1, exp: "The ovary swells and matures into fruit enclosing seeds after fertilization." },
+          { q: "What is the primary function of plant root hairs?", options: ["Photosynthesis", "Increasing surface area for water absorption", "Anchoring against strong winds", "Attracting pollinators"], correct: 1, exp: "Root hairs vastly expand root surface area to absorb water and soil minerals." },
+          { q: "What process describes a plant growing toward a light source?", options: ["Gravitropism", "Phototropism", "Thigmotropism", "Hydrotropism"], correct: 1, exp: "Phototropism is directional growth in response to light, mediated by auxin hormones." },
+          { q: "Which gas is absorbed by plants during photosynthesis and released during cellular respiration?", options: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Methane"], correct: 1, exp: "Carbon dioxide is taken in during photosynthesis to build glucose." },
+          { q: "What reproductive structure do non-flowering gymnosperms (like pine trees) use instead of flowers?", options: ["Cones", "Spores", "Tubers", "Bulbs"], correct: 0, exp: "Gymnosperms ('naked seeds') produce seeds inside male and female cones." }
+        ],
+        "High School": [
+          { q: "During light-dependent photosynthetic reactions, what molecule is split to release electrons and oxygen gas?", options: ["Glucose", "Water (H2O)", "Carbon Dioxide", "ATP"], correct: 1, exp: "Photolysis splits H2O molecules at Photosystem II, generating O2 gas, protons, and electrons." },
+          { q: "Which plant hormone promotes stem elongation, seed germination, and flowering?", options: ["Abscisic Acid", "Gibberellin", "Ethylene", "Cytokinin"], correct: 1, exp: "Gibberellins stimulate cell elongation, break seed dormancy, and promote germination." },
+          { q: "In C4 plants like corn, where does the Calvin Cycle primarily take place?", options: ["Mesophyll cells", "Bundle sheath cells", "Epidermal cells", "Xylem vessels"], correct: 1, exp: "C4 plants fix CO2 in mesophyll cells then transfer it to bundle sheath cells for the Calvin cycle." },
+          { q: "What structural polymer gives plant cell walls rigidity and strength?", options: ["Chitin", "Cellulose", "Glycogen", "Peptidoglycan"], correct: 1, exp: "Cellulose, a glucose polymer, provides structural integrity to plant cell walls." },
+          { q: "Which hormone is responsible for apical dominance, inhibiting lateral bud growth?", options: ["Auxin", "Ethylene", "Cytokinin", "Gibberellin"], correct: 0, exp: "Auxin produced in shoot tips travels downward, suppressing lateral branch development." },
+          { q: "What is the function of the Casparian strip in plant roots?", options: ["Forces water through endodermal cell membranes", "Increases root hair surface area", "Stores excess starch", "Secretes growth hormones"], correct: 0, exp: "The waxy Casparian strip forces water and minerals to cross select cell membranes into xylem." }
+        ]
+      },
+      "Biology": {
+        "Middle School": [
+          { q: "Which organelle is known as the powerhouse of the cell where ATP energy is synthesized?", options: ["Nucleus", "Mitochondria", "Ribosome", "Vacuole"], correct: 1, exp: "Mitochondria convert nutrients into ATP through cellular respiration." },
+          { q: "What fundamental process converts glucose and oxygen into carbon dioxide, water, and ATP?", options: ["Photosynthesis", "Cellular Respiration", "Fermentation", "Transpiration"], correct: 1, exp: "Cellular respiration breaks down glucose in the presence of oxygen to release usable cellular energy." },
+          { q: "In an ecological food chain, organisms that produce their own food are called:", options: ["Consumers", "Autotrophs (Producers)", "Decomposers", "Heterotrophs"], correct: 1, exp: "Autotrophs manufacture organic food molecules from simple inorganic substances." },
+          { q: "Which macromolecule stores genetic information in living organisms?", options: ["Proteins", "DNA (Nucleic Acid)", "Lipids", "Carbohydrates"], correct: 1, exp: "DNA carries the genetic instructions for development and functioning." },
+          { q: "What is the primary role of decomposers like fungi and bacteria in ecosystems?", options: ["Fixing nitrogen gas", "Recycling nutrients back into soil", "Producing atmospheric oxygen", "Consuming apex predators"], correct: 1, exp: "Decomposers break down dead organic matter, returning inorganic nutrients to the soil." }
+        ],
+        "High School": [
+          { q: "Which enzyme is responsible for unwinding double-stranded DNA during replication?", options: ["DNA Polymerase", "Helicase", "Ligase", "RNA Polymerase"], correct: 1, exp: "Helicase breaks hydrogen bonds between nitrogenous bases to unzip the DNA helix." },
+          { q: "What mechanism of evolution occurs when chance events cause random changes in allele frequencies?", options: ["Natural Selection", "Genetic Drift", "Gene Flow", "Adaptive Radiation"], correct: 1, exp: "Genetic drift represents random fluctuations in allele frequency, especially in small populations." },
+          { q: "Which phase of meiosis features crossing over between homologous chromosomes?", options: ["Prophase I", "Metaphase II", "Anaphase I", "Telophase II"], correct: 0, exp: "Synapsis and crossing over occur during Prophase I, generating genetic diversity." }
+        ]
+      },
+      "Chemistry": {
+        "Middle School": [
+          { q: "What is the pH level of pure distilled water at room temperature?", options: ["Acidic (pH 3)", "Neutral (pH 7)", "Basic (pH 11)", "Slightly Acidic (pH 5)"], correct: 1, exp: "Pure water has an equal concentration of H+ and OH- ions, yielding a neutral pH of 7." },
+          { q: "Which primary macro-nutrient in soil fertilizers supports leaf growth and foliage development?", options: ["Nitrogen (N)", "Phosphorus (P)", "Potassium (K)", "Calcium (Ca)"], correct: 0, exp: "Nitrogen is essential for protein synthesis and chlorophyll development for green leaves." },
+          { q: "What state of matter has a definite volume but takes the shape of its container?", options: ["Solid", "Liquid", "Gas", "Plasma"], correct: 1, exp: "Liquids maintain a constant volume while conforming to the shape of their container." }
+        ],
+        "High School": [
+          { q: "Which type of chemical bond involves the sharing of electron pairs between nonmetal atoms?", options: ["Ionic", "Covalent", "Metallic", "Hydrogen"], correct: 1, exp: "Covalent bonds form when nonmetal atoms share valence electrons to achieve stability." },
+          { q: "According to Le Chatelier's principle, how does an exothermic reaction respond to an increase in temperature?", options: ["Shifts toward reactants", "Shifts toward products", "No effect", "Halts completely"], correct: 0, exp: "Adding heat to an exothermic reaction shifts the equilibrium left toward reactants." }
+        ]
+      },
+      "Earth Science": {
+        "Middle School": [
+          { q: "Which soil horizon layer contains the highest concentration of organic humus and nutrients?", options: ["Bedrock (R)", "Subsoil (B)", "Topsoil (A)", "Parent Material (C)"], correct: 2, exp: "Topsoil (Horizon A) is rich in organic matter, humus, and active soil organisms." },
+          { q: "What phase of the water cycle involves water vapor cooling and changing into liquid droplets?", options: ["Evaporation", "Condensation", "Transpiration", "Precipitation"], correct: 1, exp: "Condensation transforms water vapor into cloud liquid droplets as it rises and cools." }
+        ],
+        "High School": [
+          { q: "Which mineral group makes up over 90% of Earth's continental and oceanic crust?", options: ["Carbonates", "Silicates", "Oxides", "Sulfides"], correct: 1, exp: "Silicate minerals composed of silicon and oxygen tetrahedra dominate Earth's crust." },
+          { q: "What atmospheric layer contains the ozone layer that absorbs harmful solar ultraviolet radiation?", options: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"], correct: 1, exp: "The stratosphere contains the ozone layer (O3) absorbing high-energy UV radiation." }
+        ]
+      }
+    };
+
+    /* GLOBAL APP STATE */
+    let state = {
+      grade: "Middle School",
+      subject: "Botany",
+      selectedSeed: botanicalDatabase[0], // Sunflower default
+      unlockedIds: ["sunflower"],
+      currentQuestionsAnswered: 0,
+      activeQuestionIndex: 0,
+      currentQuestionPool: [],
+      missedQuestions: [],
+      stats: { totalAnswered: 0, totalCorrect: 0 },
+      galleryFilter: "All"
+    };
+
+    /* INITIALIZATION */
+    window.addEventListener("DOMContentLoaded", () => {
+      updateProfile();
+      renderGallery();
+      renderSpeciesGuide();
+      renderMissedQuestions();
+      updateDashboardStats();
+    });
+
+    /* NAVIGATION ROUTING */
+    function switchScreen(screenId, event) {
+      if(event) event.preventDefault();
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
+      
+      const targetScreen = document.getElementById("screen-" + screenId);
+      if(targetScreen) targetScreen.classList.add("active");
+      
+      const btn = Array.from(document.querySelectorAll(".nav-btn")).find(b => b.getAttribute("onclick").includes(`'${screenId}'`));
+      if(btn) btn.classList.add("active");
+
+      if (screenId === 'activity') {
+        loadQuestionForActivity();
+      }
+    }
+
+    /* PROFILE & CALIBRATION */
+    function updateProfile() {
+      state.grade = document.getElementById("grade-select").value;
+      state.subject = document.getElementById("topic-select").value;
+
+      document.getElementById("badge-grade").innerText = state.grade;
+      document.getElementById("badge-subject").innerText = state.subject;
+
+      refreshHomeSeedUI();
+    }
+
+    /* SEED SELECTION & RARITY LOCKING MECHANICS */
+    function drawRandomSeed() {
+      const randomIndex = Math.floor(Math.random() * botanicalDatabase.length);
+      state.selectedSeed = botanicalDatabase[randomIndex];
+      refreshHomeSeedUI();
+    }
+
+    function refreshHomeSeedUI() {
+      const plant = state.selectedSeed;
+      document.getElementById("home-emoji").innerText = plant.emoji;
+      document.getElementById("home-flower-name").innerText = plant.name;
+      document.getElementById("home-cat").innerText = plant.category;
+      
+      const raritySpan = document.getElementById("home-rarity");
+      raritySpan.innerText = plant.rarity;
+      raritySpan.className = `badge-rarity rarity-${plant.rarity.toLowerCase()}`;
+
+      const ruleText = plant.strictMistake 
+        ? `Requires ${plant.questionsReq} Flawless Unbroken Answers (1 Mistake Resets)` 
+        : `Requires ${plant.questionsReq} Correct Answers`;
+      document.getElementById("home-rule-text").innerText = ruleText;
+
+      // Lock Status check
+      const lockContainer = document.getElementById("lock-status-container");
+      lockContainer.innerHTML = "";
+      
+      const isUnlocked = isPlantUnlocked(plant);
+      const plantBtn = document.getElementById("btn-plant-seed");
+
+      if(!isUnlocked) {
+        const reqTier = getRequiredPriorTier(plant.rarity);
+        lockContainer.innerHTML = `<div class="lock-banner">🔒 Locked! Grow at least one <strong>${reqTier}</strong> plant to unlock ${plant.rarity} seeds.</div>`;
+        plantBtn.disabled = true;
+        plantBtn.style.opacity = "0.5";
+      } else {
+        plantBtn.disabled = false;
+        plantBtn.style.opacity = "1";
+      }
+    }
+
+    function isPlantUnlocked(plant) {
+      if(plant.rarity === "Common") return true;
+      const tiers = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"];
+      const currentTierIdx = tiers.indexOf(plant.rarity);
+      const prevTier = tiers[currentTierIdx - 1];
+
+      // Check if user has unlocked at least one plant from previous tier
+      return botanicalDatabase.some(p => p.rarity === prevTier && state.unlockedIds.includes(p.id));
+    }
+
+    function getRequiredPriorTier(rarity) {
+      const tiers = ["Common", "Uncommon", "Rare", "Epic", "Legendary", "Mythic"];
+      return tiers[tiers.indexOf(rarity) - 1] || "Common";
+    }
+
+    function acceptSeed() {
+      state.currentQuestionsAnswered = 0;
+      setupActivityUI();
+      switchScreen("activity");
+    }
+
+    /* PLANT ACTIVITY & SVG GRAPHICS */
+    function setupActivityUI() {
+      const plant = state.selectedSeed;
+      document.getElementById("current-plant-title").innerText = plant.name;
+      document.getElementById("category-badge").innerText = plant.category;
+      document.getElementById("current-scientific-name").innerText = plant.scientific;
+      
+      const rBadge = document.getElementById("rarity-badge");
+      rBadge.innerText = plant.rarity;
+      rBadge.className = `badge-rarity rarity-${plant.rarity.toLowerCase()}`;
+
+      document.getElementById("q-difficulty-tag").innerText = `${plant.rarity} Tier`;
+
+      updatePlantSVGProgress();
+    }
+
+    function updatePlantSVGProgress() {
+      const plant = state.selectedSeed;
+      const progressRatio = state.currentQuestionsAnswered / plant.questionsReq;
+      const fillPct = Math.min(100, Math.round(progressRatio * 100));
+
+      document.getElementById("progress-bar-fill").style.width = fillPct + "%";
+      document.getElementById("progress-text").innerText = `${state.currentQuestionsAnswered}/${plant.questionsReq} Questions Answered`;
+
+      // SVG Dynamic Alterations
+      const stem = document.getElementById("svg-stem");
+      const leafL = document.getElementById("svg-leaf-left");
+      const leafR = document.getElementById("svg-leaf-right");
+      const flowerHead = document.getElementById("svg-flower-head");
+      const centerCircle = document.getElementById("svg-center");
+
+      stem.setAttribute("stroke", plant.stemColor);
+      centerCircle.setAttribute("fill", plant.centerColor);
+
+      // Height grows with progress
+      const targetY = 175 - (95 * progressRatio);
+      stem.setAttribute("d", `M100,175 L100,${targetY}`);
+
+      if(progressRatio >= 0.33) {
+        leafL.setAttribute("opacity", "1");
+        leafL.setAttribute("fill", plant.stemColor);
+      } else {
+        leafL.setAttribute("opacity", "0");
+      }
+
+      if(progressRatio >= 0.66) {
+        leafR.setAttribute("opacity", "1");
+        leafR.setAttribute("fill", plant.stemColor);
+      } else {
+        leafR.setAttribute("opacity", "0");
+      }
+
+      if(progressRatio >= 1.0) {
+        flowerHead.setAttribute("transform", `translate(100, ${targetY}) scale(1)`);
+        renderPetalsSVG(plant);
+      } else if(progressRatio > 0.3) {
+        const scaleVal = (progressRatio - 0.3) / 0.7;
+        flowerHead.setAttribute("transform", `translate(100, ${targetY}) scale(${scaleVal.toFixed(2)})`);
+        renderPetalsSVG(plant);
+      } else {
+        flowerHead.setAttribute("transform", "translate(100,75) scale(0)");
+      }
+    }
+
+    function renderPetalsSVG(plant) {
+      const container = document.getElementById("svg-petals");
+      container.innerHTML = "";
+      const count = plant.petalCount || 8;
+      const angleStep = (2 * Math.PI) / count;
+
+      for(let i = 0; i < count; i++) {
+        const angle = i * angleStep;
+        const deg = (angle * 180) / Math.PI;
+        const petal = document.createElementNS("http://www.w3.org/2000/svg", "ellipse");
+        
+        petal.setAttribute("cx", "0");
+        petal.setAttribute("cy", "-26");
+        petal.setAttribute("rx", "6");
+        petal.setAttribute("ry", "16");
+        petal.setAttribute("fill", plant.petalColor);
+        petal.setAttribute("transform", `rotate(${deg})`);
+        container.appendChild(petal);
+      }
+    }
+
+    /* QUIZ & KNOWLEDGE CHECK LOGIC */
+    function loadQuestionForActivity() {
+      const pool = questionBank[state.subject]?.[state.grade] || questionBank["Botany"]["Middle School"];
+      state.currentQuestionPool = pool;
+
+      const randomQ = pool[Math.floor(Math.random() * pool.length)];
+      state.activeQuestion = randomQ;
+
+      document.getElementById("question-text").innerText = randomQ.q;
+      const optionsContainer = document.getElementById("quiz-options");
+      optionsContainer.innerHTML = "";
+
+      const feedbackBox = document.getElementById("feedback-box");
+      feedbackBox.style.display = "none";
+
+      randomQ.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option";
+        btn.innerText = `${String.fromCharCode(65 + idx)}. ${optText}`;
+        btn.onclick = () => evaluateAnswer(idx);
+        optionsContainer.appendChild(btn);
+      });
+
+      const seed = state.selectedSeed;
+      if(seed.strictMistake) {
+        document.getElementById("tries-left").innerText = "⚠️ Strict Tier: Any mistake will destroy seed progress!";
+      } else {
+        document.getElementById("tries-left").innerText = "Standard Tier: Mistakes will not reset correct streaks.";
+      }
+    }
+
+    function evaluateAnswer(selectedIndex) {
+      const q = state.activeQuestion;
+      const seed = state.selectedSeed;
+      const feedbackBox = document.getElementById("feedback-box");
+      const optionBtns = document.querySelectorAll(".quiz-option");
+
+      optionBtns.forEach(b => b.disabled = true);
+      state.stats.totalAnswered++;
+
+      if(selectedIndex === q.correct) {
+        state.stats.totalCorrect++;
+        state.currentQuestionsAnswered++;
+        
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#d1e7dd";
+        feedbackBox.style.color = "#0f5132";
+        feedbackBox.innerHTML = `<strong>Correct! 🎉</strong> ${q.exp}`;
+
+        updatePlantSVGProgress();
+
+        if(state.currentQuestionsAnswered >= seed.questionsReq) {
+          if(!state.unlockedIds.includes(seed.id)) {
+            state.unlockedIds.push(seed.id);
+          }
+          setTimeout(() => {
+            alert(`🌟 Congratulations! You have successfully cultivated and unlocked the ${seed.name}!`);
+            renderGallery();
+            updateDashboardStats();
+            switchScreen("results");
+          }, 600);
+        } else {
+          setTimeout(loadQuestionForActivity, 1800);
+        }
+
+      } else {
+        // Track missed question
+        if(!state.missedQuestions.some(mq => mq.q === q.q)) {
+          state.missedQuestions.push({ ...q, subject: state.subject, grade: state.grade });
+          document.getElementById("missed-count-badge").innerText = state.missedQuestions.length;
+          renderMissedQuestions();
+        }
+
+        feedbackBox.style.display = "block";
+        feedbackBox.style.background = "#f8d7da";
+        feedbackBox.style.color = "#842029";
+
+        if(seed.strictMistake) {
+          state.currentQuestionsAnswered = 0;
+          updatePlantSVGProgress();
+          feedbackBox.innerHTML = `<strong>Incorrect! ❌</strong> ${q.exp}<br><br>⚠️ <em>Seed Destroyed! Unbroken streak reset to 0.</em>`;
+        } else {
+          feedbackBox.innerHTML = `<strong>Incorrect! ❌</strong> ${q.exp}`;
+        }
+
+        setTimeout(loadQuestionForActivity, 2500);
+      }
+
+      updateDashboardStats();
+    }
+
+    /* MISSED QUESTIONS HUB */
+    function renderMissedQuestions() {
+      const container = document.getElementById("missed-questions-list");
+      container.innerHTML = "";
+
+      if(state.missedQuestions.length === 0) {
+        container.innerHTML = "<p style='color:var(--text-muted); font-style:italic;'>No missed questions yet! Keep practicing in the Plant Activity.</p>";
+        return;
+      }
+
+      state.missedQuestions.forEach((item, idx) => {
+        const card = document.createElement("div");
+        card.className = "missed-card";
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <strong>Question ${idx + 1} (${item.subject} - ${item.grade})</strong>
+            <button class="btn-secondary" style="padding:0.25rem 0.6rem; font-size:0.75rem;" onclick="removeMissed(${idx})">Mark Mastered ✓</button>
+          </div>
+          <p style="margin:0.5rem 0; font-weight:600;">${item.q}</p>
+          <p style="color:#0f5132; background:#d1e7dd; padding:0.4rem 0.6rem; border-radius:6px; font-size:0.85rem;">
+            <strong>Correct Answer:</strong> ${item.options[item.correct]}
+          </p>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-top:0.4rem;">${item.exp}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function removeMissed(idx) {
+      state.missedQuestions.splice(idx, 1);
+      document.getElementById("missed-count-badge").innerText = state.missedQuestions.length;
+      renderMissedQuestions();
+    }
+
+    /* SPECIES FIELD GUIDE */
+    function renderSpeciesGuide() {
+      const container = document.getElementById("species-guide-container");
+      container.innerHTML = "";
+
+      botanicalDatabase.forEach(p => {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.style.borderLeft = `5px solid var(--${p.rarity.toLowerCase()}-color)`;
+        card.innerHTML = `
+          <div style="display:flex; align-items:center; gap:0.75rem;">
+            <span style="font-size:2rem;">${p.emoji}</span>
+            <div>
+              <h3 style="margin:0;">${p.name}</h3>
+              <p style="font-size:0.8rem; font-style:italic; color:var(--text-muted);">${p.scientific}</p>
+            </div>
+          </div>
+          <div style="margin:0.5rem 0;">
+            <span class="badge-rarity rarity-${p.rarity.toLowerCase()}">${p.rarity}</span>
+            <span class="badge-category">${p.category}</span>
+          </div>
+          <p style="font-size:0.85rem; margin-top:0.5rem;"><strong>Native To:</strong> ${p.nativeTo}</p>
+          <p style="font-size:0.85rem;"><strong>Habitat:</strong> ${p.habitat}</p>
+          <p style="font-size:0.85rem; margin-top:0.25rem;"><strong>Key Identifiers:</strong> ${p.identifiers}</p>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* GALLERY & COLLECTION */
+    function filterGallery(rarity) {
+      state.galleryFilter = rarity;
+      renderGallery();
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById("garden-gallery-grid");
+      grid.innerHTML = "";
+
+      const filtered = state.galleryFilter === "All" 
+        ? botanicalDatabase 
+        : botanicalDatabase.filter(p => p.rarity === state.galleryFilter);
+
+      filtered.forEach(p => {
+        const isUnlocked = state.unlockedIds.includes(p.id);
+        const card = document.createElement("div");
+        card.className = `gallery-card ${isUnlocked ? '' : 'locked'}`;
+        
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+            <span style="font-size:2.5rem; filter:${isUnlocked ? 'none' : 'grayscale(100%)'};">${p.emoji}</span>
+            <span class="badge-rarity rarity-${p.rarity.toLowerCase()}">${p.rarity}</span>
+          </div>
+          <h4 style="margin-top:0.5rem;">${p.name}</h4>
+          <p style="font-size:0.75rem; font-style:italic; color:var(--text-muted);">${p.scientific}</p>
+          <p style="margin-top:0.4rem;"><span class="badge-category">${p.category}</span></p>
+          <p style="font-size:0.8rem; margin-top:0.5rem; color:${isUnlocked ? 'var(--forest-mid)' : 'var(--text-muted)'}; font-weight:600;">
+            ${isUnlocked ? '✓ Cultivated' : `🔒 Needs ${getRequiredPriorTier(p.rarity)} Tier`}
+          </p>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    /* DASHBOARD STATS */
+    function updateDashboardStats() {
+      document.getElementById("stat-grown").innerText = `${state.unlockedIds.length} / ${botanicalDatabase.length}`;
+      document.getElementById("stat-correct").innerText = state.stats.totalCorrect;
+
+      const acc = state.stats.totalAnswered > 0 
+        ? Math.round((state.stats.totalCorrect / state.stats.totalAnswered) * 100) 
+        : 100;
+      document.getElementById("stat-accuracy").innerText = `${acc}%`;
+    }
+  </script>
+</body>
+</html>
