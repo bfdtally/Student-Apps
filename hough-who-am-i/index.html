@@ -1,0 +1,1578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Who Am I👤? - Historical Detective Game</title>
+  <style>
+    /* ==========================================
+       THEME & COLOR PALETTE: Ocean & Sky
+       ========================================== */
+    :root {
+      --sky-light: #e0f2fe;
+      --sky-base: #38bdf8;
+      --ocean-deep: #0369a1;
+      --ocean-dark: #0c4a6e;
+      --accent-gold: #f59e0b;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --bg-cream: #f8fafc;
+      --card-bg: #ffffff;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --shadow-soft: 0 4px 20px -2px rgba(3, 105, 161, 0.1);
+      --font-family: 'Fredoka', 'Quicksand', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-cream);
+      color: var(--text-dark);
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    :focus-visible {
+      outline: 3px solid var(--accent-gold);
+      outline-offset: 2px;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: linear-gradient(135deg, var(--ocean-deep), var(--ocean-dark));
+      color: white;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .brand-badge {
+      background-color: var(--accent-gold);
+      color: var(--ocean-dark);
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    nav ul {
+      display: flex;
+      list-style: none;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav button {
+      background: transparent;
+      border: none;
+      color: white;
+      padding: 0.5rem 0.85rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: inherit;
+      transition: background 0.2s ease, transform 0.1s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    nav button:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    nav button.active {
+      background-color: white;
+      color: var(--ocean-deep);
+    }
+
+    /* Layout & Cards */
+    main {
+      max-width: 1100px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    .status-bar {
+      background: var(--card-bg);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: var(--shadow-soft);
+      border: 2px solid var(--sky-light);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .avatar-preview-small {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .avatar-icon-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: var(--sky-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      border: 3px solid var(--sky-base);
+      transition: all 0.3s ease;
+    }
+
+    .stats-summary {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .stat-pill {
+      background: var(--sky-light);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-weight: 700;
+      color: var(--ocean-deep);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.9rem;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(0,0,0,0.05);
+      margin-bottom: 1.5rem;
+    }
+
+    h1, h2, h3 {
+      color: var(--ocean-dark);
+      margin-bottom: 0.75rem;
+    }
+
+    p {
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background-color: var(--sky-base);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background-color: var(--ocean-deep);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background-color: #e2e8f0;
+      color: var(--text-dark);
+    }
+
+    .btn-secondary:hover {
+      background-color: #cbd5e1;
+    }
+
+    .btn-accent {
+      background-color: var(--accent-gold);
+      color: var(--ocean-dark);
+    }
+
+    .btn-accent:hover {
+      background-color: #d97706;
+      color: white;
+    }
+
+    /* Custom Avatar Creator & Shop */
+    .avatar-creator {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .shop-section-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin: 1rem 0 0.5rem 0;
+      color: var(--ocean-dark);
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .shop-grid {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .shop-item {
+      padding: 0.5rem 0.8rem;
+      border-radius: var(--radius-sm);
+      border: 2px solid #e2e8f0;
+      background: white;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: all 0.2s ease;
+    }
+
+    .shop-item:hover {
+      border-color: var(--sky-base);
+    }
+
+    .shop-item.selected {
+      background: var(--sky-light);
+      border-color: var(--ocean-deep);
+      color: var(--ocean-dark);
+    }
+
+    .shop-item.locked {
+      background: #f1f5f9;
+      color: var(--text-muted);
+      border-style: dashed;
+    }
+
+    .shop-item.locked:hover {
+      border-color: var(--accent-gold);
+    }
+
+    /* Activity Elements */
+    .mystery-card {
+      background: linear-gradient(180deg, #ffffff 0%, #f0f9ff 100%);
+      border: 3px solid var(--sky-base);
+      position: relative;
+    }
+
+    .clue-box {
+      background: white;
+      border-left: 5px solid var(--accent-gold);
+      padding: 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      margin: 1rem 0;
+      font-size: 1.1rem;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .option-card {
+      background: white;
+      border: 2px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+
+    .option-card:hover {
+      border-color: var(--sky-base);
+      background: var(--sky-light);
+    }
+
+    .feedback-banner {
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      margin-top: 1rem;
+      display: none;
+      font-weight: 600;
+    }
+
+    .feedback-banner.correct {
+      display: block;
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #34d399;
+    }
+
+    .feedback-banner.incorrect {
+      display: block;
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #f87171;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 16px;
+      background-color: #e2e8f0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 0.5rem 0 1.5rem 0;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--sky-base), var(--ocean-deep));
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .figure-card {
+      background: white;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      border: 1px solid #e2e8f0;
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .figure-avatar {
+      font-size: 2.5rem;
+      background: var(--sky-light);
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    footer {
+      background-color: white;
+      border-top: 1px solid #e2e8f0;
+      padding: 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: auto;
+    }
+
+    @media (max-width: 600px) {
+      .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      nav ul {
+        width: 100%;
+        justify-content: space-between;
+      }
+      .stats-summary {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <span>🔍 Who Am I?</span>
+        <span class="brand-badge">Elementary Edition</span>
+      </div>
+      <nav aria-label="Main Navigation">
+        <ul>
+          <li><button onclick="switchScreen('home')" id="nav-home" class="active">🏠 Home</button></li>
+          <li><button onclick="switchScreen('learn')" id="nav-learn">📚 Learn</button></li>
+          <li><button onclick="switchScreen('activity')" id="nav-activity">🕵️ Activity</button></li>
+          <li><button onclick="switchScreen('results')" id="nav-results">🏆 Results</button></li>
+          <li><button onclick="switchScreen('resources')" id="nav-resources">📂 Resources</button></li>
+          <li><button onclick="switchScreen('progress')" id="nav-progress">📊 Progress</button></li>
+          <li><button onclick="switchScreen('about')" id="nav-about">❓ About</button></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Application Body -->
+  <main>
+
+    <!-- Detective Dashboard Status Banner -->
+    <section class="status-bar" aria-label="Detective Profile Summary">
+      <div class="avatar-preview-small">
+        <div class="avatar-icon-circle" id="global-avatar-icon">🕵️</div>
+        <div>
+          <strong id="global-detective-name">Detective Sam</strong>
+          <div style="font-size:0.85rem; color:var(--ocean-deep); font-weight:700;" id="global-detective-title">Junior Sleuth</div>
+        </div>
+      </div>
+      <div class="stats-summary">
+        <div class="stat-pill">⭐ <span id="stat-points">0</span> pts</div>
+        <div class="stat-pill">🧩 <span id="stat-solved">0</span>/50 Solved</div>
+        <div class="stat-pill">🎖️ <span id="stat-badges">1</span> Badges</div>
+      </div>
+    </section>
+
+    <!-- 1. HOME SCREEN -->
+    <article id="screen-home" class="screen active">
+      <div class="card" style="text-align: center; padding: 2.5rem 1.5rem;">
+        <h1>Welcome to History Detectives! 🔍</h1>
+        <p style="font-size: 1.15rem; max-width: 600px; margin: 0 auto 1.5rem auto;">
+          Solve historical mysteries, earn points, and use your rewards to unlock exclusive avatar icons, themes, and detective titles!
+        </p>
+        <button class="btn btn-accent" onclick="switchScreen('activity')" style="font-size: 1.2rem;">
+          🚀 Start First Case Now (+10 pts)
+        </button>
+      </div>
+
+      <!-- Avatar Customizer & Shop -->
+      <div class="card avatar-creator">
+        <div style="text-align: center;">
+          <h2>🎨 Detective Customizer</h2>
+          <p>Personalize your detective identity using your earned points!</p>
+          
+          <div style="margin: 1.5rem 0;">
+            <div id="avatar-display" style="font-size: 4rem; width: 110px; height: 110px; background: var(--sky-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto; border: 4px solid var(--sky-base); transition: all 0.3s ease;">
+              🕵️
+            </div>
+            <div id="avatar-title-display" style="margin-top: 0.75rem; font-weight: 700; color: var(--ocean-dark);">
+              Junior Sleuth
+            </div>
+          </div>
+
+          <div style="text-align: left; margin-top: 1rem;">
+            <label style="font-weight:700;" for="detective-input-name">Detective Name:</label>
+            <input type="text" id="detective-input-name" value="Detective Sam" onchange="updateDetectiveName(this.value)" style="width: 100%; padding: 0.6rem; border-radius: var(--radius-sm); border: 2px solid #cbd5e1; font-family: inherit; margin-top: 0.3rem;" />
+          </div>
+        </div>
+
+        <div>
+          <h2>🛍️ Avatar Shop</h2>
+          <p style="font-size:0.9rem; color:var(--text-muted);">Earn 10 points for every correct mystery solved!</p>
+
+          <!-- Avatar Icons Category -->
+          <div class="shop-section-title">
+            <span>Avatar Icons</span>
+            <span style="font-size:0.8rem; color:var(--text-muted);">Unlocks at point totals</span>
+          </div>
+          <div class="shop-grid" id="shop-icons-container">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Color Themes Category -->
+          <div class="shop-section-title">
+            <span>Border Colors</span>
+          </div>
+          <div class="shop-grid" id="shop-colors-container">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- Detective Titles Category -->
+          <div class="shop-section-title">
+            <span>Detective Titles</span>
+          </div>
+          <div class="shop-grid" id="shop-titles-container">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. LEARN SCREEN -->
+    <article id="screen-learn" class="screen">
+      <div class="card">
+        <h2>📚 Historical Briefing Room</h2>
+        <p>Review key facts about all 50 notable historical figures before testing your skills in the field!</p>
+        <div class="grid-2" style="margin-top: 1.5rem;" id="learn-cards-container"></div>
+        <div style="margin-top:1.5rem; text-align:right;">
+          <button class="btn" onclick="switchScreen('activity')">Go to Practice Activity ➔</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. ACTIVITY SCREEN -->
+    <article id="screen-activity" class="screen">
+      <div class="card mystery-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+          <span class="brand-badge" id="mystery-case-num">Case #1</span>
+          <span style="font-weight: 700; color: var(--ocean-deep);" id="hint-tracker">Clues Unlocked: 1/3</span>
+        </div>
+
+        <h2 style="margin-top: 1rem;" id="mystery-title">Mystery Historical Figure</h2>
+        
+        <div class="clue-box" id="clue-display">Loading clue...</div>
+
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <button class="btn btn-secondary" onclick="revealExtraHint()" id="hint-btn">💡 Request Extra Hint</button>
+        </div>
+
+        <h3>Who am I? Make your guess:</h3>
+        <div class="options-grid" id="options-container"></div>
+
+        <div id="feedback-display" class="feedback-banner"></div>
+
+        <div style="margin-top: 1.5rem; display: flex; justify-content: flex-end; gap: 1rem;">
+          <button class="btn btn-accent" id="next-btn" onclick="nextQuestion()" style="display: none;">Next Mystery Case ➔</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 4. RESULTS SCREEN -->
+    <article id="screen-results" class="screen">
+      <div class="card" style="text-align: center;">
+        <h2>🏆 Detective Case Report</h2>
+        <p id="results-summary">Complete detective challenges in the Activity tab to see your detailed evaluation!</p>
+        
+        <div style="margin: 2rem 0; background: var(--sky-light); padding: 1.5rem; border-radius: var(--radius-md);">
+          <h3>Current Points Balance</h3>
+          <div style="font-size: 3rem; font-weight: 700; color: var(--ocean-deep);" id="results-score-display">0 pts</div>
+          <p id="results-encouragement">Head over to the Home screen to spend your points in the Avatar Shop!</p>
+        </div>
+
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <button class="btn" onclick="switchScreen('activity')">Try Another Case</button>
+          <button class="btn btn-accent" onclick="switchScreen('home')">Go to Avatar Shop 🛍️</button>
+        </div>
+      </div>
+    </article>
+
+    <!-- 5. RESOURCES SCREEN -->
+    <article id="screen-resources" class="screen">
+      <div class="card">
+        <h2>📂 Field Reference Guide</h2>
+        <p>Use these reference cheat-sheets and historical timelines to assist during mystery solving.</p>
+        
+        <div style="display: grid; gap: 1rem; margin-top: 1rem;">
+          <div style="border: 1px solid #e2e8f0; padding: 1rem; border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong>📜 Elementary History Timeline Reference</strong>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Key eras from American and World History</div>
+            </div>
+            <button class="btn btn-secondary" onclick="alert('Sample Resource: Timeline guide loaded successfully!')">View Guide</button>
+          </div>
+          <div style="border: 1px solid #e2e8f0; padding: 1rem; border-radius: var(--radius-sm); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <strong>🗝️ Detective Mystery Clue Decoder</strong>
+              <div style="font-size: 0.85rem; color: var(--text-muted);">Tips for identifying key keywords in historical quotes</div>
+            </div>
+            <button class="btn btn-secondary" onclick="alert('Sample Resource: Clue Decoder loaded successfully!')">View Guide</button>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 6. PROGRESS SCREEN -->
+    <article id="screen-progress" class="screen">
+      <div class="card">
+        <h2>📊 Detective Progress Dashboard</h2>
+        <p>Track discovered figures, earned points, and overall course level completion.</p>
+
+        <label style="font-weight: 700; display: block; margin-top: 1rem;">Overall Mastery Progress:</label>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="overall-progress-bar"></div>
+        </div>
+
+        <div class="grid-2" style="margin-top: 1.5rem;">
+          <div style="background: white; border: 2px solid var(--sky-light); padding: 1rem; border-radius: var(--radius-md);">
+            <h3>🔓 Unlocked Detective Badges</h3>
+            <ul style="list-style: none; margin-top: 0.5rem;" id="badge-list">
+              <li>🎖️ <strong>Junior Sleuth</strong> (Starter Badge)</li>
+            </ul>
+          </div>
+          <div style="background: white; border: 2px solid var(--sky-light); padding: 1rem; border-radius: var(--radius-md);">
+            <h3>📁 Discovered Figures</h3>
+            <div id="discovered-list" style="margin-top: 0.5rem; font-size: 0.95rem; color: var(--text-muted);">
+              No historical figures fully solved yet. Head over to Activity to make your first discovery!
+            </div>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 7. ABOUT SCREEN -->
+    <article id="screen-about" class="screen">
+      <div class="card">
+        <h2>❓ About "Who Am I👤?"</h2>
+        <p>
+          <strong>Who Am I👤?</strong> is an educational game designed for 3rd, 4th, and 5th-grade Social Studies classrooms. 
+          By presenting history through interactive clues and customizable detective shop rewards, students stay engaged while learning key figures.
+        </p>
+
+        <h3 style="margin-top: 1.5rem;">🔒 Safety & Privacy</h3>
+        <p style="font-size: 0.95rem; color: var(--text-muted);">
+          This application operates completely locally in your browser. It does not harvest personal student data, require external database logins, or connect to third-party payment gateways.
+        </p>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer>
+    <p>Who Am I👤? Educational App Prototype • Designed for Elementary School Social Studies</p>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    /* ==========================================
+       DATA STRUCTURES (50 HISTORICAL FIGURES)
+       ========================================== */
+    const mysteryData = [
+      {
+        id: 1, title: "The Underground Railroad Conductor", icon: "🗽",
+        clues: [
+          "I escaped from slavery in Maryland and helped over 300 others reach freedom.",
+          "I served as a scout and spy for the Union Army during the American Civil War.",
+          "I was known by the nickname 'Moses' for leading my people to safety."
+        ],
+        options: ["Harriet Tubman", "Rosa Parks", "Sojourner Truth", "Clara Barton"],
+        answer: "Harriet Tubman",
+        explanation: "Harriet Tubman was a courageous leader who risked her life repeatedly to rescue enslaved people using a network of safe houses called the Underground Railroad."
+      },
+      {
+        id: 2, title: "The Kite & Lightning Inventor", icon: "⚡",
+        clues: [
+          "I invented the lightning rod, bifocals, and the Franklin stove.",
+          "I helped draft the United States Declaration of Independence.",
+          "I performed a famous experiment using a kite during a thunderstorm."
+        ],
+        options: ["Thomas Edison", "Benjamin Franklin", "Alexander Graham Bell", "George Washington"],
+        answer: "Benjamin Franklin",
+        explanation: "Benjamin Franklin was a Founding Father of the United States who was also renowned globally as a scientist, writer, and inventor."
+      },
+      {
+        id: 3, title: "The Aviation Pioneer", icon: "✈️",
+        clues: [
+          "I set many aviation records and wrote best-selling books about my flights.",
+          "I was the first woman to fly solo nonstop across the Atlantic Ocean.",
+          "My airplane was named the 'Lockheed Vega 5B'."
+        ],
+        options: ["Bessie Coleman", "Amelia Earhart", "Sally Ride", "Mae Jemison"],
+        answer: "Amelia Earhart",
+        explanation: "Amelia Earhart was a groundbreaking aviator who inspired generations of women to pursue careers in aviation and science."
+      },
+      {
+        id: 4, title: "The Renaissance Master", icon: "🎨",
+        clues: [
+          "I was an Italian artist, sculptor, architect, and scientist.",
+          "I drew detailed conceptual designs for flying machines and helicopters in my notebooks.",
+          "I painted the famous portrait known as the Mona Lisa."
+        ],
+        options: ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Michelangelo"],
+        answer: "Leonardo da Vinci",
+        explanation: "Leonardo da Vinci exemplified the Renaissance ideal, excelling across art, anatomy, engineering, and natural science."
+      },
+      {
+        id: 5, title: "The Civil Rights Leader", icon: "🏛️",
+        clues: [
+          "I was a minister who led peaceful marches and boycotts for civil rights.",
+          "I delivered the famous 'I Have a Dream' speech in Washington, D.C. in 1963.",
+          "I received the Nobel Peace Prize for fighting racial inequality through nonviolence."
+        ],
+        options: ["Martin Luther King Jr.", "Malcolm X", "Frederick Douglass", "John Lewis"],
+        answer: "Martin Luther King Jr.",
+        explanation: "Dr. Martin Luther King Jr. was a central leader of the American Civil Rights Movement, advocating for nonviolent activism to achieve equality."
+      },
+      {
+        id: 6, title: "The Bus Boycott Heroine", icon: "🚌",
+        clues: [
+          "My refusal to give up my seat on a segregated bus sparked the Montgomery Bus Boycott.",
+          "I worked for many years as a secretary for the NAACP in Alabama.",
+          "Congress called me 'the first lady of civil rights' and 'the mother of the freedom movement'."
+        ],
+        options: ["Ruby Bridges", "Rosa Parks", "Coretta Scott King", "Ida B. Wells"],
+        answer: "Rosa Parks",
+        explanation: "Rosa Parks's quiet courage in 1955 ignited a landmark civil rights effort that ended legally enforced segregation on public transit."
+      },
+      {
+        id: 7, title: "The First U.S. President", icon: "⚔️",
+        clues: [
+          "I served as Commander-in-Chief of the Continental Army during the American Revolution.",
+          "I presided over the convention that drafted the United States Constitution.",
+          "I was unanimously elected as the very first President of the United States."
+        ],
+        options: ["John Adams", "Thomas Jefferson", "George Washington", "Alexander Hamilton"],
+        answer: "George Washington",
+        explanation: "George Washington led American military forces to victory in the Revolutionary War and set crucial precedents as the nation's inaugural president."
+      },
+      {
+        id: 8, title: "The Agricultural Scientist", icon: "🌱",
+        clues: [
+          "I was born into slavery and grew up to become a world-renowned scientist and educator at Tuskegee Institute.",
+          "I developed over 300 products made from peanuts, including dyes, plastics, and soap.",
+          "I taught Southern farmers how to restore soil nutrients using crop rotation."
+        ],
+        options: ["George Washington Carver", "Booker T. Washington", "W.E.B. Du Bois", "Garrett Morgan"],
+        answer: "George Washington Carver",
+        explanation: "George Washington Carver revolutionized agricultural science and helped small farmers improve soil quality and crop yields."
+      },
+      {
+        id: 9, title: "The Egyptian Pharaoh", icon: "👑",
+        clues: [
+          "I ruled ancient Egypt during the 18th Dynasty as a young pharaoh.",
+          "My tomb in the Valley of the Kings remained hidden for over 3,000 years until discovered in 1922.",
+          "I am often called the 'Boy King' and my gold burial mask is famous worldwide."
+        ],
+        options: ["Ramses II", "King Tutankhamun", "Cleopatra", "Akhenaten"],
+        answer: "King Tutankhamun",
+        explanation: "King Tutankhamun's nearly intact tomb provided historians with invaluable treasures and insights into ancient Egyptian culture."
+      },
+      {
+        id: 10, title: "The First Woman in Space", icon: "🚀",
+        clues: [
+          "I studied physics and became a famous astronaut in NASA's space shuttle program.",
+          "In 1983, I boarded the Space Shuttle Challenger and made history.",
+          "I became the first American woman to travel into outer space."
+        ],
+        options: ["Sally Ride", "Mae Jemison", "Katherine Johnson", "Kalpana Chawla"],
+        answer: "Sally Ride",
+        explanation: "Dr. Sally Ride was a physicist and NASA astronaut who broke barriers for women in science and space exploration."
+      },
+      {
+        id: 11, title: "The Author & Abolitionist", icon: "📖",
+        clues: [
+          "I escaped from slavery and learned to read and write, becoming a powerful orator and author.",
+          "I published a famous autobiography and established the abolitionist newspaper called 'The North Star'.",
+          "I advised President Abraham Lincoln during the Civil War and fought for women's voting rights."
+        ],
+        options: ["Frederick Douglass", "Booker T. Washington", "W.E.B. Du Bois", "Langston Hughes"],
+        answer: "Frederick Douglass",
+        explanation: "Frederick Douglass was an author, public speaker, and abolitionist leader who dedicated his life to human rights and ending slavery."
+      },
+      {
+        id: 12, title: "The Polish-French Scientist", icon: "🔬",
+        clues: [
+          "I conducted pioneering research on radioactivity and discovered two elements: polonium and radium.",
+          "I was the first woman to win a Nobel Prize and the first person to win Nobel Prizes in two different sciences.",
+          "During World War I, I developed mobile X-ray units to help army doctors treat wounded soldiers."
+        ],
+        options: ["Marie Curie", "Rosalind Franklin", "Ada Lovelace", "Lise Meitner"],
+        answer: "Marie Curie",
+        explanation: "Marie Curie was a trailblazing physicist and chemist whose groundbreaking discoveries advanced medical physics and chemistry."
+      },
+      {
+        id: 13, title: "The Civil War President", icon: "🎩",
+        clues: [
+          "I was born in a log cabin in Kentucky and served as the 16th President of the United States.",
+          "I issued the Emancipation Proclamation in 1863 and gave the famous Gettysburg Address.",
+          "I successfully preserved the Union throughout the American Civil War."
+        ],
+        options: ["Abraham Lincoln", "Ulysses S. Grant", "Andrew Johnson", "Teddy Roosevelt"],
+        answer: "Abraham Lincoln",
+        explanation: "Abraham Lincoln guided the nation through its greatest constitutional crisis, preserving the Union and abolishing slavery."
+      },
+      {
+        id: 14, title: "The Red Cross Founder", icon: "🩹",
+        clues: [
+          "I was a courageous nurse who brought supplies and medical care to soldiers on Civil War battlefields.",
+          "People called me the 'Angel of the Battlefield' because of my dedication to helping the wounded.",
+          "In 1881, I founded the American Red Cross to aid people during disasters and emergencies."
+        ],
+        options: ["Clara Barton", "Florence Nightingale", "Dorothea Dix", "Elizabeth Blackwell"],
+        answer: "Clara Barton",
+        explanation: "Clara Barton was a pioneering nurse and humanitarian who founded the American Red Cross to assist soldiers and disaster victims."
+      },
+      {
+        id: 15, title: "The Native American Guide", icon: "🌲",
+        clues: [
+          "I belonged to the Lemhi Shoshone tribe in the Pacific Northwest.",
+          "I served as an interpreter and guide for the Lewis and Clark Expedition across North America.",
+          "My knowledge of wild plants, languages, and geography helped the expedition navigate the Rocky Mountains to the Pacific Ocean."
+        ],
+        options: ["Sacagawea", "Pocahontas", "Wilma Mankiller", "Maria Tallchief"],
+        answer: "Sacagawea",
+        explanation: "Sacagawea was an indispensable guide and interpreter whose skills were vital to the success of the Lewis and Clark Expedition."
+      },
+      {
+        id: 16, title: "The Astronomer & Surveyor", icon: "📐",
+        clues: [
+          "I was a self-taught African American mathematician, astronomer, and almanac author.",
+          "I built a working wooden clock entirely by hand using carved parts.",
+          "I helped survey the original boundaries of Washington, D.C., the U.S. capital city."
+        ],
+        options: ["Benjamin Banneker", "Benjamin Franklin", "George Washington Carver", "Eli Whitney"],
+        answer: "Benjamin Banneker",
+        explanation: "Benjamin Banneker was an accomplished early American scientist whose mathematical skill was pivotal in surveying the nation's capital."
+      },
+      {
+        id: 17, title: "The Women's Rights Champion", icon: "🗳️",
+        clues: [
+          "I traveled the country giving speeches advocating for women's right to vote.",
+          "In 1872, I was arrested for voting illegally in the presidential election.",
+          "The 19th Amendment, which granted women the right to vote, was named in my honor."
+        ],
+        options: ["Susan B. Anthony", "Elizabeth Cady Stanton", "Lucy Stone", "Lucretia Mott"],
+        answer: "Susan B. Anthony",
+        explanation: "Susan B. Anthony spent over 50 years campaigning for women's suffrage, leading directly to women securing the right to vote."
+      },
+      {
+        id: 18, title: "The Baseball Trailblazer", icon: "⚾",
+        clues: [
+          "I wore jersey number 42 for the Brooklyn Dodgers.",
+          "In 1947, I broke the color barrier in Major League Baseball.",
+          "I won the Rookie of the Year Award and was named an All-Star multiple times."
+        ],
+        options: ["Jackie Robinson", "Hank Aaron", "Satchel Paige", "Willie Mays"],
+        answer: "Jackie Robinson",
+        explanation: "Jackie Robinson broke racial barriers in professional sports, demonstrating immense strength and dignity in the face of prejudice."
+      },
+      {
+        id: 19, title: "The Moonwalk Astronaut", icon: "🌕",
+        clues: [
+          "I was a naval aviator and test pilot before joining NASA's space program.",
+          "I commanded the Apollo 11 lunar landing mission in July 1969.",
+          "I famously stated: 'That's one small step for man, one giant leap for mankind.'"
+        ],
+        options: ["Neil Armstrong", "Buzz Aldrin", "John Glenn", "Alan Shepard"],
+        answer: "Neil Armstrong",
+        explanation: "Neil Armstrong became the first human being to walk on the surface of the Moon during the historic Apollo 11 mission."
+      },
+      {
+        id: 20, title: "The Track & Field Champion", icon: "🥇",
+        clues: [
+          "I overcame polio and childhood illness to become an elite sprinter.",
+          "In the 1960 Rome Olympics, I became the first American woman to win three gold medals in a single Games.",
+          "I was known as 'The Tornado' and inspired athletes worldwide."
+        ],
+        options: ["Wilma Rudolph", "Florence Griffith Joyner", "Althea Gibson", "Jackie Joyner-Kersee"],
+        answer: "Wilma Rudolph",
+        explanation: "Wilma Rudolph overcame severe physical setbacks in early childhood to become one of the fastest women in Olympic track history."
+      },
+      {
+        id: 21, title: "The 'Ain't I a Woman?' Orator", icon: "📢",
+        clues: [
+          "I escaped slavery with my infant daughter and chose a new name representing my spiritual mission.",
+          "I delivered a famous speech titled 'Ain't I a Woman?' at the Ohio Women's Rights Convention in 1851.",
+          "I fought for abolition, women's rights, and land grants for formerly enslaved people."
+        ],
+        options: ["Sojourner Truth", "Harriet Tubman", "Phyllis Wheatley", "Ida B. Wells"],
+        answer: "Sojourner Truth",
+        explanation: "Sojourner Truth was a powerful speaker and advocate for abolitionism and women's rights whose speeches remain famous today."
+      },
+      {
+        id: 22, title: "The Theory of Relativity Physicist", icon: "💡",
+        clues: [
+          "I was born in Germany and won the 1921 Nobel Prize in Physics for explaining the photoelectric effect.",
+          "I developed the famous mass-energy equivalence equation: E = mc².",
+          "My theories completely changed how scientists understand space, time, gravity, and light."
+        ],
+        options: ["Albert Einstein", "Isaac Newton", "Galileo Galilei", "Niels Bohr"],
+        answer: "Albert Einstein",
+        explanation: "Albert Einstein is widely recognized as one of the most influential physicists in history, famous for his Theory of Relativity."
+      },
+      {
+        id: 23, title: "The Last Queen of Egypt", icon: "🏛️",
+        clues: [
+          "I was the last active ruler of the Ptolemaic Kingdom of Egypt.",
+          "I spoke multiple languages and was famous for my political intelligence and diplomatic skills.",
+          "I formed famous political alliances with Julius Caesar and Mark Antony."
+        ],
+        options: ["Cleopatra", "Hatshepsut", "Nefertiti", "Queen Victoria"],
+        answer: "Cleopatra",
+        explanation: "Cleopatra VII was a powerful ruler of ancient Egypt known for her sharp intellect, strategic diplomacy, and commanding leadership."
+      },
+      {
+        id: 24, title: "The Lady with the Lamp", icon: "🕯️",
+        clues: [
+          "I was a British nurse who led teams caring for injured soldiers during the Crimean War.",
+          "I gained fame as 'The Lady with the Lamp' for checking on wounded soldiers during night rounds.",
+          "I founded the modern profession of nursing and established clean hospital standards."
+        ],
+        options: ["Florence Nightingale", "Clara Barton", "Edith Cavell", "Mary Seacole"],
+        answer: "Florence Nightingale",
+        explanation: "Florence Nightingale transformed healthcare by establishing professional standards for nursing, hygiene, and hospital management."
+      },
+      {
+        id: 25, title: "The Codebreaker & Computer Pioneer", icon: "💻",
+        clues: [
+          "I was a brilliant English mathematician who helped break the German Enigma code during World War II.",
+          "My work at Bletchley Park saved millions of lives and shortened the war in Europe.",
+          "I am widely considered the father of theoretical computer science and artificial intelligence."
+        ],
+        options: ["Alan Turing", "Charles Babbage", "John von Neumann", "Ada Lovelace"],
+        answer: "Alan Turing",
+        explanation: "Alan Turing was a pioneering mathematician whose codebreaking machine shortened World War II and laid the foundations of modern computing."
+      },
+      {
+        id: 26, title: "The Conqueror of the Ancient World", icon: "⚔️",
+        clues: [
+          "I was tutored by the famous philosopher Aristotle during my youth in Greece.",
+          "I became King of Macedonia and created one of the largest empires in ancient history by age 30.",
+          "I remained undefeated in battle throughout my entire military career."
+        ],
+        options: ["Alexander the Great", "Julius Caesar", "Charlemagne", "Genghis Khan"],
+        answer: "Alexander the Great",
+        explanation: "Alexander the Great established an empire stretching from Greece to northwestern India, spreading Greek culture across the ancient world."
+      },
+      {
+        id: 27, title: "The Silk Road Explorer", icon: "🧭",
+        clues: [
+          "I was a merchant traveler from Venice, Italy who journeyed across Asia.",
+          "I spent over 17 years living and serving in the court of Kublai Khan in China.",
+          "My travel book inspired European explorers like Christopher Columbus centuries later."
+        ],
+        options: ["Marco Polo", "Ibn Battuta", "Zheng He", "Ferdinand Magellan"],
+        answer: "Marco Polo",
+        explanation: "Marco Polo's detailed accounts of Asian culture, trade, and geography opened European eyes to the riches and geography of the Far East."
+      },
+      {
+        id: 28, title: "The Maid of Orléans", icon: "🛡️",
+        clues: [
+          "I was a young French peasant girl who believed I received visions urging me to aid France.",
+          "I led the French army to a pivotal military victory at the Siege of Orléans during the Hundred Years' War.",
+          "I became a national heroine and patron saint of France."
+        ],
+        options: ["Joan of Arc", "Queen Elizabeth I", "Catherine the Great", "Eleanor of Aquitaine"],
+        answer: "Joan of Arc",
+        explanation: "Joan of Arc rallied French forces against English occupation, demonstrating heroic leadership before her martyrdom."
+      },
+      {
+        id: 29, title: "The Telescope Astronomer", icon: "🔭",
+        clues: [
+          "I was an Italian physicist and astronomer who improved the design of the telescope.",
+          "I discovered four major moons orbiting Jupiter, known today as the Galilean moons.",
+          "I supported the heliocentric theory that the Earth orbits around the Sun."
+        ],
+        options: ["Galileo Galilei", "Nicolaus Copernicus", "Johannes Kepler", "Isaac Newton"],
+        answer: "Galileo Galilei",
+        explanation: "Galileo Galilei is often called the 'father of modern observational astronomy' for his revolutionary telescope discoveries."
+      },
+      {
+        id: 30, title: "The Courageous Advocate", icon: "🤟",
+        clues: [
+          "An illness in early childhood left me both deaf and blind.",
+          "With the support of my teacher Anne Sullivan, I learned to communicate using tactile sign language.",
+          "I earned a college degree and became a famous author, activist, and speaker for disability rights."
+        ],
+        options: ["Helen Keller", "Laura Bridgman", "Dorothea Dix", "Eleanor Roosevelt"],
+        answer: "Helen Keller",
+        explanation: "Helen Keller overcame profound physical sensory challenges to become a world-renowned author, speaker, and crusader for disability rights."
+      },
+      {
+        id: 31, title: "The Classical Greek Philosopher", icon: "🏛️",
+        clues: [
+          "I lived in classical Athens and taught students by asking probing questions rather than giving direct answers.",
+          "I never wrote down my own philosophy; my student Plato documented my dialogues.",
+          "I am famous for stating that 'the unexamined life is not worth living'."
+        ],
+        options: ["Socrates", "Aristotle", "Plato", "Pythagoras"],
+        answer: "Socrates",
+        explanation: "Socrates developed the Socratic Method of inquiry and is widely regarded as one of the founders of Western philosophy."
+      },
+      {
+        id: 32, title: "The King of the Huns", icon: "🏹",
+        clues: [
+          "I was the ruler of the Hunnic Empire from 434 until my death in 453 AD.",
+          "My armies marched across the Eastern and Western Roman Empires, striking fear into both.",
+          "Ancient Roman historians referred to me by the intimidating title 'the Scourge of God'."
+        ],
+        options: ["Attila the Hun", "Alaric the Visigoth", "Genseric", "Odoacer"],
+        answer: "Attila the Hun",
+        explanation: "Attila the Hun commanded a formidable nomadic empire that heavily challenged the political and military stability of the late Roman Empire."
+      },
+      {
+        id: 33, title: "The Great Mongol Emperor", icon: "🐎",
+        clues: [
+          "Born with the name Temüjin, I united the nomadic tribes of the East Asian steppe.",
+          "I founded the Mongol Empire, which grew to become the largest contiguous land empire in world history.",
+          "I established religious freedom and trade networks across the Silk Road throughout my empire."
+        ],
+        options: ["Genghis Khan", "Kublai Khan", "Tamerlane", "Attila the Hun"],
+        answer: "Genghis Khan",
+        explanation: "Genghis Khan founded the vast Mongol Empire through brilliant military organization, mobility, and strategic leadership."
+      },
+      {
+        id: 34, title: "The Virgin Queen of England", icon: "👑",
+        clues: [
+          "I was the daughter of King Henry VIII and Queen Anne Boleyn.",
+          "I ruled England for 44 years during a golden era of exploration, theatre, and literature.",
+          "My royal navy famously defeated the invading Spanish Armada in 1588."
+        ],
+        options: ["Queen Elizabeth I", "Queen Victoria", "Mary Queen of Scots", "Catherine the Great"],
+        answer: "Queen Elizabeth I",
+        explanation: "Queen Elizabeth I presided over the Elizabethan Era, marked by national unity, flourishing arts, and naval strength."
+      },
+      {
+        id: 35, title: "The Bard of Avon", icon: "🎭",
+        clues: [
+          "I was an English playwright, poet, and actor born in Stratford-upon-Avon.",
+          "I wrote 39 plays, including world-famous dramas like 'Romeo and Juliet', 'Hamlet', and 'Macbeth'.",
+          "My theatrical company performed many of my original works at the Globe Theatre in London."
+        ],
+        options: ["William Shakespeare", "Christopher Marlowe", "Geoffrey Chaucer", "Charles Dickens"],
+        answer: "William Shakespeare",
+        explanation: "William Shakespeare is universally recognized as the greatest playwright in the English language."
+      },
+      {
+        id: 36, title: "The Gravity & Motion Physicist", icon: "🍎",
+        clues: [
+          "I was an English mathematician and physicist who formulated the three fundamental Laws of Motion.",
+          "Legend tells that watching an apple fall from a tree inspired my understanding of universal gravity.",
+          "I published the groundbreaking scientific treatise titled 'Principia Mathematica' in 1687."
+        ],
+        options: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Johannes Kepler"],
+        answer: "Isaac Newton",
+        explanation: "Sir Isaac Newton's laws of motion and universal gravitation laid the groundwork for modern physics and engineering."
+      },
+      {
+        id: 37, title: "The Deaf Musical Genius", icon: "🎼",
+        clues: [
+          "I was a German composer and pianist who bridged the Classical and Romantic musical eras.",
+          "I began losing my hearing in my late 20s, but continued composing masterpiece symphonies while completely deaf.",
+          "I composed famous musical works including 'Symphony No. 9' (Ode to Joy) and 'Für Elise'."
+        ],
+        options: ["Ludwig van Beethoven", "Wolfgang Amadeus Mozart", "Johann Sebastian Bach", "Frédéric Chopin"],
+        answer: "Ludwig van Beethoven",
+        explanation: "Ludwig van Beethoven overcame total hearing loss to create some of the most powerful and enduring classical music in human history."
+      },
+      {
+        id: 38, title: "The Naturalist & Evolutionary Thinker", icon: "🐢",
+        clues: [
+          "I sailed around the world on HMS Beagle as a young ship naturalist.",
+          "My observations of tortoises and finches on the Galápagos Islands led to my scientific theories.",
+          "In 1859, I published 'On the Origin of Species', introducing evolution by natural selection."
+        ],
+        options: ["Charles Darwin", "Gregor Mendel", "Louis Pasteur", "Alexander von Humboldt"],
+        answer: "Charles Darwin",
+        explanation: "Charles Darwin formulated the theory of evolution through natural selection, transforming modern biological science."
+      },
+      {
+        id: 39, title: "The Anti-Apartheid Leader", icon: "🇿🇦",
+        clues: [
+          "I spent 27 years imprisoned on Robben Island for resisting racial apartheid in South Africa.",
+          "After my release in 1990, I worked with leaders to peacefully transition my country to democracy.",
+          "In 1994, I was elected as the very first Black President of South Africa."
+        ],
+        options: ["Nelson Mandela", "Desmond Tutu", "Kofi Annan", "Patrice Lumumba"],
+        answer: "Nelson Mandela",
+        explanation: "Nelson Mandela stood as a global symbol of peace, reconciliation, and triumph over oppression after ending apartheid."
+      },
+      {
+        id: 40, title: "The Polish-French Chemist & Physicist", icon: "⚛️",
+        clues: [
+          "I pioneered research into radiation alongside my husband Pierre.",
+          "I am the only person to win Nobel Prizes in two different scientific fields (Physics and Chemistry).",
+          "I coined the term 'radioactivity' during my scientific experiments in Paris."
+        ],
+        options: ["Marie Curie", "Rosalind Franklin", "Ada Lovelace", "Chien-Shiung Wu"],
+        answer: "Marie Curie",
+        explanation: "Marie Curie was a pioneering scientist whose discoveries in radioactivity revolutionized physics and modern medicine."
+      },
+      {
+        id: 41, title: "The Greek Mathematician & Inventor", icon: "📐",
+        clues: [
+          "I was an ancient Greek mathematician and engineer born in Syracuse, Sicily.",
+          "Legend says I shouted 'Eureka!' after discovering the principle of buoyancy while taking a bath.",
+          "I designed defensive weapons, compound pulleys, and a famous water-raising screw."
+        ],
+        options: ["Archimedes", "Pythagoras", "Euclid", "Eratosthenes"],
+        answer: "Archimedes",
+        explanation: "Archimedes made fundamental contributions to geometry, physics, and hydrostatics, leaving a lasting legacy in engineering."
+      },
+      {
+        id: 42, title: "The Great Chinese Philosopher", icon: "📜",
+        clues: [
+          "I was an ancient Chinese teacher and thinker whose teachings shaped Eastern philosophy for over two millennia.",
+          "My philosophy emphasized kindness, family devotion, social harmony, and respect for elders.",
+          "My wise sayings were compiled by my students in a famous collection known as 'The Analects'."
+        ],
+        options: ["Confucius", "Laozi", "Mencius", "Sun Tzu"],
+        answer: "Confucius",
+        explanation: "Confucius established ethical principles and educational philosophies that deeply influenced society, government, and culture across East Asia."
+      },
+      {
+        id: 43, title: "The Great Egyptian Builder", icon: "🏛️",
+        clues: [
+          "I was a powerful pharaoh who ruled ancient Egypt during the 19th Dynasty for over 60 years.",
+          "I commissioned monumental construction projects including the temples at Abu Simbel and the Ramesseum.",
+          "Historians often refer to me as 'Ramses the Great' for my military victories and lasting monuments."
+        ],
+        options: ["Ramses II", "King Tutankhamun", "Akhenaten", "Thutmose III"],
+        answer: "Ramses II",
+        explanation: "Ramses II was one of ancient Egypt's most celebrated pharaohs, famous for his extensive military campaigns and grand architectural monuments."
+      },
+      {
+        id: 44, title: "The Father of Europe", icon: "⚔️",
+        clues: [
+          "I was King of the Franks who united much of Western and Central Europe during the Early Middle Ages.",
+          "In 800 AD, Pope Leo III crowned me the first Holy Roman Emperor in Rome.",
+          "I promoted education, culture, and literacy during a period known as the Carolingian Renaissance."
+        ],
+        options: ["Charlemagne", "Clovis I", "William the Conqueror", "Otto I"],
+        answer: "Charlemagne",
+        explanation: "Charlemagne (Charles the Great) consolidated Western Europe under a single empire and fostered cultural rebirth through education."
+      },
+      {
+        id: 45, title: "The Printing Press Pioneer", icon: "🖨️",
+        clues: [
+          "I was a German goldsmith and publisher who invented movable type printing in Europe around 1440.",
+          "My invention made books widely accessible and affordable, sparking a communications revolution.",
+          "My most famous printed publication was a Latin Bible completed around 1455."
+        ],
+        options: ["Johannes Gutenberg", "William Caxton", "Albrecht Dürer", "Desiderius Erasmus"],
+        answer: "Johannes Gutenberg",
+        explanation: "Johannes Gutenberg revolutionized communication and literacy by inventing the mechanical movable-type printing press."
+      },
+      {
+        id: 46, title: "The Renaissance Sculptor & Painter", icon: "🗿",
+        clues: [
+          "I was an Italian master sculptor, painter, architect, and poet of the High Renaissance.",
+          "I spent four years painting the intricate biblical frescoes on the ceiling of the Sistine Chapel.",
+          "I carved iconic marble masterpieces including the famous statue of 'David' and the 'Pietà'."
+        ],
+        options: ["Michelangelo", "Raphael", "Donatello", "Leonardo da Vinci"],
+        answer: "Michelangelo",
+        explanation: "Michelangelo Buonarroti was a genius sculptor and painter whose works represent the artistic pinnacle of the Italian Renaissance."
+      },
+      {
+        id: 47, title: "The Atlantic Navigator", icon: "⛵",
+        clues: [
+          "I was an Italian navigator from Genoa who sailed across the Atlantic Ocean under the flag of Spain.",
+          "In 1492, I led an expedition aboard three ships: the Niña, the Pinta, and the Santa María.",
+          "My voyages initiated permanent contact between Europe and the Americas."
+        ],
+        options: ["Christopher Columbus", "Ferdinand Magellan", "Amerigo Vespucci", "Hernán Cortés"],
+        answer: "Christopher Columbus",
+        explanation: "Christopher Columbus's transatlantic voyages in 1492 connected the Eastern and Western Hemispheres, changing global trade and history."
+      },
+      {
+        id: 48, title: "The Sea Route to India Explorer", icon: "🧭",
+        clues: [
+          "I was a Portuguese explorer who became the first European to reach India by sea.",
+          "My 1497-1499 voyage sailed around the Cape of Good Hope at the southern tip of Africa.",
+          "My sea route established direct maritime trade routes between Europe and Asia."
+        ],
+        options: ["Vasco da Gama", "Bartholomeu Dias", "Ferdinand Magellan", "Marco Polo"],
+        answer: "Vasco da Gama",
+        explanation: "Vasco da Gama opened the ocean route from Europe to Asia, pioneering global maritime trade and Portuguese exploration."
+      },
+      {
+        id: 49, title: "The World-Changing Astronomer", icon: "🌌",
+        clues: [
+          "I was an Italian astronomer whose observations supported the Copernican model of the solar system.",
+          "I observed craters on the Moon and spots on the Sun using my improved telescope.",
+          "My scientific defenses of heliocentrism led to a famous trial before the Roman Inquisition."
+        ],
+        options: ["Galileo Galilei", "Johannes Kepler", "Tycho Brahe", "Nicolaus Copernicus"],
+        answer: "Galileo Galilei",
+        explanation: "Galileo Galilei's telescopic observations provided crucial physical evidence supporting the theory that planets revolve around the Sun."
+      },
+      {
+        id: 50, title: "The World's First Computer Programmer", icon: "💻",
+        clues: [
+          "I was an English mathematician and the daughter of the famous poet Lord Byron.",
+          "I worked closely with Charles Babbage on his mechanical computer design called the Analytical Engine.",
+          "I wrote an algorithm intended to be processed by a machine, making me the first computer programmer."
+        ],
+        options: ["Ada Lovelace", "Grace Hopper", "Katherine Johnson", "Joan Clarke"],
+        answer: "Ada Lovelace",
+        explanation: "Ada Lovelace recognized the potential of computing machines beyond simple calculation and wrote the first algorithm for computer implementation."
+      }
+    ];
+
+    /* SHOP CONFIGURATION */
+    const shopItems = {
+      icons: [
+        { id: "icon_sleuth", label: "🕵️ Sleuth", icon: "🕵️", cost: 0 },
+        { id: "icon_inspector", label: "🔎 Inspector", icon: "🔎", cost: 10 },
+        { id: "icon_scout", label: "🤠 Scout", icon: "🤠", cost: 40 },
+        { id: "icon_scholar", label: "👩‍🔬 Scholar", icon: "👩‍🔬", cost: 80 },
+        { id: "icon_wizard", label: "🧙 Wizard", icon: "🧙", cost: 130 },
+        { id: "icon_super", label: "🦸 Hero", icon: "🦸", cost: 200 },
+        { id: "icon_legend", label: "👑 Legend", icon: "👑", cost: 300 },
+        { id: "icon_time_lord", label: "⌛ Time Lord", icon: "⌛", cost: 400 }
+      ],
+      colors: [
+        { id: "color_sky", label: "Sky Blue", color: "#38bdf8", cost: 0 },
+        { id: "color_gold", label: "Gold", color: "#f59e0b", cost: 50 },
+        { id: "color_emerald", label: "Emerald", color: "#10b981", cost: 100 },
+        { id: "color_purple", label: "Royal Purple", color: "#a855f7", cost: 180 },
+        { id: "color_crimson", label: "Crimson Red", color: "#ef4444", cost: 260 },
+        { id: "color_cosmic", label: "Cosmic Navy", color: "#0c4a6e", cost: 350 }
+      ],
+      titles: [
+        { id: "title_junior", label: "Junior Sleuth", cost: 0 },
+        { id: "title_investigator", label: "History Investigator", cost: 60 },
+        { id: "title_senior", label: "Senior Detective", cost: 120 },
+        { id: "title_time_master", label: "Master Time Traveler", cost: 250 },
+        { id: "title_grandmaster", label: "Grandmaster Historian", cost: 380 },
+        { id: "title_legendary", label: "Legendary Chronicle Master", cost: 450 }
+      ]
+    };
+
+    let state = {
+      detectiveName: "Detective Sam",
+      avatarIcon: "🕵️",
+      avatarColor: "#38bdf8",
+      selectedTitle: "Junior Sleuth",
+      currentQuestionIdx: 0,
+      currentClueIdx: 0,
+      points: 0,
+      solvedIds: [],
+      badges: ["Junior Sleuth"]
+    };
+
+    /* PERSISTENCE */
+    function saveStateToStorage() {
+      try {
+        localStorage.setItem("who_am_i_app_state", JSON.stringify(state));
+      } catch (e) {
+        console.log("LocalStorage not available.");
+      }
+    }
+
+    function loadStateFromStorage() {
+      try {
+        const saved = localStorage.getItem("who_am_i_app_state");
+        if (saved) {
+          state = { ...state, ...JSON.parse(saved) };
+        }
+      } catch (e) {
+        console.log("Could not load state from storage.");
+      }
+    }
+
+    /* NAVIGATION */
+    function switchScreen(screenId) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+
+      const targetScreen = document.getElementById(`screen-${screenId}`);
+      const targetNav = document.getElementById(`nav-${screenId}`);
+
+      if (targetScreen) targetScreen.classList.add("active");
+      if (targetNav) targetNav.classList.add("active");
+
+      window.scrollTo(0, 0);
+    }
+
+    function updateHeaderStats() {
+      document.getElementById("global-detective-name").textContent = state.detectiveName;
+      document.getElementById("global-avatar-icon").textContent = state.avatarIcon;
+      document.getElementById("global-detective-title").textContent = state.selectedTitle;
+      document.getElementById("stat-points").textContent = state.points;
+      document.getElementById("stat-solved").textContent = state.solvedIds.length;
+      document.getElementById("stat-badges").textContent = state.badges.length;
+
+      // Update avatar display ring colors
+      const headerIconCircle = document.getElementById("global-avatar-icon");
+      if (headerIconCircle) headerIconCircle.style.borderColor = state.avatarColor;
+
+      const avatarDisplay = document.getElementById("avatar-display");
+      if (avatarDisplay) {
+        avatarDisplay.textContent = state.avatarIcon;
+        avatarDisplay.style.borderColor = state.avatarColor;
+      }
+
+      const avatarTitleDisp = document.getElementById("avatar-title-display");
+      if (avatarTitleDisp) avatarTitleDisp.textContent = state.selectedTitle;
+
+      const pBar = document.getElementById("overall-progress-bar");
+      if (pBar) {
+        const pct = Math.min(100, Math.round((state.solvedIds.length / mysteryData.length) * 100));
+        pBar.style.width = pct + "%";
+      }
+
+      renderShopItems();
+      saveStateToStorage();
+    }
+
+    function updateDetectiveName(val) {
+      if (val.trim() !== "") {
+        state.detectiveName = val.trim();
+        updateHeaderStats();
+      }
+    }
+
+    /* SHOP RENDERING & PURCHASING */
+    function renderShopItems() {
+      // Icons
+      const iconsContainer = document.getElementById("shop-icons-container");
+      if (!iconsContainer) return;
+      iconsContainer.innerHTML = "";
+      shopItems.icons.forEach(item => {
+        const btn = document.createElement("button");
+        const isUnlocked = state.points >= item.cost;
+        const isSelected = state.avatarIcon === item.icon;
+
+        btn.className = `shop-item ${isSelected ? 'selected' : ''} ${!isUnlocked ? 'locked' : ''}`;
+        btn.innerHTML = `${item.label} ${!isUnlocked ? `🔒 (${item.cost}pts)` : ''}`;
+        btn.onclick = () => {
+          if (isUnlocked) {
+            state.avatarIcon = item.icon;
+            updateHeaderStats();
+          } else {
+            alert(`Earn ${item.cost} points by solving historical cases to unlock this icon!`);
+          }
+        };
+        iconsContainer.appendChild(btn);
+      });
+
+      // Colors
+      const colorsContainer = document.getElementById("shop-colors-container");
+      colorsContainer.innerHTML = "";
+      shopItems.colors.forEach(item => {
+        const btn = document.createElement("button");
+        const isUnlocked = state.points >= item.cost;
+        const isSelected = state.avatarColor === item.color;
+
+        btn.className = `shop-item ${isSelected ? 'selected' : ''} ${!isUnlocked ? 'locked' : ''}`;
+        btn.innerHTML = `<span style="display:inline-block; width:12px; height:12px; background:${item.color}; border-radius:50%;"></span> ${item.label} ${!isUnlocked ? `🔒 (${item.cost}pts)` : ''}`;
+        btn.onclick = () => {
+          if (isUnlocked) {
+            state.avatarColor = item.color;
+            updateHeaderStats();
+          } else {
+            alert(`Earn ${item.cost} points to unlock this border theme!`);
+          }
+        };
+        colorsContainer.appendChild(btn);
+      });
+
+      // Titles
+      const titlesContainer = document.getElementById("shop-titles-container");
+      titlesContainer.innerHTML = "";
+      shopItems.titles.forEach(item => {
+        const btn = document.createElement("button");
+        const isUnlocked = state.points >= item.cost;
+        const isSelected = state.selectedTitle === item.label;
+
+        btn.className = `shop-item ${isSelected ? 'selected' : ''} ${!isUnlocked ? 'locked' : ''}`;
+        btn.innerHTML = `🏷️ ${item.label} ${!isUnlocked ? `🔒 (${item.cost}pts)` : ''}`;
+        btn.onclick = () => {
+          if (isUnlocked) {
+            state.selectedTitle = item.label;
+            updateHeaderStats();
+          } else {
+            alert(`Earn ${item.cost} points to unlock this title!`);
+          }
+        };
+        titlesContainer.appendChild(btn);
+      });
+    }
+
+    function populateLearnCards() {
+      const container = document.getElementById("learn-cards-container");
+      container.innerHTML = "";
+      mysteryData.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "figure-card";
+        card.innerHTML = `
+          <div class="figure-avatar">${item.icon}</div>
+          <div>
+            <h3>${item.answer}</h3>
+            <p style="font-size:0.9rem; margin:0;">${item.explanation}</p>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    /* GAME LOGIC */
+    function renderCurrentQuestion() {
+      const q = mysteryData[state.currentQuestionIdx];
+      document.getElementById("mystery-case-num").textContent = `Case #${q.id}`;
+      document.getElementById("mystery-title").textContent = q.title;
+      
+      state.currentClueIdx = 0;
+      updateClueUI();
+
+      const optionsContainer = document.getElementById("options-container");
+      optionsContainer.innerHTML = "";
+      q.options.forEach(opt => {
+        const btn = document.createElement("div");
+        btn.className = "option-card";
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(opt, btn);
+        optionsContainer.appendChild(btn);
+      });
+
+      document.getElementById("next-btn").style.display = "none";
+      const fb = document.getElementById("feedback-display");
+      fb.className = "feedback-banner";
+      fb.style.display = "none";
+      fb.textContent = "";
+    }
+
+    function updateClueUI() {
+      const q = mysteryData[state.currentQuestionIdx];
+      document.getElementById("clue-display").innerHTML = `<strong>Clue #${state.currentClueIdx + 1}:</strong> "${q.clues[state.currentClueIdx]}"`;
+      document.getElementById("hint-tracker").textContent = `Clues Unlocked: ${state.currentClueIdx + 1}/${q.clues.length}`;
+      
+      const hintBtn = document.getElementById("hint-btn");
+      if (state.currentClueIdx >= q.clues.length - 1) {
+        hintBtn.disabled = true;
+        hintBtn.style.opacity = "0.5";
+      } else {
+        hintBtn.disabled = false;
+        hintBtn.style.opacity = "1";
+      }
+    }
+
+    function revealExtraHint() {
+      const q = mysteryData[state.currentQuestionIdx];
+      if (state.currentClueIdx < q.clues.length - 1) {
+        state.currentClueIdx++;
+        updateClueUI();
+      }
+    }
+
+    function checkAnswer(selected, element) {
+      const q = mysteryData[state.currentQuestionIdx];
+      const fb = document.getElementById("feedback-display");
+
+      if (selected === q.answer) {
+        const isFirstSolve = !state.solvedIds.includes(q.id);
+        
+        if (isFirstSolve) {
+          state.solvedIds.push(q.id);
+          state.points += 10;
+          fb.className = "feedback-banner correct";
+          fb.innerHTML = `🎉 <strong>Correct! +10 Points Earned!</strong><br>${q.explanation}`;
+          
+          if (state.solvedIds.length === 5 && !state.badges.includes("History Investigator")) {
+            state.badges.push("History Investigator");
+          }
+          if (state.solvedIds.length === 20 && !state.badges.includes("Senior Detective")) {
+            state.badges.push("Senior Detective");
+          }
+          if (state.solvedIds.length === 35 && !state.badges.includes("Master Time Traveler")) {
+            state.badges.push("Master Time Traveler");
+          }
+          if (state.solvedIds.length === mysteryData.length && !state.badges.includes("Legendary Chronicle Master")) {
+            state.badges.push("Legendary Chronicle Master");
+          }
+        } else {
+          fb.className = "feedback-banner correct";
+          fb.innerHTML = `🎉 <strong>Correct!</strong><br>${q.explanation}`;
+        }
+
+        updateHeaderStats();
+        updateProgressScreen();
+        document.getElementById("next-btn").style.display = "inline-flex";
+      } else {
+        fb.className = "feedback-banner incorrect";
+        fb.innerHTML = `❌ <strong>Not quite!</strong> That wasn't ${selected}. Review the clues above and try another guess!`;
+      }
+      fb.style.display = "block";
+    }
+
+    function nextQuestion() {
+      state.currentQuestionIdx = (state.currentQuestionIdx + 1) % mysteryData.length;
+      renderCurrentQuestion();
+    }
+
+    function updateProgressScreen() {
+      const badgeList = document.getElementById("badge-list");
+      badgeList.innerHTML = "";
+      state.badges.forEach(b => {
+        const li = document.createElement("li");
+        li.innerHTML = `🎖️ <strong>${b}</strong>`;
+        li.style.marginBottom = "0.4rem";
+        badgeList.appendChild(li);
+      });
+
+      const disc = document.getElementById("discovered-list");
+      if (state.solvedIds.length === 0) {
+        disc.textContent = "No historical figures fully solved yet. Head over to Activity to make your first discovery!";
+      } else {
+        disc.innerHTML = "";
+        state.solvedIds.forEach(id => {
+          const figure = mysteryData.find(m => m.id === id);
+          if (figure) {
+            const item = document.createElement("div");
+            item.style.padding = "0.4rem 0";
+            item.style.borderBottom = "1px solid #f1f5f9";
+            item.innerHTML = `✅ <strong>${figure.answer}</strong> (${figure.title})`;
+            disc.appendChild(item);
+          }
+        });
+      }
+
+      document.getElementById("results-score-display").textContent = `${state.points} pts`;
+      document.getElementById("results-summary").textContent = `You have solved ${state.solvedIds.length} out of ${mysteryData.length} historical mysteries so far!`;
+    }
+
+    /* INIT */
+    window.addEventListener("DOMContentLoaded", () => {
+      loadStateFromStorage();
+      populateLearnCards();
+      updateHeaderStats();
+      renderCurrentQuestion();
+      updateProgressScreen();
+    });
+  </script>
+</body>
+</html>

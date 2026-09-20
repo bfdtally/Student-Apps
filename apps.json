@@ -55,6 +55,14 @@
       "description": "An app that teaches and helps students with multiplication facts. It will track progress using a multiplication table with it being blank when a kid has not learned a fact, red if they are bad at it, yellow if they are just learning, and gr",
       "url": "/pringley-table-timez/",
       "projectId": "f5e8ef64-e479-4621-bdba-67b1c6aad5ea"
+    },
+    {
+      "title": "Who Am I👤?",
+      "student": "Priscilla Hough",
+      "slug": "hough-who-am-i",
+      "description": "Students will receive clues and they will use these clues to figure out the historical figure’s identity.",
+      "url": "/hough-who-am-i/",
+      "projectId": "e1601e08-3c75-46b5-8e77-01747f36633b"
     }
   ]
 }
