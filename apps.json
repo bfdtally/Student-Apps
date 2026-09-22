@@ -79,6 +79,14 @@
       "description": "Students will receive clues and they will use these clues to figure out the historical figure’s identity.",
       "url": "/hough-who-am-i/",
       "projectId": "e1601e08-3c75-46b5-8e77-01747f36633b"
+    },
+    {
+      "title": "Wordy Wonders",
+      "student": "Madison Green",
+      "slug": "green-wordy-wonders",
+      "description": "I want this app to have sight words for kindergarten through second grade, where it goes through and asks different questions, like showing a picture of sight words like a rug, car, or dog, and having two to four choices(progressively addin",
+      "url": "/green-wordy-wonders/",
+      "projectId": "13312e80-d451-42e4-9bac-113fdb7a238f"
     }
   ]
 }
