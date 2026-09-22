@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Stitch's Word World</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to learning content</a>
+  <header class="topbar">
+    <button class="brand" data-nav="home" aria-label="Go to home">
+      <span class="brand-mark" aria-hidden="true">★</span>
+      <span>Stitch's Word World</span>
+    </button>
+    <div class="top-actions">
+      <button id="audioToggle" class="icon-button" aria-pressed="true" aria-label="Turn spoken help off">🔊</button>
+      <button class="pill" data-nav="progress" aria-label="Open progress. 0 stars earned">⭐ <span id="starCount">0</span></button>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section id="home" class="screen active" aria-labelledby="homeTitle">
+      <div class="hero card gradient-card">
+        <div class="mascot-wrap" aria-hidden="true">
+          <div class="mascot">👽</div>
+          <div class="speech">Aloha! Let's learn together!</div>
+        </div>
+        <div>
+          <p class="eyebrow">Welcome, learner!</p>
+          <h1 id="homeTitle">Learn with Stitch. Grow with Stitch.</h1>
+          <p class="kid-goal"><strong>Today’s goal:</strong> Listen, look, and choose the right sound or word.</p>
+          <p>Practice letters, sounds, words, sentences, and reading in short playful missions.</p>
+          <button class="primary large" data-nav="path">Start Learning</button>
+        </div>
+      </div>
+
+      <section aria-labelledby="chooseLevelTitle" class="section-block">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">First visit</p>
+            <h2 id="chooseLevelTitle">Choose a learning level</h2>
+          </div>
+          <button class="speaker" data-speak="Choose the learning level that feels right. You can change it later." aria-label="Hear level instructions">🔊 Hear</button>
+        </div>
+        <div class="level-grid" id="levelPicker">
+          <button class="level-card selected" data-level="1"><span>🌱</span><strong>Baby Stitch</strong><small>Letters & sounds</small></button>
+          <button class="level-card" data-level="2"><span>🧩</span><strong>Learning Stitch</strong><small>Words & rhymes</small></button>
+          <button class="level-card locked" data-level="3" disabled><span>✏️</span><strong>Smart Stitch</strong><small>Sentences</small></button>
+          <button class="level-card locked" data-level="4" disabled><span>📚</span><strong>Super Smart Stitch</strong><small>Reading & writing</small></button>
+        </div>
+      </section>
+
+      <section class="home-grid section-block" aria-label="Main menu">
+        <button class="menu-card blue" data-nav="path"><span>🎮</span><strong>Play & Learn</strong><small>Start today's activity</small></button>
+        <button class="menu-card purple" data-nav="progress"><span>📈</span><strong>My Progress</strong><small>See what you've learned</small></button>
+        <button class="menu-card pink" data-nav="room"><span>🪴</span><strong>Stitch's Room</strong><small>Decorate the learning space</small></button>
+        <button class="menu-card yellow" data-nav="practice"><span>🧠</span><strong>Practice</strong><small>Choose a skill</small></button>
+        <button class="menu-card mint" data-nav="daily"><span>🚀</span><strong>Daily Mission</strong><small>5 quick words</small></button>
+        <button class="menu-card white" data-nav="adult"><span>🧑‍🏫</span><strong>Teacher / Parent</strong><small>Adult dashboard</small></button>
+      </section>
+    </section>
+
+    <section id="path" class="screen" aria-labelledby="pathTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">Your journey</p><h1 id="pathTitle">Learning Path</h1></div></div>
+      <div class="goal-banner card"><span aria-hidden="true">🎯</span><div><strong>Your learning goal</strong><p>Hear a word, notice its sounds, and use what you know to choose or build the right answer.</p></div><button class="speaker" data-speak="Your goal is to hear a word, notice its sounds, and choose or build the right answer." aria-label="Hear the learning goal">🔊 Hear</button></div>
+      <div class="journey" id="journeyList">
+        <button class="journey-stop" data-activity="letter"><span>1</span><div><strong>Letter Explorer</strong><small>Match letters and words</small></div></button>
+        <button class="journey-stop" data-activity="sound"><span>2</span><div><strong>Sound Detective</strong><small>Find beginning sounds</small></div></button>
+        <button class="journey-stop" data-activity="sight"><span>3</span><div><strong>Sight Word Spotter</strong><small>Recognize common words</small></div></button>
+        <button class="journey-stop" data-activity="build"><span>4</span><div><strong>Build the Word</strong><small>Put letters in order</small></div></button>
+        <button class="journey-stop" data-activity="rhyme"><span>5</span><div><strong>Rhyme Time</strong><small>Choose rhyming words</small></div></button>
+        <button class="journey-stop" data-activity="sentence"><span>6</span><div><strong>Sentence Builder</strong><small>Put words in order</small></div></button>
+        <button class="journey-stop" data-activity="punctuation"><span>7</span><div><strong>Sentence Fixer</strong><small>Capitals & punctuation</small></div></button>
+        <button class="journey-stop" data-activity="comprehension"><span>8</span><div><strong>Read & Answer</strong><small>Short reading questions</small></div></button>
+      </div>
+      <div class="stitch-progress card">
+        <div><strong>Stitch's learning journey</strong><p>Stitch is learning right beside you.</p></div>
+        <div class="meter" id="stitchStarMeter" role="progressbar" aria-label="Stitch star progress" aria-valuemin="0" aria-valuemax="20" aria-valuenow="0"><span id="stitchStarMeterFill" style="width:0%"></span></div>
+        <strong id="stitchStarText">0 / 20 stars</strong>
+      </div>
+    </section>
+
+    <section id="activity" class="screen" aria-labelledby="activityTitle">
+      <div class="page-title"><button class="back" data-nav="path">← Path</button><div><p class="eyebrow" id="activityEyebrow">Sound Detective</p><h1 id="activityTitle">Find the beginning sound</h1></div></div>
+      <div class="activity-shell card">
+        <div class="activity-goal" id="activityGoal">🎯 I can listen to a word and find its beginning sound.</div>
+        <div class="activity-instruction"><span id="instructionText">Tap the answer that matches the word.</span><button class="speaker" id="instructionSpeak" aria-label="Hear activity directions">🔊 Directions</button></div>
+        <div class="activity-topline"><span id="roundLabel">1 of 5</span><button class="speaker" id="activitySpeak" aria-label="Hear the question">🔊 Hear</button></div>
+        <div class="mini-meter"><span id="roundMeter" style="width:20%"></span></div>
+        <div class="activity-visual" id="activityVisual">🐱</div>
+        <p class="question" id="questionText">Which letter does <strong>cat</strong> begin with?</p>
+        <div class="answer-grid" id="answerGrid"></div>
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+        <div class="activity-actions">
+          <button class="secondary" id="hintButton">💡 Hint</button>
+          <button class="primary" id="nextButton" disabled>Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="results" class="screen" aria-labelledby="resultsTitle">
+      <div class="celebration card gradient-card center">
+        <div class="big-emoji" aria-hidden="true">🎉</div>
+        <p class="eyebrow">Mission complete</p>
+        <h1 id="resultsTitle">You did it!</h1>
+        <p id="resultSummary">You helped Stitch finish 5 sound challenges.</p>
+        <div class="reward-row"><span>⭐ +1 star</span><span>📈 Skill progress saved</span></div>
+        <div class="result-buttons"><button class="primary" id="continueResources">Continue to Learning Helpers →</button><button class="secondary" id="playAgain">Play Again</button><button class="secondary" data-nav="path">Choose Another Activity</button></div>
+      </div>
+    </section>
+
+    <section id="resources" class="screen" aria-labelledby="resourcesTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">Learning helpers</p><h1 id="resourcesTitle">Resources</h1></div></div>
+      <label class="search-box">🔎 <input id="resourceSearch" type="search" placeholder="Search words, sounds, reading..." aria-label="Search resources" /></label>
+      <div class="resource-intro card"><span aria-hidden="true">💡</span><div><strong>Use a helper, then keep going.</strong><p>These quick examples connect to the skills you practice in the games.</p></div></div>
+      <section class="gallery-block" aria-labelledby="galleryTitle">
+        <div class="section-heading compact-heading"><div><p class="eyebrow">Look, listen, learn</p><h2 id="galleryTitle">Picture Word Gallery</h2></div><button class="speaker" data-speak="Choose a picture. Listen to the word and its example." aria-label="Hear picture gallery directions">🔊 Hear</button></div>
+        <div class="image-gallery" id="imageGallery" aria-label="Picture word gallery">
+          <button class="image-card selected" data-gallery-word="cat" data-gallery-example="Cat. The cat sits. Cat begins with C." data-gallery-skill="phonics"><span aria-hidden="true">🐱</span><strong>cat</strong><small>C starts cat</small></button>
+          <button class="image-card" data-gallery-word="sun" data-gallery-example="Sun. The sun is bright. Sun begins with S." data-gallery-skill="phonics"><span aria-hidden="true">☀️</span><strong>sun</strong><small>S starts sun</small></button>
+          <button class="image-card" data-gallery-word="book" data-gallery-example="Book. I read a book. Book is spelled B O O K." data-gallery-skill="spelling"><span aria-hidden="true">📘</span><strong>book</strong><small>B-O-O-K</small></button>
+          <button class="image-card" data-gallery-word="happy" data-gallery-example="Happy means feeling glad. Stitch feels happy when we learn." data-gallery-skill="vocabulary"><span aria-hidden="true">😊</span><strong>happy</strong><small>feeling glad</small></button>
+          <button class="image-card" data-gallery-word="jump" data-gallery-example="Jump means to push your body up from the ground. I can jump." data-gallery-skill="vocabulary"><span aria-hidden="true">🤸</span><strong>jump</strong><small>move up</small></button>
+          <button class="image-card" data-gallery-word="the" data-gallery-example="The. The is a sight word. The dog can run." data-gallery-skill="reading"><span aria-hidden="true">👀</span><strong>the</strong><small>sight word</small></button>
+        </div>
+        <div class="gallery-detail card" id="galleryDetail">
+          <div class="gallery-big" id="galleryBig" aria-hidden="true">🐱</div>
+          <div><p class="eyebrow">Word helper</p><h3 id="galleryWord">cat</h3><p id="galleryExample">Cat. The cat sits. Cat begins with C.</p><div class="inline-actions"><button class="speaker" id="gallerySpeak" aria-label="Hear selected word and example">🔊 Play Word</button><button class="save-button" id="gallerySave" aria-pressed="false">♡ Save</button></div></div>
+        </div>
+      </section>
+
+      <section class="check-block card" aria-labelledby="quickCheckTitle">
+        <div class="check-heading"><div><p class="eyebrow">Quick knowledge check</p><h2 id="quickCheckTitle">Show what you know</h2></div><span id="checkProgress">1 of 3</span></div>
+        <p id="checkPrompt" class="question small-question">Which picture shows <strong>sun</strong>?</p>
+        <button class="speaker" id="checkSpeak" aria-label="Hear quick check question">🔊 Hear Question</button>
+        <div id="checkAnswers" class="picture-answer-grid"></div>
+        <div id="checkFeedback" class="feedback" aria-live="polite"></div>
+        <div class="activity-actions"><button class="secondary" id="checkRestart">Start Over</button><button class="primary" id="checkNext" disabled>Next →</button></div>
+      </section>
+
+      <div class="resource-grid" id="resourceGrid">
+        <article class="resource-card" data-tags="alphabet letters sounds"><div>🔤</div><h3>Alphabet Sound Cards</h3><p>See a letter, a picture, and a word example.</p><button class="save-button">♡ Save</button></article>
+        <article class="resource-card" data-tags="sight words reading"><div>👀</div><h3>Sight Word Mini List</h3><p>Practice: the, see, my, like, go.</p><button class="save-button">♡ Save</button></article>
+        <article class="resource-card" data-tags="rhymes phonics"><div>🎵</div><h3>Rhyme Families</h3><p>cat, hat, bat • log, dog, frog</p><button class="save-button">♡ Save</button></article>
+        <article class="resource-card" data-tags="sentence punctuation grammar"><div>✍️</div><h3>Sentence Helper</h3><p>Start with a capital. End with punctuation.</p><button class="save-button">♡ Save</button></article>
+      </div>
+      <div class="flow-actions"><button class="primary" data-nav="progress">Continue to My Progress →</button><button class="secondary" data-nav="path">Back to Learning Path</button></div>
+    </section>
+
+    <section id="progress" class="screen" aria-labelledby="progressTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">Growing every day</p><h1 id="progressTitle">My Progress</h1></div></div>
+      <div class="stats-grid">
+        <div class="stat card"><span>⭐</span><strong id="progressStars">0</strong><small>Stars earned</small></div>
+        <div class="stat card"><span>✅</span><strong id="lessonsComplete">0</strong><small>Lessons completed</small></div>
+        <div class="stat card"><span id="levelIcon">🌱</span><strong id="currentLevelLabel">Level 1</strong><small id="currentLevelName">Baby Stitch</small></div>
+      </div>
+      <div class="card skill-card"><div class="section-heading compact-heading"><div><h2>Skill growth</h2><p class="muted">Updates when you finish practice or a quick check.</p></div></div>
+        <div class="skill-row"><span>Phonics</span><div class="meter"><span id="skillPhonics" style="width:0%"></span></div><strong id="skillPhonicsText">Not started</strong></div>
+        <div class="skill-row"><span>Spelling</span><div class="meter"><span id="skillSpelling" style="width:0%"></span></div><strong id="skillSpellingText">Not started</strong></div>
+        <div class="skill-row"><span>Reading</span><div class="meter"><span id="skillReading" style="width:0%"></span></div><strong id="skillReadingText">Not started</strong></div>
+        <div class="skill-row"><span>Vocabulary</span><div class="meter"><span id="skillVocabulary" style="width:0%"></span></div><strong id="skillVocabularyText">Not started</strong></div>
+        <div class="skill-row"><span>Pronunciation practice</span><div class="meter"><span id="skillPronunciation" style="width:0%"></span></div><strong id="skillPronunciationText">Not started</strong></div>
+      </div>
+      <div class="card evidence-card" aria-labelledby="evidenceTitle"><div class="section-heading compact-heading"><div><h2 id="evidenceTitle">Learning evidence</h2><p class="muted">Compare the first score with the latest score on this device.</p></div></div><div id="growthSummary" class="growth-grid"></div><h3>Completed skills</h3><div id="masteryList" class="mastery-list"><p class="muted">Finish a lesson to add learning evidence here.</p></div></div>
+      <div class="card next-step"><h2>Suggested next step</h2><p id="nextStepText">Complete a five-round activity to start building your progress.</p><div class="flow-actions left"><button class="primary" id="nextStepButton" data-activity="sound">Practice Sounds</button><button class="secondary" data-nav="help">Continue to About & Help →</button></div></div>
+    </section>
+
+    <section id="room" class="screen" aria-labelledby="roomTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">Reward space</p><h1 id="roomTitle">Stitch's Room</h1></div></div>
+      <div class="room card">
+        <div class="room-stage" id="roomStage"><span class="room-mascot">👽</span><span id="decor1" class="decor">🪴</span><span id="decor2" class="decor hidden">🌈</span><span id="decor3" class="decor hidden">🏆</span></div>
+        <div class="decor-options" aria-label="Room decorations">
+          <button data-decor="decor1">🪴 Plant</button><button data-decor="decor2">🌈 Rainbow</button><button data-decor="decor3">🏆 Trophy</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="practice" class="screen" aria-labelledby="practiceTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">Pick one skill</p><h1 id="practiceTitle">Practice</h1></div></div>
+      <div class="practice-grid">
+        <button class="practice-card" data-activity="letter"><span>🔤</span><strong>Letters</strong><small>Letter recognition</small></button>
+        <button class="practice-card" data-activity="sound"><span>👂</span><strong>Sounds</strong><small>Beginning sounds</small></button>
+        <button class="practice-card" data-activity="sight"><span>👀</span><strong>Sight Words</strong><small>Recognize common words</small></button>
+        <button class="practice-card" data-activity="build"><span>🧱</span><strong>Build Words</strong><small>Put letters in order</small></button>
+        <button class="practice-card" data-activity="rhyme"><span>🎶</span><strong>Rhymes</strong><small>Find word pairs</small></button>
+        <button class="practice-card" data-activity="sentence"><span>🧩</span><strong>Sentences</strong><small>Put words in order</small></button>
+        <button class="practice-card" data-activity="punctuation"><span>✏️</span><strong>Fix a Sentence</strong><small>Capitals & punctuation</small></button>
+        <button class="practice-card" data-activity="comprehension"><span>📖</span><strong>Read & Answer</strong><small>Short passage questions</small></button>
+      </div>
+    </section>
+
+    <section id="daily" class="screen" aria-labelledby="dailyTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">5–10 minute practice</p><h1 id="dailyTitle">Daily Stitch Lesson</h1></div></div>
+      <div class="mission card gradient-card center"><div class="big-emoji">🚀</div><p class="eyebrow">Focused learning challenge</p><h2>Today's Mission</h2><p><strong>Goal:</strong> Help Stitch get 4 of 5 beginning sounds right. You can retry when you need to.</p><button class="speaker" data-speak="Today's mission: Help Stitch learn five beginning sounds!" aria-label="Hear today's mission">🔊 Hear Mission</button><button class="primary large" data-activity="sound">Start Mission</button></div>
+    </section>
+
+    <section id="adult" class="screen" aria-labelledby="adultTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">Adults only</p><h1 id="adultTitle">Teacher / Parent</h1></div></div>
+      <div id="adultGate" class="card gate center"><div class="big-emoji">🔐</div><h2>Adult check</h2><p>What is 8 + 4?</p><div class="gate-options"><button data-gate="10">10</button><button data-gate="12">12</button><button data-gate="14">14</button></div><p id="gateFeedback" aria-live="polite"></p></div>
+      <div id="adultDashboard" class="hidden">
+        <div class="stats-grid">
+          <div class="stat card"><strong id="adultLevel">Level 1</strong><small>Current level</small></div>
+          <div class="stat card"><strong id="adultLessons">0</strong><small>Completed lessons</small></div>
+          <div class="stat card"><strong id="adultMastered">0</strong><small>Skills mastered</small></div>
+        </div>
+        <div class="card"><h2>Learning progress</h2><p class="privacy-note">Stored only in this browser. No learner name or sensitive information is collected.</p>
+          <div class="skill-row"><span>Phonics</span><div class="meter"><span id="adultPhonicsBar" style="width:0%"></span></div><strong id="adultPhonics">Not started</strong></div>
+          <div class="skill-row"><span>Spelling</span><div class="meter"><span id="adultSpellingBar" style="width:0%"></span></div><strong id="adultSpelling">Not started</strong></div>
+          <div class="skill-row"><span>Reading</span><div class="meter"><span id="adultReadingBar" style="width:0%"></span></div><strong id="adultReading">Not started</strong></div>
+          <div class="skill-row"><span>Vocabulary</span><div class="meter"><span id="adultVocabularyBar" style="width:0%"></span></div><strong id="adultVocabulary">Not started</strong></div>
+          <p id="adultTrend" class="muted">Complete lessons to compare early and recent scores.</p>
+        </div>
+        <div class="card assignment"><h2>Assign practice</h2><select id="assignmentSelect" aria-label="Choose skill to assign"><option>Beginning sounds</option><option>Sight words</option><option>Word building</option><option>Reading</option></select><button class="primary" id="assignButton">Assign</button><span id="assignFeedback" aria-live="polite"></span></div>
+        <div class="card"><h2>Classroom Mode</h2><p>Use a teacher-controlled display for group spelling, vocabulary, and reading practice.</p><button class="secondary" id="classroomButton">Open sample class screen</button><div id="classroomPanel" class="hidden classroom-panel"><strong>Whole-class challenge:</strong><p>Which word rhymes with <em>cat</em>? — hat / sun / log</p></div></div>
+      </div>
+    </section>
+
+    <section id="help" class="screen" aria-labelledby="helpTitle">
+      <div class="page-title"><button class="back" data-nav="home">← Home</button><div><p class="eyebrow">About the app</p><h1 id="helpTitle">About & Help</h1></div></div>
+      <div class="card help-card"><h2>What this app teaches</h2><p>Stitch's Word World is a K–2 language arts learning app for practicing phonics, spelling, vocabulary, sentence skills, and early reading with Stitch as a learning buddy.</p><h2>How to use it</h2><p>Choose a learning level, pick a lesson, answer five short rounds, check a learning helper, and visit My Progress to see what to practice next.</p><h2>Accessibility</h2><p>Large controls, keyboard-friendly navigation, visible text alongside audio, replayable speech, responsive layouts, and no required audio.</p><h2>Remember</h2><p>Mistakes are part of learning. You can hear directions again, use a hint, replay an activity, or choose a different one.</p><div class="flow-actions left"><button class="primary" data-nav="home">Back to Home</button><button class="secondary" data-nav="path">Choose Another Activity</button></div></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Primary navigation">
+    <button data-nav="home"><span>🏠</span>Home</button>
+    <button data-nav="path"><span>🗺️</span>Path</button>
+    <button data-nav="resources"><span>📚</span>Resources</button>
+    <button data-nav="progress"><span>⭐</span>Progress</button>
+    <button data-nav="help"><span>❓</span>Help</button>
+  </nav>
+  <script src="app.js"></script>
+</body>
+</html>
