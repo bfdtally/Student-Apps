@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Time Trek: Decisions That Made History</title>
+<style>
+  :root{
+    color-scheme: light;
+    --cream:#F5EDE0; --card:#FBF6EE; --brown:#3D2B1F; --brown-soft:#6B5847;
+    --clay:#C6704F; --clay-dark:#A85A3D; --clay-darker:#8C4830; --sage:#7A8B69; --sage-dark:#4F5F42; --gold:#D4A24C;
+    --radius:20px; --shadow:0 4px 14px rgba(61,43,31,0.12); font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  body{ margin:0; font-family:-apple-system,"Segoe UI Rounded","Segoe UI",Roboto,system-ui,sans-serif;
+    background:var(--cream); color:var(--brown); min-height:100vh; padding-bottom:78px; }
+  h1,h2,h3{ font-weight:800; line-height:1.2; margin:0 0 .4em; }
+  p{ line-height:1.5; } button{ font-family:inherit; cursor:pointer; } a{ color:var(--clay-dark); }
+  header.top{ display:flex; align-items:center; justify-content:space-between; padding:14px 18px;
+    background:var(--card); border-bottom:2px solid #EADFCB; position:sticky; top:0; z-index:10; }
+  header.top .brand{ display:flex; align-items:center; gap:10px; font-weight:800; font-size:1.1rem; }
+  header.top .brand-mark{ width:36px;height:36px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, var(--gold), var(--clay)); display:flex;align-items:center;justify-content:center;font-size:1.2rem; }
+  main{ max-width:780px; margin:0 auto; padding:20px 16px 40px; }
+  .screen{ display:none; } .screen.active{ display:block; animation:fade .35s ease; }
+  @keyframes fade{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+  .card{ background:var(--card); border-radius:var(--radius); padding:22px; box-shadow:var(--shadow); margin-bottom:18px; }
+  nav.tabbar{ position:fixed; bottom:0; left:0; right:0; background:var(--card); border-top:2px solid #EADFCB;
+    display:flex; justify-content:space-around; padding:6px 4px; z-index:20; }
+  nav.tabbar button{ background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:2px;
+    color:var(--brown-soft); font-size:.7rem; padding:6px 4px; border-radius:14px; min-width:44px; min-height:44px; flex:1; }
+  nav.tabbar button .ic{ font-size:1.3rem; }
+  nav.tabbar button.active{ color:var(--brown); background:#F3E2D3; font-weight:700; }
+  nav.tabbar button:focus-visible, button:focus-visible, [tabindex]:focus-visible, textarea:focus-visible{ outline:3px solid var(--sage); outline-offset:2px; }
+  .btn{ display:inline-flex; align-items:center; gap:8px; justify-content:center; background:var(--clay-dark); color:#fff;
+    border:none; border-radius:999px; padding:14px 26px; font-size:1rem; font-weight:700; min-height:48px; box-shadow:var(--shadow); }
+  .btn:hover{ background:var(--clay-darker); }
+  .btn.secondary{ background:var(--sage-dark); }
+  .btn.secondary:hover{ background:#3F4C35; }
+  .btn.ghost{ background:transparent; color:var(--clay-darker); border:2px solid var(--clay); box-shadow:none; }
+  .btn.small{ padding:8px 14px; font-size:.85rem; min-height:40px; }
+  .btn:disabled{ opacity:.5; }
+  .speak-btn{ background:#EFE3D1; border:none; border-radius:999px; width:44px; height:44px; display:inline-flex;
+    align-items:center; justify-content:center; font-size:1.1rem; color:var(--clay-dark); }
+  .speak-row{ display:flex; align-items:center; gap:10px; margin:10px 0; }
+  .hero{ text-align:center; padding:26px 10px 10px; }
+  .hero .scene{ width:150px; height:150px; margin:0 auto 14px; border-radius:50%;
+    background:radial-gradient(circle at 40% 35%, var(--gold), var(--clay) 70%); display:flex; align-items:center;
+    justify-content:center; font-size:4rem; box-shadow:0 0 0 8px #F3E2D3, var(--shadow); animation:glow 2.4s ease-in-out infinite; }
+  @keyframes glow{ 0%,100%{ box-shadow:0 0 0 8px #F3E2D3, var(--shadow);} 50%{ box-shadow:0 0 0 14px #F3E2D3, var(--shadow);} }
+  .trail{ position:relative; padding:10px 0 10px 30px; }
+  .trail::before{ content:""; position:absolute; left:14px; top:10px; bottom:10px; width:4px;
+    background:repeating-linear-gradient(var(--sage) 0 8px, transparent 8px 14px); border-radius:4px; }
+  .stop{ position:relative; margin-bottom:22px; }
+  .stop .node{ position:absolute; left:-30px; top:2px; width:28px; height:28px; border-radius:50%; background:var(--sage-dark);
+    color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; box-shadow:0 0 0 4px var(--cream); }
+  .stop.locked .node{ background:#C9BEA9; color:var(--brown); } .stop.done .node{ background:var(--gold); color:var(--brown); }
+  .stop-card{ display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .stop-card .meta{ font-size:.8rem; color:var(--brown-soft); }
+  .badge-pill{ display:inline-block; background:#EDE7D8; color:var(--brown-soft); border-radius:999px; padding:2px 10px; font-size:.72rem; font-weight:700; margin-top:4px; }
+  .grade-chips{ display:flex; gap:8px; flex-wrap:wrap; margin:10px 0 16px; }
+  .chip{ background:var(--card); border:2px solid #EADFCB; border-radius:999px; padding:6px 14px; font-size:.8rem; font-weight:700; color:var(--brown-soft); min-height:36px; }
+  .chip.active{ background:var(--clay-dark); color:#fff; border-color:var(--clay-dark); }
+  .choice-btn{ display:block; width:100%; text-align:left; background:var(--card); border:2px solid #EADFCB;
+    border-radius:16px; padding:14px 16px; margin-bottom:10px; font-size:.98rem; color:var(--brown); }
+  .choice-btn:hover{ border-color:var(--clay); } .choice-btn.tried{ border-color:var(--gold); }
+  .clue-chip{ display:inline-flex; align-items:center; gap:6px; background:#EFE3D1; border:none; border-radius:14px;
+    padding:10px 14px; margin:4px 6px 4px 0; font-size:.9rem; min-height:44px; }
+  .clue-chip.seen{ background:var(--sage-dark); color:#fff; }
+  .clue-detail{ background:#FBF6EE; border-left:4px solid var(--sage); border-radius:10px; padding:10px 12px; margin-top:8px; font-size:.9rem; }
+  .scene-box{ border-radius:16px; padding:16px; margin-top:12px; overflow:hidden; }
+  .scene-box.best{ background:#E7EEE0; border:2px solid var(--sage); }
+  .scene-box.mixed{ background:#FBF0DC; border:2px solid var(--gold); }
+  .scene-box.poor{ background:#F6E4D8; border:2px solid var(--clay); }
+  .scene-line{ opacity:0; animation:reveal .5s ease forwards; margin:0 0 8px; }
+  .ripple-wrap{ margin:12px 0; }
+  .ripple-label{ display:flex; justify-content:space-between; font-size:.72rem; color:var(--brown-soft); font-weight:700; margin-bottom:4px; }
+  .ripple-track{ background:#EADFCB; border-radius:999px; height:10px; overflow:hidden; }
+  .ripple-fill{ height:100%; border-radius:999px; background:linear-gradient(90deg,var(--sage),var(--clay)); width:0; transition:width 1.1s ease .3s; }
+  .counterfactual{ background:#FBF6EE; border:2px dashed var(--brown-soft); border-radius:14px; padding:12px 14px; margin-top:10px; font-size:.9rem; }
+  .attempt-note{ font-size:.78rem; color:var(--brown-soft); margin-top:6px; }
+  @keyframes reveal{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);} }
+  .artifact-tile{ background:var(--card); border:2px solid #EADFCB; border-radius:16px; padding:14px; text-align:center; font-size:.85rem; }
+  .badge-empty{ display:inline-block; width:1.1em; height:1.1em; border:2px solid #D8CBB0; border-radius:6px; vertical-align:middle; }
+  .artifact-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:12px; }
+  .placeholder-note{ font-size:.85rem; color:var(--brown-soft); }
+  .teacher-note{ background:#EFE7D6; border:2px dashed var(--brown-soft); border-radius:14px; padding:10px 14px; margin:10px 0; font-size:.85rem; }
+  .save-flag{ font-size:.75rem; color:var(--sage-dark); font-weight:700; }
+  .step-dots{ display:flex; gap:6px; margin-bottom:14px; }
+  .step-dots span{ width:9px; height:9px; border-radius:50%; background:#EADFCB; }
+  .step-dots span.on{ background:var(--clay); }
+  textarea{ width:100%; border-radius:12px; border:2px solid #EADFCB; padding:10px; font-family:inherit; font-size:.95rem; background:#fff; color:var(--brown); }
+  /* Play hub */
+  .play-grid{ display:grid; grid-template-columns:1fr; gap:14px; }
+  @media (min-width:560px){ .play-grid{ grid-template-columns:1fr 1fr; } }
+  .play-card{ background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow); text-align:left; border:2px solid transparent; }
+  .play-card:hover{ border-color:var(--clay); }
+  .play-card .play-icon{ font-size:1.8rem; }
+  .play-card h3{ margin:6px 0 4px; font-size:1.05rem; }
+  .play-card p{ font-size:.85rem; color:var(--brown-soft); margin:0 0 10px; }
+  .category-tag{ display:inline-block; background:#EDE7D8; color:var(--brown-soft); border-radius:999px; padding:2px 10px; font-size:.68rem; font-weight:700; margin-bottom:8px; }
+  .play-badge-earned{ font-size:.72rem; color:var(--sage-dark); font-weight:700; }
+  .section-label{ font-weight:800; margin:20px 0 10px; font-size:1rem; }
+  /* Timer */
+  .timer-wrap{ margin:10px 0; }
+  .timer-track{ background:#EADFCB; border-radius:999px; height:14px; overflow:hidden; }
+  .timer-fill{ height:100%; background:linear-gradient(90deg,var(--sage),var(--gold)); transition:width 0.4s linear; }
+  .timer-label{ font-size:.8rem; font-weight:700; color:var(--brown-soft); margin-bottom:4px; display:flex; justify-content:space-between; }
+  /* Stepper */
+  .stepper{ display:inline-flex; align-items:center; gap:10px; background:var(--card); border:2px solid #EADFCB; border-radius:999px; padding:4px 8px; }
+  .stepper button{ background:var(--clay-dark); color:#fff; border:none; border-radius:50%; width:40px; height:40px; font-size:1.2rem; font-weight:800; }
+  .stepper button:disabled{ opacity:.4; }
+  .stepper .qty{ min-width:24px; text-align:center; font-weight:800; }
+  /* Reorder list */
+  .reorder-list{ display:flex; flex-direction:column; gap:8px; }
+  .reorder-item{ display:flex; align-items:center; gap:10px; background:var(--card); border:2px solid #EADFCB; border-radius:14px; padding:10px 12px; }
+  .reorder-item .re-icon{ font-size:1.4rem; }
+  .reorder-item .re-text{ flex:1; font-size:.92rem; }
+  .reorder-item .re-btns{ display:flex; flex-direction:column; gap:4px; }
+  .reorder-item .re-btns button{ background:#EFE3D1; border:none; border-radius:8px; width:40px; height:36px; font-size:1rem; color:var(--clay-dark); }
+  /* Map */
+  .map-wrap{ position:relative; width:100%; padding-top:65%; border-radius:16px; overflow:hidden;
+    background:linear-gradient(160deg,#E8DCC0,#D9C9A3); border:3px solid #C9B98E; margin:12px 0; }
+  .map-hotspot{ position:absolute; transform:translate(-50%,-50%); background:rgba(251,246,238,.9); color:var(--brown); border:2px solid var(--brown-soft);
+    border-radius:14px; padding:8px 10px; font-size:.8rem; display:flex; flex-direction:column; align-items:center; min-width:56px; min-height:44px; justify-content:center; }
+  .map-hotspot .mh-icon{ font-size:1.4rem; }
+  .map-hotspot.found{ border-color:var(--sage); background:#E7EEE0; }
+  /* Scene / hunt grid */
+  .scene-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:12px 0; }
+  .scene-obj{ background:var(--card); border:2px solid #EADFCB; border-radius:14px; padding:14px 4px; text-align:center; font-size:1.6rem; min-height:64px; }
+  .scene-obj.found{ border-color:var(--sage); background:#E7EEE0; }
+  .scene-obj.checked-empty{ opacity:.45; }
+  .scene-obj .so-label{ display:block; font-size:.62rem; margin-top:4px; color:var(--brown-soft); }
+  /* Gallery / museum */
+  .artifact-pick-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:10px; margin:12px 0; }
+  .artifact-pick{ background:var(--card); color:var(--brown); border:2px solid #EADFCB; border-radius:14px; padding:12px 8px; text-align:center; font-size:.78rem; min-height:44px; }
+  .artifact-pick.selected{ border-color:var(--clay); background:#F3E2D3; }
+  .artifact-pick .ap-icon{ font-size:1.8rem; display:block; }
+  .gallery-wall{ display:flex; flex-direction:column; gap:14px; margin:14px 0; }
+  .gallery-frame{ background:#FBF6EE; border:6px solid var(--brown-soft); border-radius:10px; padding:16px; text-align:center; }
+  .gallery-frame .gf-icon{ font-size:2.2rem; }
+  /* Compare / then-vs-now */
+  .compare-cols{ display:grid; grid-template-columns:1fr; gap:14px; margin:12px 0; }
+  @media (min-width:560px){ .compare-cols{ grid-template-columns:1fr 1fr; } }
+  .compare-card{ background:var(--card); border-radius:16px; padding:16px; border:2px solid #EADFCB; }
+  .compare-card.now{ border-color:var(--sage); }
+  .compare-card h4{ margin:0 0 8px; }
+  .compare-card ul{ margin:0; padding-left:18px; font-size:.88rem; }
+  /* Vote */
+  .vote-btn{ display:block; width:100%; text-align:left; background:var(--card); color:var(--brown); border:2px solid #EADFCB; border-radius:14px;
+    padding:12px 16px; margin-bottom:8px; font-size:.92rem; }
+  .vote-btn:hover{ border-color:var(--clay); }
+  .vote-btn:disabled{ color:var(--brown-soft); opacity:.75; }
+  .perspective-quote{ background:#FBF6EE; border-left:4px solid var(--gold); border-radius:10px; padding:8px 12px; margin:6px 0; font-size:.85rem; font-style:italic; }
+  /* Drawing canvas */
+  .draw-wrap{ margin:12px 0; }
+  .draw-canvas{ width:100%; max-width:320px; height:200px; background:#fff; border-radius:12px; border:2px solid #EADFCB; touch-action:none; display:block; }
+  .swatch-row{ display:flex; gap:8px; margin:10px 0; align-items:center; flex-wrap:wrap; }
+  .swatch{ width:40px; height:40px; border-radius:50%; border:2px solid #fff; box-shadow:0 0 0 2px #EADFCB; }
+  .swatch.active{ box-shadow:0 0 0 2px var(--clay); }
+  .journal-entry{ background:var(--card); border-radius:14px; border:2px solid #EADFCB; padding:12px; margin-bottom:10px; }
+  .journal-entry img{ max-width:160px; border-radius:8px; margin-top:6px; display:block; }
+  @media (min-width:640px){ main{ padding-top:28px; } .hero .scene{ width:180px; height:180px; font-size:5rem; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="brand-mark">⏳</span> Time Trek</div>
+  <button class="speak-btn" id="muteToggle" aria-pressed="false" aria-label="Turn narration on or off">🔊</button>
+</header>
+<main id="app"></main>
+<nav class="tabbar" aria-label="Main sections">
+  <button data-screen="home" class="active"><span class="ic">🏠</span>Home</button>
+  <button data-screen="path"><span class="ic">🗺️</span>Path</button>
+  <button data-screen="play"><span class="ic">🎲</span>Play</button>
+  <button data-screen="resources"><span class="ic">📚</span>Resources</button>
+  <button data-screen="progress"><span class="ic">🎖️</span>Progress</button>
+  <button data-screen="about"><span class="ic">❓</span>About</button>
+</nav>
+<script>
+/* ================= Sample educational content (fictional/sample only) ================= */
+const MISSIONS = [
+{ id:"river", grade:"G3", subject:"Settlements & Location", title:"River Town Rescue", place:"A river valley with a hill and a forest nearby",
+   icon:"🏞️", skill:"Smart Settler", minutes:8,
+   steps:[
+    {type:"observe", text:"Three guides know this land well. Tap each one to hear their clue before you choose where to build.",
+     clues:[
+      {icon:"🦫",label:"By the river",detail:"\"The river floods every spring when the snow melts!\""},
+      {icon:"🦅",label:"On the hill",detail:"\"It's windy up here, and dry — you'd need a well.\""},
+      {icon:"🦉",label:"In the forest",detail:"\"Plenty of wood, but the river is a long walk away.\""}
+     ]},
+    {type:"decide", prompt:"Where should the town be built?",
+     choices:[
+      {text:"Right on the floodplain, next to the river.", outcome:"poor",
+       consequence:["Spring arrives. Snow melts far upstream, and the river swells past its banks.","The water creeps up — then floods. Three houses have to be dragged to higher ground before they float away.","The flood line was always there. The guide's clue said so."],
+       ripple:{now:25, later:90},
+       counterfactual:"If the town were built on the hill instead, this same flood would pass by harmlessly below it.",
+       reteach:"Remember the clue: rivers like this one flood every spring. Building right on the flood line is risky, even though the water is closer."},
+      {text:"On the hill, away from the water.", outcome:"mixed",
+       consequence:["The spring flood passes safely below the hill.","But by summer, the well runs dry. Villagers haul buckets up from the river every day, and one spills on the way."],
+       ripple:{now:20, later:45},
+       counterfactual:"A floodplain town would have kept flood-free water close by all summer — but risked the spring flood instead.",
+       reteach:null},
+      {text:"In the forest, near the trees.", outcome:"mixed",
+       consequence:["Plenty of wood for building all year.","But water is a long daily walk away, and the path gets dangerous once wolves start prowling it at dusk."],
+       ripple:{now:20, later:40},
+       counterfactual:"A hill town would trade the wolf-watched path for a dry well instead — every site has a tradeoff.",
+       reteach:null}
+     ]},
+    {type:"decide", prompt:"Twist: this year is a drought, not a flood year. Where should the NEXT town go?",
+     choices:[
+      {text:"By the river again — the water source is reliable.", outcome:"best",
+       consequence:["The dry season stretches on. The river drops low but never disappears — this town's crops survive.","The hill town's well fails completely, and families are hauling water in from far away."],
+       ripple:{now:15, later:15},
+       counterfactual:"In a flood year the river site was the risky one — in a drought year it's the safest. Context changes everything.",
+       reteach:null},
+      {text:"On the hill — it's safer overall.", outcome:"poor",
+       consequence:["The dry season stretches on, and the hill's well runs completely dry.","Families have to haul water in from far away, week after week."],
+       ripple:{now:30, later:70},
+       counterfactual:"The riverside town's water never fully disappeared, even in the drought.",
+       reteach:"There's no single \"safest\" spot forever — a hill is safer in a flood year, but a river is safer in a drought year."}
+     ]},
+    {type:"create", prompt:"A good place to build a town is…", starter:"A good place to build a town is… because…", badge:"Smart Settler"}
+   ]},
+{ id:"symbols", grade:"G3", subject:"Civic Symbols", title:"Symbol Detective", place:"The town square",
+   icon:"🔎", skill:"Civic Designer", minutes:6,
+   steps:[
+    {type:"observe", text:"Tap each symbol in the town square to learn what it stands for.",
+     clues:[
+      {icon:"🚩",label:"The town flag",detail:"Its blue stripe stands for the river that gives the town water."},
+      {icon:"🌾",label:"The courthouse seal",detail:"Wheat stalks on the seal stand for the farms that feed the town."},
+      {icon:"🤝",label:"The statue",detail:"Two clasped hands stand for a friendship treaty with a neighboring town."}
+     ]},
+    {type:"decide", prompt:"The town wants to celebrate its harvest with a symbol. Which one fits best?",
+     choices:[
+      {text:"The wheat seal.", outcome:"best",
+       consequence:["Everyone recognizes it right away — the wheat has meant \"farming\" here for generations."],
+       ripple:{now:10, later:10}, counterfactual:"The flag's river stripe is about water, not farming — close, but not quite the harvest symbol.", reteach:null},
+      {text:"The clasped-hands statue.", outcome:"poor",
+       consequence:["People are confused — the statue is about the friendship treaty, not the harvest."],
+       ripple:{now:15, later:15}, counterfactual:"The wheat seal already means \"farming\" to everyone in town.",
+       reteach:"Each symbol carries its own specific meaning. The clasped hands stand for friendship, not farming — the wheat does."}
+     ]},
+    {type:"decide", prompt:"You're designing a brand-new town seal. Which set of symbols best captures the whole town — its river, its farms, and its friendship treaty?",
+     choices:[
+      {text:"River stripe + wheat + clasped hands, all three together.", outcome:"best",
+       consequence:["The new seal tells the whole story of the town in one image — water, food, and friendship."],
+       ripple:{now:10, later:10}, counterfactual:"Leaving any one symbol out would leave part of the town's story untold.", reteach:null},
+      {text:"Just the wheat, since farming matters most.", outcome:"mixed",
+       consequence:["The seal looks clean and simple, but visitors have no way to know about the river or the treaty."],
+       ripple:{now:10, later:20}, counterfactual:"Adding the river stripe and clasped hands would tell the town's full story, not just one part of it.", reteach:null}
+     ]},
+    {type:"create", prompt:"Why did you choose the symbols you did for the new seal?", starter:"I chose these symbols because…", badge:"Civic Designer"}
+   ]},
+ { id:"marketday", grade:"G3", subject:"Economics: Needs & Wants", title:"Market Day Mayhem", place:"A village market square",
+   icon:"🧺", skill:"Market Master", minutes:8,
+   steps:[
+    {type:"observe", text:"Look over your stall before the market opens. Some of your goods are needs, some are wants.",
+     clues:[
+      {icon:"🍞",label:"Bread",detail:"A need — people must buy food no matter what."},
+      {icon:"🍬",label:"Honey candy",detail:"A want — sweet, but nobody needs it to get through the day."},
+      {icon:"🧵",label:"Wool blankets",detail:"A need in cold months — people will pay more for warmth."}
+     ]},
+    {type:"decide", prompt:"How should you price your stall today?",
+     choices:[
+      {text:"Set prices high — every sale earns more.", outcome:"poor",
+       consequence:["Morning turns to afternoon, and shoppers keep walking right past your stall.","By closing time, your baskets are still full and the coins in your box barely jingle."],
+       ripple:{now:20, later:40}, counterfactual:"A fair, balanced price would have brought in steady customers all day.",
+       reteach:"When prices are too high, shoppers simply buy from someone else. A fair price brings in more sales overall, even if each one earns a little less."},
+      {text:"Set prices very low — sell everything fast.", outcome:"mixed",
+       consequence:["A crowd rushes in, and your stall is empty before noon.","But when you count your coins, the pile is small — barely enough to cover next week's goods."],
+       ripple:{now:10, later:30}, counterfactual:"A balanced price would have sold nearly as fast, with a much bigger coin pile at the end.", reteach:null},
+      {text:"Set a fair, balanced price.", outcome:"best",
+       consequence:["Customers come steadily all day, and your baskets empty out by late afternoon.","Your coin box is heavier than it's ever been."],
+       ripple:{now:10, later:10}, counterfactual:"Pricing too high would have left your baskets full and your coin box light.", reteach:null}
+     ]},
+    {type:"decide", prompt:"A neighbor arrives — she doesn't have enough coins for bread her family needs. What do you do?",
+     choices:[
+      {text:"Lower the price for her today.", outcome:"mixed",
+       consequence:["You earn a little less today.","But next market day, she's back — and she brings two more families with her."],
+       ripple:{now:10, later:5}, counterfactual:"Holding firm would have earned full price today, but she may have bought from someone else next time.", reteach:null},
+      {text:"Hold firm at the full price.", outcome:"mixed",
+       consequence:["You earn full price from her today.","But next market day, she buys her bread from a different stall instead."],
+       ripple:{now:5, later:15}, counterfactual:"Lowering the price today might have earned less now, but kept her coming back as a loyal customer.", reteach:null}
+     ]},
+    {type:"decide", prompt:"You've saved a good pile of coins. Do you buy the new delivery wagon now, or save toward the winter fair?",
+     choices:[
+      {text:"Buy the wagon right now.", outcome:"mixed",
+       consequence:["The wagon makes deliveries easier all spring and summer.","But by next winter, it's rusted and creaky, and you have nothing saved for the big fair."],
+       ripple:{now:15, later:20}, counterfactual:"Saving instead would have doubled your coins by the winter fair — though you'd have missed a summer of easy deliveries.", reteach:null},
+      {text:"Save the coins for the winter fair.", outcome:"best",
+       consequence:["The pile grows all year.","At the winter fair, your savings are worth twice as much — plenty for a wagon and more."],
+       ripple:{now:10, later:5}, counterfactual:"Buying the wagon now would have been useful right away, but left nothing saved for winter.", reteach:null}
+     ]},
+    {type:"create", prompt:"The best price for your goods is…", starter:"The best price is… because…", badge:"Market Master"}
+   ]},
+ { id:"neighborhoodheroes", grade:"G3", subject:"Civics: Helpers & Rules", title:"Neighborhood Heroes", place:"A busy neighborhood block",
+   icon:"🚒", skill:"Community Builder", minutes:7,
+   steps:[
+    {type:"observe", text:"Three problems are happening around the neighborhood right now. Tap each to see what's going on.",
+     clues:[
+      {icon:"🔥",label:"A small fire",detail:"Smoke is rising from a trash can behind the bakery."},
+      {icon:"🐕",label:"A lost dog",detail:"A dog without a collar is wandering near the school, looking scared."},
+      {icon:"💡",label:"A broken streetlight",detail:"The light on Elm Street has been flickering and just went dark."}
+     ]},
+    {type:"decide", prompt:"The fire is spreading behind the bakery. Who should you call?",
+     choices:[
+      {text:"The city worker who fixes streetlights.", outcome:"poor",
+       consequence:["The streetlight crew arrives with a ladder — but no way to put out a fire.","By the time the right call is made, the smoke has spread further."],
+       ripple:{now:20, later:35}, counterfactual:"Calling the firefighters right away would have put the fire out before it spread.",
+       reteach:"Each helper has a specific job. Firefighters are trained and equipped for fires — that's who to call first."},
+      {text:"The firefighters.", outcome:"best",
+       consequence:["The fire truck arrives quickly, and the fire is out within minutes.","No one is hurt, and the bakery reopens the next day."],
+       ripple:{now:10, later:10}, counterfactual:"Calling a city worker instead would have wasted precious time while the fire grew.", reteach:null}
+     ]},
+    {type:"decide", prompt:"A classmate says: \"There's no running in the hallway\" and \"cars must stop at red lights.\" Are these the same kind of thing?",
+     choices:[
+      {text:"Yes — they're both just rules everyone follows.", outcome:"poor",
+       consequence:["A student running in the hall gets a reminder from a teacher.","A driver running a red light gets pulled over by police — that's a very different kind of consequence."],
+       ripple:{now:10, later:15}, counterfactual:"Recognizing the difference helps explain why some consequences involve a teacher, and others involve the police.",
+       reteach:"A school rule (no running) is enforced by the school. A law (stop at red lights) is enforced by police and applies to everyone in town, not just one building."},
+      {text:"No — one is a school rule, the other is a law.", outcome:"best",
+       consequence:["That's exactly right. Rules are made by a group, like a school or a family. Laws apply to the whole town or country and are enforced by police."],
+       ripple:{now:10, later:10}, counterfactual:"Treating them as the same thing would blur why breaking one gets a reminder and breaking the other gets a ticket.", reteach:null}
+     ]},
+    {type:"decide", prompt:"Your class is writing one new playground rule. Which one should you propose?",
+     choices:[
+      {text:"\"No one may use the swings, ever.\"", outcome:"poor",
+       consequence:["The swings sit empty all year, and kids who loved them are disappointed.","The rule solves nothing — it just removes something everyone enjoyed."],
+       ripple:{now:15, later:15}, counterfactual:"A rule about taking turns would keep the swings safe and let everyone still enjoy them.",
+       reteach:"A good rule solves the actual problem without taking away something everyone should get to enjoy."},
+      {text:"\"Everyone gets a turn on the swings — 2 minutes each.\"", outcome:"best",
+       consequence:["Kids line up and take turns fairly.","No one gets hurt, and everyone still gets to swing."],
+       ripple:{now:10, later:10}, counterfactual:"Banning the swings completely would have been simpler to write, but far less fair.", reteach:null}
+     ]},
+    {type:"create", prompt:"Why do neighborhoods need both helpers and rules?", starter:"Neighborhoods need helpers and rules because…", badge:"Community Builder"}
+   ]},
+ { id:"timecapsule", grade:"G3", subject:"Change Over Time", title:"Time Capsule Detective", place:"A kitchen from the year 1900",
+   icon:"🕰️", skill:"Time Keeper", minutes:8,
+   steps:[
+    {type:"observe", text:"Step into a kitchen from the year 1900. Tap each object to see how families used it.",
+     clues:[
+      {icon:"🧊",label:"The icebox",detail:"A block of ice kept food cool — someone delivered fresh ice by wagon every few days."},
+      {icon:"🔥",label:"The wood stove",detail:"Cooking meant chopping wood and keeping a fire going all day."},
+      {icon:"🧺",label:"The washboard",detail:"Clothes were scrubbed by hand against its ridges, one piece at a time."}
+     ]},
+    {type:"decide", prompt:"You're packing a time capsule to bury in the year 1900. Which item makes sense to include?",
+     choices:[
+      {text:"A small television.", outcome:"poor",
+       consequence:["Nothing like this exists yet in 1900 — there's no electricity in most homes, let alone a screen that plays pictures.","It doesn't belong in this kitchen at all."],
+       ripple:{now:15, later:20}, counterfactual:"A hand-carved wooden spoon would fit perfectly with the tools already in this kitchen.",
+       reteach:"A time capsule should only hold things that actually existed at that time. Electricity for televisions didn't reach most homes until decades later."},
+      {text:"A hand-carved wooden spoon.", outcome:"best",
+       consequence:["This fits right in — wooden tools like this were common in kitchens like this one."],
+       ripple:{now:10, later:10}, counterfactual:"A television would have been a strange, impossible object to find in this kitchen.", reteach:null}
+     ]},
+    {type:"decide", prompt:"What eventually replaced the icebox?",
+     choices:[
+      {text:"A bigger icebox.", outcome:"poor",
+       consequence:["Ice deliveries kept happening for a while, but eventually something new took over completely."],
+       ripple:{now:10, later:15}, counterfactual:"The electric refrigerator replaced the icebox once electricity reached most homes.",
+       reteach:"As electricity spread to homes, the electric refrigerator replaced the icebox — no more waiting for the ice wagon."},
+      {text:"The electric refrigerator.", outcome:"best",
+       consequence:["Exactly — once homes had electricity, refrigerators kept food cold without needing delivered ice at all."],
+       ripple:{now:10, later:10}, counterfactual:"A bigger icebox would have still needed regular ice deliveries — the real change was electricity.", reteach:null}
+     ]},
+    {type:"create", prompt:"A kid opens your time capsule 100 years from now. Write a short caption explaining one item you chose.", starter:"I chose this item because…", badge:"Time Keeper"}
+   ]},
+{ id:"explorer", grade:"G4", subject:"Early Exploration & Trade", title:"Explorer's Log", place:"A merchant ship, about to set sail",
+   icon:"⛵", skill:"Fearless Navigator", minutes:9,
+   steps:[
+    {type:"observe", text:"Before you pack the ship, learn what this voyage requires.",
+     clues:[
+      {icon:"🌬️",label:"Winds",detail:"The winds only blow the right direction for about 8 weeks — the voyage has to fit that window."},
+      {icon:"🌊",label:"Currents",detail:"Ocean currents will carry the ship faster on the return trip than on the way out."},
+      {icon:"📦",label:"Cargo hold",detail:"There's only room for 10 crates: choose between food, water, tools, trade goods, and medicine."}
+     ]},
+    {type:"decide", prompt:"How should you load the cargo hold for 8 weeks at sea?",
+     choices:[
+      {text:"A balanced load: food, water, tools, and trade goods.", outcome:"best",
+       consequence:["Supplies last the whole voyage with a little room to spare.","There's still enough trade goods left to barter well at landfall."],
+       ripple:{now:10, later:10}, counterfactual:"An all-trade-goods load would have run out of water long before landfall.", reteach:null},
+      {text:"Mostly trade goods — you can buy supplies along the way.", outcome:"poor",
+       consequence:["By week 6, the water barrels are nearly empty.","A sailor collapses from thirst, and the ship has to make an emergency stop, trading away goods just to restock water."],
+       ripple:{now:15, later:55}, counterfactual:"A balanced load would have kept enough water on board for the whole 8 weeks.",
+       reteach:"There's nowhere to restock water in the open ocean. Food and water have to last the entire voyage, not just get you started."},
+      {text:"Mostly food and water, only a little trade goods.", outcome:"mixed",
+       consequence:["The crew stays healthy and well-fed the whole way.","But at landfall, there's little to trade — you end up bartering away some of your tools instead."],
+       ripple:{now:10, later:20}, counterfactual:"A balanced load would have left tools untouched and traded goods instead.", reteach:null}
+     ]},
+    {type:"decide", prompt:"A storm hits in week 3. Do you sail through it or wait it out?",
+     choices:[
+      {text:"Sail through it.", outcome:"mixed",
+       consequence:["The ship pitches hard, and a loose barrel breaks free, spilling some supplies overboard.","But you stay on schedule and reach land on time."],
+       ripple:{now:20, later:15}, counterfactual:"Waiting out the storm would have kept every barrel secure, but cost three days.", reteach:null},
+      {text:"Wait it out in a sheltered cove.", outcome:"best",
+       consequence:["The ship rides out the storm safely with nothing lost.","The delay costs a few days, but the crew and cargo arrive in full."],
+       ripple:{now:10, later:10}, counterfactual:"Sailing through would have kept you on schedule, at the cost of some lost supplies.", reteach:null}
+     ]},
+    {type:"create", prompt:"Write your captain's log entry for the voyage.", starter:"We survived because we packed ___ and chose to ___", badge:"Fearless Navigator"}
+   ]},
+{ id:"regions", grade:"G4", subject:"Geographic Regions", title:"Region Riddle", place:"The Plains region",
+   icon:"🌾", skill:"Regional Expert", minutes:7,
+   steps:[
+    {type:"observe", text:"Learn what each landscape produces before you plan your region's economy.",
+     clues:[
+      {icon:"🏔️",label:"Mountains",detail:"Rich in minerals and lumber, but hard to farm."},
+      {icon:"🌊",label:"Coast",detail:"Full of fish, and easy for ships to reach for trade."},
+      {icon:"🌾",label:"Plains",detail:"Wide, flat, and full of rich soil — perfect for growing grain."}
+     ]},
+    {type:"decide", prompt:"Your region is the wide-open Plains. What should its main way of living be?",
+     choices:[
+      {text:"Growing grain on the wide, flat fields.", outcome:"best",
+       consequence:["The flat land and rich soil make the Plains one of the best grain-growing regions around.","Silos fill up every harvest season."],
+       ripple:{now:10, later:10}, counterfactual:"Mining would need mountains the Plains simply don't have.", reteach:null},
+      {text:"Mining for minerals.", outcome:"poor",
+       consequence:["Workers dig for weeks and find almost nothing — the Plains has no mineral deposits at all."],
+       ripple:{now:15, later:20}, counterfactual:"Growing grain uses exactly what the Plains' flat, rich soil is good for.",
+       reteach:"Each region's economy grows out of its landscape. The Plains' flat, rich soil is built for farming, not mining."}
+     ]},
+    {type:"decide", prompt:"Your region has no fish, but people want some. What do you do?",
+     choices:[
+      {text:"Trade grain with the Coastal region for fish.", outcome:"best",
+       consequence:["The Coastal region is glad to trade — they need grain, and you need fish.","Both regions end up with more variety than either had alone."],
+       ripple:{now:10, later:10}, counterfactual:"Trying to fish a landlocked pond would have left the town mostly without fish anyway.", reteach:null},
+      {text:"Try fishing in a small nearby pond.", outcome:"poor",
+       consequence:["The pond barely has enough fish for a few families, let alone the whole town."],
+       ripple:{now:15, later:25}, counterfactual:"Trading grain for fish with the Coastal region would have easily met the town's needs.",
+       reteach:"No single region has everything it needs. Trading with a region that has what you lack is usually far more reliable than trying to force your land to provide it."}
+     ]},
+    {type:"create", prompt:"Describe how your region and a neighboring region depend on each other.", starter:"My region thrives because we trade ___ for ___", badge:"Regional Expert"}
+   ]},
+ { id:"treaty", grade:"G4", subject:"Contact, Trade & Treaties", title:"Treaty at the River", place:"A river valley, first contact between a tribal nation and newcomers",
+   icon:"🕊️", skill:"Honest Historian", minutes:10,
+   note:"This activity is designed to be paired with class discussion. It presents treaties honestly — many were unequal, and many were later broken.",
+   steps:[
+    {type:"observe", text:"Meet the river council before any decisions are made. Learn what matters most to this community.",
+     clues:[
+      {icon:"🌊",label:"The river",detail:"It provides fish, fresh water, and a route for canoes — central to daily life."},
+      {icon:"🌲",label:"The hunting grounds",detail:"Generations have hunted here; the land is known in careful, practiced detail."},
+      {icon:"🏕️",label:"The village",detail:"Homes, elders, and children all depend on this specific stretch of land."}
+     ]},
+    {type:"decide", prompt:"A ship has arrived. The newcomers want to trade. What do you offer first?",
+     choices:[
+      {text:"Metal tools, like knives and hoes.", outcome:"best",
+       consequence:["Both sides benefit — the tools are useful for daily work, and the newcomers receive furs and food in return.","Trust builds slowly between the two groups."],
+       ripple:{now:10, later:10}, counterfactual:"Trading guns instead would have shifted the balance of power in a far riskier direction.", reteach:null},
+      {text:"Cloth and glass beads.", outcome:"mixed",
+       consequence:["The trade goes smoothly and everyone is satisfied for now.","But it doesn't change much for either side in the long run."],
+       ripple:{now:10, later:10}, counterfactual:"Tools would have been just as fair, and more useful for daily life on both sides.", reteach:null},
+      {text:"Guns.", outcome:"poor",
+       consequence:["The trade brings a burst of goods both ways — but word spreads fast, and other groups nearby grow uneasy.","Within a season, the balance of power in the region has shifted in a way no one fully controls."],
+       ripple:{now:15, later:55}, counterfactual:"Trading tools instead would have built the same trust without shifting the region's balance of power.",
+       reteach:"Some trades carry consequences far beyond the moment. Trading weapons changed the balance of power for everyone nearby, not just the two groups trading."}
+     ]},
+    {type:"decide", prompt:"The newcomers now offer a treaty: they want the land along the river in exchange for goods and a promise of peace. What does the council decide?",
+     choices:[
+      {text:"Accept the land deal.", outcome:"mixed",
+       consequence:["The immediate goods and promised peace ease tension right away.","But over the following years, the map shows the village's land shrinking again and again as more settlers arrive."],
+       ripple:{now:10, later:60}, counterfactual:"Refusing might have meant conflict sooner — but many nations who accepted similar deals still lost their land over time.", reteach:null},
+      {text:"Ask for more time before deciding.", outcome:"mixed",
+       consequence:["The council buys a season to think and consult with elders.","But more settlers arrive during that time, and the pressure to accept only grows stronger."],
+       ripple:{now:15, later:45}, counterfactual:"Accepting right away would have secured the promised goods sooner, before more settlers arrived.", reteach:null},
+      {text:"Refuse the treaty entirely.", outcome:"mixed",
+       consequence:["The council holds its ground and keeps its land — for now.","Tensions with the newcomers rise, and both sides brace for what comes next."],
+       ripple:{now:25, later:40}, counterfactual:"Accepting the deal might have eased tension immediately, at the cost of the land itself.", reteach:null}
+     ]},
+    {type:"create", prompt:"Every choice in this mission had a real cost. Why is fairness so hard in a moment like this?", starter:"Fairness is hard here because…", badge:"Honest Historian"}
+   ]},
+ { id:"capitolhill", grade:"G4", subject:"State Government", title:"Capitol Hill Hop", place:"The state capitol building",
+   icon:"🏛️", skill:"Lawmaker", minutes:8,
+   steps:[
+    {type:"observe", text:"Your town has a problem. Learn what's happening before you write a law about it.",
+     clues:[
+      {icon:"🗑️",label:"Litter",detail:"Trash is piling up in the park, and nobody's in charge of cleaning it."},
+      {icon:"🐕",label:"Stray dogs",detail:"Dogs without owners are wandering the streets, and a few families are worried."},
+      {icon:"📋",label:"Town hall notes",detail:"Residents have been asking their representative to do something about one of these."}
+     ]},
+    {type:"decide", prompt:"You decide to write a law about litter in the park. How strict should it be?",
+     choices:[
+      {text:"A $500 fine for dropping even a single leaf.", outcome:"poor",
+       consequence:["A kid gets fined for a leaf that blew off a tree.","Families are furious, and the law gets mocked all over town before it's even a week old."],
+       ripple:{now:20, later:30}, counterfactual:"A reasonable fine for actual litter would have solved the problem without punishing innocent people.",
+       reteach:"A law that's too strict often punishes people unfairly and loses public support fast — even if the original goal was reasonable."},
+      {text:"A small fine only for littering trash, with a warning first.", outcome:"best",
+       consequence:["People start using trash cans more carefully, and the park is noticeably cleaner within a month.","Most residents feel the law is fair."],
+       ripple:{now:10, later:10}, counterfactual:"An extreme fine would have caused public anger without necessarily cleaning the park any faster.", reteach:null},
+      {text:"No fine at all — just a friendly sign asking people to clean up.", outcome:"mixed",
+       consequence:["A few people take the sign seriously.","But most keep littering exactly as before — nothing really changes."],
+       ripple:{now:5, later:25}, counterfactual:"A small fine with a warning first would have actually changed people's behavior.", reteach:null}
+     ]},
+    {type:"decide", prompt:"A senator on the committee objects to your bill, saying the fine is unfair to families with young kids. What do you do?",
+     choices:[
+      {text:"Compromise — lower the fine and add a first-time warning.", outcome:"best",
+       consequence:["The senator agrees to support the bill.","It moves forward, a little weaker than you first wrote it, but with real support behind it."],
+       ripple:{now:10, later:10}, counterfactual:"Refusing to budge might have kept your original law, but it likely would have died in committee.", reteach:null},
+      {text:"Argue that the fine should stay exactly as written.", outcome:"mixed",
+       consequence:["The debate drags on for weeks in a crowded, noisy committee room.","The bill eventually stalls — not defeated, just stuck."],
+       ripple:{now:20, later:25}, counterfactual:"A small compromise would have kept the bill moving instead of stuck in committee.", reteach:null},
+      {text:"Withdraw the bill rather than change it.", outcome:"poor",
+       consequence:["The bill dies completely.","The park stays just as littered as before, and nothing changes for the town."],
+       ripple:{now:15, later:35}, counterfactual:"A small compromise would have kept the core idea alive and actually helped the park.",
+       reteach:"In lawmaking, a compromise that keeps most of your goal usually helps people more than holding out for a perfect version that never passes."}
+     ]},
+    {type:"create", prompt:"Why do lawmakers so often have to compromise?", starter:"Lawmakers compromise because…", badge:"Lawmaker"}
+   ]},
+ { id:"goldrush", grade:"G4", subject:"Westward Expansion", title:"Gold Rush or Bust", place:"The trail west, headed for gold country",
+   icon:"⛏️", skill:"Forty-Niner", minutes:10,
+   steps:[
+    {type:"observe", text:"Before you leave, learn what this journey will demand.",
+     clues:[
+      {icon:"🛒",label:"Wagon weight",detail:"A heavier wagon moves slower and struggles on mountain trails."},
+      {icon:"🍞",label:"Food supply",detail:"The trail takes months — running low on food partway through is dangerous."},
+      {icon:"⛏️",label:"Gold claims",detail:"Most claims turn up very little gold — most miners who struck it rich sold supplies, not gold."}
+     ]},
+    {type:"decide", prompt:"How should you pack the wagon?",
+     choices:[
+      {text:"Load up on gear and tools — more is better.", outcome:"poor",
+       consequence:["The heavy wagon crawls up every hill.","Halfway through the trail, an axle breaks under the extra weight, costing days of repair."],
+       ripple:{now:20, later:35}, counterfactual:"A balanced load would have moved faster and put less strain on the wagon.",
+       reteach:"An overloaded wagon moves slower and breaks down more easily. Trail families packed only what they truly needed."},
+      {text:"Pack light on food to save weight.", outcome:"poor",
+       consequence:["The wagon moves quickly at first.","But two months in, food runs low, and the family goes hungry before reaching the next trading post."],
+       ripple:{now:15, later:40}, counterfactual:"A balanced load would have kept enough food for the whole journey.",
+       reteach:"The trail takes months. Packing too little food doesn't show its cost right away — it shows up weeks later, when there's no way to turn back for more."},
+      {text:"Pack a balanced load of food, tools, and spare parts.", outcome:"best",
+       consequence:["The wagon moves at a steady pace, and supplies last the whole way.","The family arrives tired, but whole."],
+       ripple:{now:10, later:10}, counterfactual:"Overloading with gear would have slowed the wagon and risked a breakdown.", reteach:null}
+     ]},
+    {type:"decide", prompt:"You reach a river crossing. Do you pay the ferry, or try to ford the river with the wagon?",
+     choices:[
+      {text:"Try to ford the river yourself.", outcome:"poor",
+       consequence:["The wagon tips partway across, and the current sweeps away a barrel of supplies before you can grab it."],
+       ripple:{now:25, later:20}, counterfactual:"Paying the ferry operator would have crossed the same river safely, for a small fee.",
+       reteach:"Fording an unfamiliar river with a loaded wagon was one of the most dangerous parts of the trail — paying for the ferry was usually worth the cost."},
+      {text:"Pay the ferry operator to cross safely.", outcome:"best",
+       consequence:["The ferry gets your wagon across without incident.","It costs a little money, but everyone and everything arrives dry."],
+       ripple:{now:10, later:10}, counterfactual:"Fording the river yourself would have saved the fee, but risked losing supplies or worse.", reteach:null}
+     ]},
+    {type:"decide", prompt:"After months of panning, you strike a small amount of gold. What do you do with your earnings?",
+     choices:[
+      {text:"Buy a mining claim and keep digging for more gold.", outcome:"poor",
+       consequence:["Most claims nearby have already been picked over.","You spend your earnings and months of work turn up almost nothing more."],
+       ripple:{now:20, later:45}, counterfactual:"Opening a supply store would have earned steady money from every miner who needed goods, gold or no gold.",
+       reteach:"During the Gold Rush, most miners didn't get rich from gold — the storekeepers who sold food, tools, and supplies to miners often did better, steadily, no matter who struck gold."},
+      {text:"Open a small store selling supplies to other miners.", outcome:"best",
+       consequence:["Every miner in the area needs food, tools, and boots — whether or not they find gold.","Your store brings in steady money, month after month."],
+       ripple:{now:10, later:10}, counterfactual:"Betting everything on a new mining claim would have been a gamble with poor odds.", reteach:null}
+     ]},
+    {type:"create", prompt:"Why did so many people believe gold mining was easy money, when it usually wasn't?", starter:"Easy money is… because…", badge:"Forty-Niner"}
+   ]},
+{ id:"colonycountdown", grade:"G5", subject:"Causes of the Revolution", title:"Colony Countdown", place:"A colonial town, on the eve of the Stamp Act",
+   icon:"📜", skill:"Cause & Effect Detective", minutes:9,
+   steps:[
+    {type:"observe", text:"Meet three colonists who will each feel this new tax differently.",
+     clues:[
+      {icon:"🌾",label:"The farmer",detail:"Feels the tax through higher prices on everyday goods bought with crop money."},
+      {icon:"⚓",label:"The merchant",detail:"Pays the tax directly on every shipment of goods sold."},
+      {icon:"🔨",label:"The apprentice",detail:"Has no land and no vote, but still pays the tax on paper goods he buys."}
+     ]},
+    {type:"decide", prompt:"Parliament passes the Stamp Tax on paper goods. What does the town do?",
+     choices:[
+      {text:"Comply and pay the tax quietly.", outcome:"mixed",
+       consequence:["Life goes on peacefully for now.","Six months later, Parliament passes another tax — resistance looked cheap, so why not add one more?"],
+       ripple:{now:5, later:45}, counterfactual:"A boycott would have cost more right now, but sent a clear signal Parliament couldn't ignore.", reteach:null},
+      {text:"Boycott British goods until the tax is repealed.", outcome:"best",
+       consequence:["Shops selling stamped goods sit empty. Merchants in England start losing money.","Parliament responds by sending more troops — the boycott worked, but it wasn't free."],
+       ripple:{now:25, later:20}, counterfactual:"Quiet compliance would have avoided the troops, but taught Parliament that resistance was cheap.", reteach:null},
+      {text:"Riot in the streets.", outcome:"poor",
+       consequence:["A window breaks, and soldiers are called in.","Moderate colonists who might have supported a boycott pull away — the anger got attention, but it also handed the other side an excuse."],
+       ripple:{now:35, later:40}, counterfactual:"A boycott would have hurt British merchants' profits without giving Parliament an excuse to crack down.",
+       reteach:"Anger gets attention, but it can also cost support. A boycott pressured Parliament economically without turning moderate colonists against the cause."}
+     ]},
+    {type:"decide", prompt:"At the town meeting, what action does the town formally choose?",
+     choices:[
+      {text:"Sign a petition asking Parliament to reconsider.", outcome:"mixed",
+       consequence:["The petition is polite and widely signed — and mostly ignored back in London."],
+       ripple:{now:5, later:20}, counterfactual:"Joining the boycott would have applied real economic pressure, not just words.", reteach:null},
+      {text:"Join the boycott of British goods.", outcome:"best",
+       consequence:["Word spreads to other towns, and the boycott grows into a movement that Parliament can't ignore."],
+       ripple:{now:15, later:15}, counterfactual:"A petition alone rarely changed Parliament's mind — economic pressure did far more.", reteach:null}
+     ]},
+    {type:"create", prompt:"Trace the chain of cause and effect: the tax led to your town's choice, which led to Parliament's response, which fed into the Revolution. Explain the chain in your own words.", starter:"The tax led to ___, which caused Parliament to ___, which eventually led to…", badge:"Cause & Effect Detective"}
+   ]},
+{ id:"declaration", grade:"G5", subject:"Primary Sources", title:"Declaration Detective", place:"Reading the Declaration of Independence",
+   icon:"🖋️", skill:"Founding Voice", minutes:8,
+   steps:[
+    {type:"observe", text:"Read three grievances from the Declaration, in simplified language.",
+     clues:[
+      {icon:"📜",label:"Grievance 1",detail:"\"He has imposed taxes on us without our consent.\""},
+      {icon:"📜",label:"Grievance 2",detail:"\"He has kept armies among us in times of peace, without our approval.\""},
+      {icon:"📜",label:"Grievance 3",detail:"\"He has obstructed the administration of justice.\""}
+     ]},
+    {type:"decide", prompt:"Which grievance matches the Stamp Tax you saw colonists react to?",
+     choices:[
+      {text:"\"He has imposed taxes on us without our consent.\"", outcome:"best",
+       consequence:["That's the exact grievance — the colonists had no representatives voting on the tax that was placed on them."],
+       ripple:{now:10, later:10}, counterfactual:"The \"armies among us\" grievance is about troops, not taxes — a different complaint entirely.", reteach:null},
+      {text:"\"He has kept armies among us in times of peace.\"", outcome:"poor",
+       consequence:["That grievance is about British troops stationed in the colonies, not about taxes."],
+       ripple:{now:10, later:15}, counterfactual:"The \"taxes without consent\" grievance directly matches the Stamp Tax.",
+       reteach:"Each grievance names a specific complaint. \"Taxes without consent\" is about taxation — matching it to the Stamp Tax means looking for the tax-related line, not a general one."}
+     ]},
+    {type:"decide", prompt:"New scenario: a king declares that only nobles are allowed to own land. Which right is being violated?",
+     choices:[
+      {text:"The right to fair and equal treatment under the law.", outcome:"best",
+       consequence:["Limiting land ownership to nobles treats people unequally based on birth, not fairness — exactly what this grievance protects against."],
+       ripple:{now:10, later:10}, counterfactual:"Free speech isn't the issue here — no one is being silenced, just excluded from owning land.", reteach:null},
+      {text:"The right to free speech.", outcome:"poor",
+       consequence:["No one in this scenario is being stopped from speaking — the issue is who's allowed to own land."],
+       ripple:{now:10, later:15}, counterfactual:"Fair and equal treatment under the law is the right actually being violated here.",
+       reteach:"Matching a scenario to a right means looking closely at what's actually happening — here, it's about unequal treatment, not silenced speech."}
+     ]},
+    {type:"create", prompt:"Sign your name and explain, in your own words, why one of these grievances matters.", starter:"I signed because…", badge:"Founding Voice"}
+   ]},
+{ id:"townmeeting", grade:"G5", subject:"Civic Symbols & Fairness", title:"Who Gets to Speak?", place:"A New England town meeting, colonial era",
+   icon:"🏛️", skill:"Civic Thinker", minutes:6,
+   steps:[
+    {type:"decide", prompt:"A young apprentice who owns no land wants to speak. What happens under this town's rules?",
+     choices:[
+      {text:"He is allowed to speak — everyone living in town gets a voice.", outcome:"poor",
+       consequence:["The meeting record shows he was turned away at the door.","In many colonial towns, only certain landowners were allowed to vote or speak."],
+       ripple:{now:15,later:20}, counterfactual:"Under the actual rule of this town, only landowners could speak — which left many people out.",
+       reteach:"Fairness in government changes over time. Early town meetings often limited who could take part, which is part of why the rule later changed."},
+      {text:"He is turned away — only landowners may speak.", outcome:"best",
+       consequence:["That matches how many colonial town meetings actually worked.","It's worth journaling about: was that rule fair to everyone in town?"],
+       ripple:{now:10,later:30}, counterfactual:"A town that let everyone speak would have heard the apprentice's view too — some later towns did change the rule.", reteach:null}
+     ]},
+    {type:"create", prompt:"Was this town meeting rule fair? Why or why not?", starter:"I think this rule was… because…", badge:"Civic Thinker"}
+   ]},
+ { id:"convention", grade:"G5", subject:"The Constitutional Convention", title:"Convention Compromise", place:"Independence Hall, Philadelphia, 1787",
+   icon:"🖋️", skill:"Framer", minutes:10,
+   note:"This activity is designed to be paired with class discussion, especially the Three-Fifths Compromise step, which the app addresses honestly and without minimizing the injustice involved.",
+   steps:[
+    {type:"observe", text:"Delegates from big states and small states disagree about representation. Learn both sides before the debate begins.",
+     clues:[
+      {icon:"🏛️",label:"Virginia Plan",detail:"Favored by big states — representation in Congress based on population."},
+      {icon:"⚖️",label:"New Jersey Plan",detail:"Favored by small states — equal representation for every state, no matter its size."},
+      {icon:"🗳️",label:"The deadlock",detail:"Neither side will budge, and the entire convention risks falling apart."}
+     ]},
+    {type:"decide", prompt:"As a small-state delegate, the big states refuse to accept equal representation. What do you do?",
+     choices:[
+      {text:"Hold firm — refuse any plan based on population.", outcome:"poor",
+       consequence:["Talks break down. Several delegates threaten to walk out entirely.","The convention comes close to collapsing before a single compromise is found."],
+       ripple:{now:25, later:30}, counterfactual:"Proposing a two-house compromise would have kept both sides at the table instead of walking away.",
+       reteach:"A convention this important couldn't survive if either side simply refused to move. The eventual solution combined both ideas instead of choosing only one."},
+      {text:"Propose a two-house Congress — one based on population, one with equal votes per state.", outcome:"best",
+       consequence:["Both sides see something they wanted in the plan.","It isn't a perfect win for anyone, but it keeps the convention together."],
+       ripple:{now:10, later:10}, counterfactual:"Holding firm on equal representation alone would have left the big states unwilling to sign at all.", reteach:null}
+     ]},
+    {type:"decide", prompt:"This two-house solution became known as the Great Compromise. Which part of Congress did it create to satisfy the small states specifically?",
+     choices:[
+      {text:"The House of Representatives, based on population.", outcome:"poor",
+       consequence:["That part actually favored the bigger states, who wanted representation tied to population."],
+       ripple:{now:10, later:15}, counterfactual:"The Senate — equal votes per state, no matter the size — is what reassured the small states.",
+       reteach:"The House of Representatives is based on population, which favored bigger states. The Senate, with two seats per state regardless of size, is what protected the small states."},
+      {text:"The Senate, with two seats per state.", outcome:"best",
+       consequence:["Exactly — every state, big or small, gets equal footing in the Senate. That balance is still part of Congress today."],
+       ripple:{now:10, later:10}, counterfactual:"The House alone, based on population, would have left small states with far less voice.", reteach:null}
+     ]},
+    {type:"decide", prompt:"Southern delegates then raised a painful question: should enslaved people count toward a state's population for representation? The convention's actual answer — the Three-Fifths Compromise — counted each enslaved person as three-fifths of a person for this purpose. Which statement is historically accurate about this decision?",
+     choices:[
+      {text:"It was a fair way to balance the interests of every state equally.", outcome:"poor",
+       consequence:["This wasn't a fair balance — it was a bargain that treated enslaved human beings as partial persons to increase Southern political power, while enslaved people themselves had no rights or voice at all."],
+       ripple:{now:10, later:20}, counterfactual:"Recognizing this compromise as unjust — even while understanding why it happened — is the historically accurate view most historians hold today.",
+       reteach:"The Three-Fifths Compromise is widely recognized by historians as a deeply unjust bargain. It increased the political power of slaveholding states while denying enslaved people any rights at all — some delegates at the time even said so."},
+      {text:"It was a deeply unjust bargain that treated enslaved people as less than full persons, made to keep Southern states in the union.", outcome:"best",
+       consequence:["That's the honest reading of this moment. Some delegates at the convention knew this compromise was wrong even as they voted for it.","This decision deepened the divide between free and enslaved states — a divide that grew for decades and helped lead toward the Civil War."],
+       ripple:{now:10, later:10}, counterfactual:"Calling it simply \"fair\" would erase the real injustice it caused to millions of enslaved people.", reteach:null}
+     ]},
+    {type:"create", prompt:"The Constitution included compromises that helped the country form — and compromises that caused deep harm. Why might people today disagree about how to remember the Constitutional Convention?", starter:"People might disagree because…", badge:"Framer"}
+   ]},
+ { id:"northstar", grade:"G5", subject:"The Underground Railroad", title:"North Star: A Journey to Freedom", place:"A network of hidden routes toward the free states",
+   icon:"⭐", skill:"North Star", minutes:10,
+   note:"This activity is designed to be paired with class discussion. It treats the subject with gravity and accuracy: freedom was dangerous, incomplete, and hard-won, even in the North.",
+   steps:[
+    {type:"observe", text:"Before you travel, learn the hidden signals that guided people safely along the way.",
+     clues:[
+      {icon:"🧵",label:"A quilt pattern",detail:"Certain patterns hung outside a house could quietly signal that it was safe to approach."},
+      {icon:"🏮",label:"A lantern in a window",detail:"A lit lantern placed just so could mean \"safe house\" — or warn travelers to stay away."},
+      {icon:"🎵",label:"A song's hidden meaning",detail:"Songs like \"Follow the Drinking Gourd\" carried real directions, disguised as lyrics — the \"drinking gourd\" meant the Big Dipper, pointing north."}
+     ]},
+    {type:"decide", prompt:"You approach a house at night and see a lit lantern placed in the front window, facing the road. What does this most likely mean?",
+     choices:[
+      {text:"This house is not safe — keep moving.", outcome:"poor",
+       consequence:["You pass by a house that would have taken you in safely for the night, and keep walking through the cold instead."],
+       ripple:{now:15, later:15}, counterfactual:"A lantern placed facing the road was a common signal that this house was a safe stop.",
+       reteach:"Signals varied by region and family, but a visible lantern like this one was commonly used to mean a house was safe to approach."},
+      {text:"This house is a safe stop for the night.", outcome:"best",
+       consequence:["You approach carefully, and the family quietly takes you in, feeds you, and lets you rest before the next leg of the journey."],
+       ripple:{now:10, later:10}, counterfactual:"Passing this house by would have meant a longer, colder, more dangerous night with nowhere to rest.", reteach:null}
+     ]},
+    {type:"decide", prompt:"The river ahead is running high and fast tonight. Dawn is still hours away. Do you cross now, or wait for a safer, shallower crossing point downstream?",
+     choices:[
+      {text:"Cross now, while it's still dark.", outcome:"mixed",
+       consequence:["The crossing is difficult and frightening, but the darkness hides your movement from any patrol along the road.","You reach the other side cold and exhausted, but you've made real progress before sunrise."],
+       ripple:{now:20, later:10}, counterfactual:"Waiting for the safer crossing point would have been less dangerous, but cost precious hours of darkness.", reteach:null},
+      {text:"Wait and travel to the safer, shallower crossing.", outcome:"mixed",
+       consequence:["The safer crossing takes longer to reach, and dawn is breaking by the time you're across — a riskier time to be seen on the road.","But you cross without the danger of the fast current."],
+       ripple:{now:15, later:15}, counterfactual:"Crossing right away in the dark would have been more dangerous in the water, but safer from being seen.", reteach:null}
+     ]},
+    {type:"create", prompt:"Even reaching a free state didn't always mean safety — a law called the Fugitive Slave Act allowed enslaved people to be recaptured even in the North, which is why many continued on to Canada. Knowing this, what does the word \"freedom\" mean to you after this journey?", starter:"Freedom was…", badge:"North Star"}
+   ]},
+ { id:"supplyline", grade:"G5", subject:"Revolutionary War Logistics", title:"The General's Supply Line", place:"An encampment near Valley Forge, winter 1777",
+   icon:"❄️", skill:"Quartermaster", minutes:9,
+   steps:[
+    {type:"observe", text:"As quartermaster, walk through camp before making any decisions.",
+     clues:[
+      {icon:"🥾",label:"Worn boots",detail:"Many soldiers' shoes have fallen apart; some march with cloth wrapped around bare feet."},
+      {icon:"🌾",label:"Local farms",detail:"Nearby farmers have food and grain, but many are struggling too, and some support the other side."},
+      {icon:"🐎",label:"Supply wagons",detail:"Wagons from other colonies are weeks away and depend on weather and roads."}
+     ]},
+    {type:"decide", prompt:"Winter is closing in and supplies are low. How do you get more food for the army?",
+     choices:[
+      {text:"Pay local farmers a fair price for their surplus.", outcome:"best",
+       consequence:["Farmers are willing to sell, and the army gets a steady, if modest, supply of food.","Trust between the army and nearby communities holds."],
+       ripple:{now:15, later:10}, counterfactual:"Simply taking supplies without payment would have angered the very communities the army depends on.", reteach:null},
+      {text:"Requisition supplies from farms by order, paying little or nothing.", outcome:"poor",
+       consequence:["The army gets food quickly this time.","But farmers whose fields were emptied grow resentful — some quietly begin supporting the other side instead."],
+       ripple:{now:10, later:45}, counterfactual:"Paying farmers fairly would have gotten similar supplies without turning local support against the army.",
+       reteach:"An army fighting far from home depends on the goodwill of nearby communities. Taking supplies without fair payment can win a short-term need at a long-term cost."},
+      {text:"Send a small group to quietly smuggle supplies past enemy lines.", outcome:"mixed",
+       consequence:["The smuggled wagon nearly gets caught, but slips through with a modest load of goods.","It works this time, but it's too risky to rely on regularly."],
+       ripple:{now:25, later:15}, counterfactual:"Paying local farmers would have been slower to arrange, but far less risky than smuggling.", reteach:null}
+     ]},
+    {type:"decide", prompt:"You have a limited store of blankets, shoes, and food for the winter. How do you allocate it?",
+     choices:[
+      {text:"Focus almost everything on food, since hunger is the most visible problem.", outcome:"poor",
+       consequence:["Stomachs are fuller, but frostbite spreads through camp as bare feet and thin blankets can't handle the cold.","Sickness thins the ranks by late winter."],
+       ripple:{now:15, later:50}, counterfactual:"A balanced supply of food, shoes, and blankets together would have kept far more soldiers healthy through the winter.",
+       reteach:"Soldiers needed more than food to survive Valley Forge's winter — shoes and blankets prevented frostbite and sickness that thinned the army just as much as hunger did."},
+      {text:"Split the supplies evenly across food, shoes, and blankets.", outcome:"best",
+       consequence:["No one has plenty of anything, but the balance keeps most soldiers fed, warm enough, and on their feet.","The army makes it to spring in fighting shape."],
+       ripple:{now:15, later:10}, counterfactual:"Focusing only on food would have left the camp vulnerable to frostbite and illness.", reteach:null}
+     ]},
+    {type:"create", prompt:"Why might keeping an army supplied matter just as much as winning battles?", starter:"Supplies matter because…", badge:"Quartermaster"}
+   ]},
+{ id:"nile", grade:"G6", subject:"Civilization Development", title:"Nile: Rise of a Kingdom", place:"Ancient Egypt, along the Nile River",
+   icon:"🌊", skill:"Rise of the Kingdom", minutes:10,
+   steps:[
+    {type:"observe", text:"Study the Nile's yearly rhythm before you plant.",
+     clues:[
+      {icon:"💧",label:"Flood season",detail:"The river rises and spreads rich black soil across the fields."},
+      {icon:"☀️",label:"After the flood",detail:"Once the water recedes, the soaked soil is perfect for seeds."},
+      {icon:"🌾",label:"Dry season",detail:"Hard, cracked ground — nothing new can take root here."}
+     ]},
+    {type:"decide", prompt:"When should farmers plant their seeds?",
+     choices:[
+      {text:"Right when the flood arrives.", outcome:"poor",
+       consequence:["Seeds go into the rising water — and are immediately ripped out and swept downstream.","\"The flood giveth, and taketh,\" the elders say. Nothing survives this early."],
+       ripple:{now:20, later:60}, counterfactual:"Planting after the water recedes gives seeds soaked, settled soil instead of a moving flood.",
+       reteach:"The flood needs to recede first. Seeds planted after that have rich, settled soil to grow in."},
+      {text:"After the flood recedes, in the soaked soil.", outcome:"best",
+       consequence:["The seeds take root in the rich black soil the flood left behind.","By harvest, the fields are thick with grain."],
+       ripple:{now:15, later:15}, counterfactual:"Planting during the flood itself would have washed the seeds away entirely.", reteach:null},
+      {text:"Wait for the fully dry season.", outcome:"poor",
+       consequence:["By the time the ground is completely dry, it's cracked and hard.","Seeds can't take root — the moisture from the flood is long gone."],
+       ripple:{now:20, later:55}, counterfactual:"Planting right after the flood recedes catches the soil while it's still rich and moist.",
+       reteach:"Waiting too long lets the soaked soil dry into hard, cracked ground. The best window is right after the flood goes down."}
+     ]},
+    {type:"decide", prompt:"The harvest was strong — there's a surplus. What should the kingdom build?",
+     choices:[
+      {text:"A canal to spread water further next year.", outcome:"best",
+       consequence:["Two years pass. The canal roughly doubles the farmland that can be watered.","Fields spread wider and greener than ever before."],
+       ripple:{now:20, later:10}, counterfactual:"A temple would have drawn traders sooner, but the canal keeps paying off every single year after.", reteach:null},
+      {text:"A temple to draw traders and travelers.", outcome:"mixed",
+       consequence:["Ships start arriving to trade goods and ideas at the temple docks.","But farmland stays the same size — next year's harvest won't grow any bigger because of it."],
+       ripple:{now:15, later:20}, counterfactual:"A canal would have grown the harvest itself, year after year, instead of just drawing visitors.", reteach:null},
+      {text:"A granary to store food for hard years.", outcome:"mixed",
+       consequence:["Years later, a drought hits — and the stored grain keeps everyone fed while other towns go hungry.","But nothing about the kingdom actually grew during the good years."],
+       ripple:{now:10, later:25}, counterfactual:"A canal would have grown next year's harvest; the granary only protects what you already have.", reteach:null}
+     ]},
+    {type:"create", prompt:"My civilization grew because…", starter:"My civilization grew because… we planted at the right time, and we chose to build…", badge:"Rise of the Kingdom"}
+   ]},
+{ id:"silkroad", grade:"G6", subject:"Interconnected World", title:"Silk Road Trader", place:"Trading posts along the Silk Road",
+   icon:"🐫", skill:"Master of the Silk Road", minutes:10,
+   steps:[
+    {type:"observe", text:"Before you load the caravan, learn what each good is worth on the road.",
+     clues:[
+      {icon:"🧵",label:"Silk",detail:"Light to carry and always in high demand — but easy for bandits to grab fast."},
+      {icon:"🫙",label:"Glass",detail:"Fetches a high price at market, but it's fragile — rough routes can shatter it."},
+      {icon:"🐴",label:"Horses",detail:"Very valuable, but slow the caravan down and need water every day."}
+     ]},
+    {type:"decide", prompt:"Which route should the caravan take?",
+     choices:[
+      {text:"The mountain pass — short, but steep and exposed.", outcome:"poor",
+       consequence:["The short route saves two days at first.","But the exposed pass is a favorite spot for bandits, and they're waiting."],
+       ripple:{now:15, later:55}, counterfactual:"The oasis route takes longer but avoids the pass entirely — no bandit encounter at all.",
+       reteach:"The fastest route on a map isn't always the safest one. Traders often chose a longer, better-supplied road on purpose."},
+      {text:"Straight through the desert — long, but no bandits.", outcome:"mixed",
+       consequence:["No bandits this way — but there's no water source for three days.","The horses in the caravan suffer the most; two are too weak to carry much by the end."],
+       ripple:{now:25, later:30}, counterfactual:"The oasis route refills water every day, keeping the horses strong the whole way.", reteach:null},
+      {text:"The oasis route — longer, but refills water and supplies.", outcome:"best",
+       consequence:["It takes an extra day, but every stop has water and a place to rest the horses.","The caravan arrives at the market in full strength."],
+       ripple:{now:10, later:10}, counterfactual:"The mountain pass would have been two days faster — if the bandits hadn't been waiting.", reteach:null}
+     ]},
+    {type:"decide", prompt:"At a checkpoint, a toll collector demands payment to let you pass. What do you do?",
+     choices:[
+      {text:"Refuse and push through.", outcome:"poor",
+       consequence:["Guards block the road, and the standoff costs a full day.","Some of your silk is damaged in the crowded delay."],
+       ripple:{now:20, later:35}, counterfactual:"Paying the toll would have cost far less than the day lost and the damaged goods.",
+       reteach:"Tolls were a normal, expected cost of trade along the Silk Road — paying one was usually cheaper than fighting it."},
+      {text:"Pay the toll in a few glass pieces.", outcome:"best",
+       consequence:["The collector waves you through within minutes.","You still have plenty of goods left for the market ahead."],
+       ripple:{now:10, later:10}, counterfactual:"Refusing to pay would have cost a full day and some damaged silk.", reteach:null}
+     ]},
+    {type:"decide", prompt:"At the market, prices are lower than you hoped. Do you sell now or hold out?",
+     choices:[
+      {text:"Sell everything now at today's price.", outcome:"mixed",
+       consequence:["You walk away with a safe, modest profit.","A trader down the road sells the same goods a week later for more."],
+       ripple:{now:10, later:15}, counterfactual:"Holding out risked the silk losing quality — but paid off better this time.", reteach:null},
+      {text:"Hold out a few extra days for a better price.", outcome:"best",
+       consequence:["Prices rise once a caravan from the east arrives short on silk.","You sell for a noticeably better profit than the first offer."],
+       ripple:{now:15, later:5}, counterfactual:"Selling right away would have been safer, but for less profit.", reteach:null}
+     ]},
+    {type:"create", prompt:"Traders carried more than goods — ideas and inventions traveled the road too. What do you think spread along with the silk and spices?", starter:"Along the Silk Road, ideas like ___ likely traveled between cultures because…", badge:"Master of the Silk Road"}
+   ]},
+ { id:"hammurabi", grade:"G6", subject:"Ancient Law & Justice", title:"Hammurabi's Courtroom", place:"A courtroom in ancient Babylon",
+   icon:"⚖️", skill:"Lawgiver", minutes:8,
+   steps:[
+    {type:"observe", text:"Before you judge any cases, study three laws from Hammurabi's Code.",
+     clues:[
+      {icon:"🧱",label:"Law on builders",detail:"If a poorly built house collapses and kills the owner, the builder faces the same fate."},
+      {icon:"🌾",label:"Law on farmers",detail:"If someone floods a neighbor's field through carelessness, they must repay the lost grain."},
+      {icon:"⚖️",label:"\"An eye for an eye\"",detail:"Many punishments in the code mirror the harm done — a strict, exact kind of justice."}
+     ]},
+    {type:"decide", prompt:"A farmer accidentally lets water flood into a neighbor's field, ruining the crop. The neighbor demands the farmer's own house be destroyed in return. Is this a fair punishment?",
+     choices:[
+      {text:"Yes — destroy the farmer's house in return.", outcome:"poor",
+       consequence:["The farmer's family loses their home over an accident, not an intentional act.","The village sees this as too harsh, and even neighbors call it unjust."],
+       ripple:{now:20, later:25}, counterfactual:"Requiring the farmer to repay the value of the lost grain would fit the actual harm done.",
+       reteach:"Hammurabi's actual code called for repaying the value of the damage in cases like this — a punishment that matches the harm, not one that goes far beyond it."},
+      {text:"No — the farmer should repay the value of the lost grain instead.", outcome:"best",
+       consequence:["The farmer pays back what the neighbor lost.","Both families move on, and the punishment matches the actual harm done."],
+       ripple:{now:10, later:10}, counterfactual:"Destroying the farmer's house would have been a punishment far more severe than the accidental harm caused.", reteach:null}
+     ]},
+    {type:"decide", prompt:"Here's the uncomfortable part: Hammurabi's Code punished the same crime differently depending on whether the victim was a noble or a commoner. A noble who injured a commoner paid a small fine — but a commoner who injured a noble faced much harsher punishment. Was this system fair?",
+     choices:[
+      {text:"Yes — nobles were more important to society, so the law reflected that.", outcome:"poor",
+       consequence:["Under an equal law, both cases would have received the same punishment regardless of who was involved.","Treating people differently by class meant the same action could be a minor fine or a severe punishment, depending only on birth."],
+       ripple:{now:15, later:20}, counterfactual:"A single standard of justice for everyone would have treated the same crime the same way, no matter who committed it.",
+       reteach:"A legal system that punishes the same act differently based on someone's class is treating people unequally under the law — a problem many societies, including Babylon, struggled with."},
+      {text:"No — the same crime should carry the same punishment no matter who's involved.", outcome:"best",
+       consequence:["That's the modern idea of equal justice under the law — one that Hammurabi's own code didn't fully practice, even though it was one of the first written law codes in history."],
+       ripple:{now:10, later:10}, counterfactual:"Accepting different punishments by class would excuse a real unfairness built into the system.", reteach:null}
+     ]},
+    {type:"create", prompt:"Write one law for your classroom. Keep the punishment proportional to the problem it solves.", starter:"My classroom law is… and the consequence is… because…", badge:"Lawgiver"}
+   ]},
+ { id:"aqueduct", grade:"G6", subject:"Roman Engineering", title:"Aqueduct Architect", place:"A valley between a mountain spring and the city of Rome",
+   icon:"🏛️", skill:"Engineer of Rome", minutes:9,
+   steps:[
+    {type:"observe", text:"Study the land before you design anything.",
+     clues:[
+      {icon:"⛰️",label:"The spring",detail:"Clean water flows from higher ground in the mountains."},
+      {icon:"🏙️",label:"The city",detail:"Rome sits lower in the valley and needs a steady water supply."},
+      {icon:"📐",label:"The slope",detail:"Roman aqueducts relied on a very gentle, precise downhill slope to keep water flowing without pumps."}
+     ]},
+    {type:"decide", prompt:"How steep should you make the aqueduct's slope?",
+     choices:[
+      {text:"Very steep, so the water arrives as fast as possible.", outcome:"poor",
+       consequence:["Water rushes through the channel with tremendous force.","Within a year, the fast-moving water erodes the channel walls, and cracks begin spreading through the structure."],
+       ripple:{now:15, later:45}, counterfactual:"A gentle, steady slope would have delivered water reliably without wearing down the channel.",
+       reteach:"Roman engineers used a very gradual slope on purpose. Too steep, and the rushing water erodes the channel over time."},
+      {text:"Almost completely flat.", outcome:"poor",
+       consequence:["The water barely moves, pooling in low spots along the channel.","Stagnant water grows murky, and people in the city start getting sick from it."],
+       ripple:{now:15, later:40}, counterfactual:"A gentle, consistent slope would have kept the water moving and clean.",
+       reteach:"Water needs a slope to flow at all — too flat, and it stagnates instead of reaching the city clean and moving."},
+      {text:"A gentle, steady downhill slope the whole way.", outcome:"best",
+       consequence:["The water flows steadily toward the city without eroding the channel or standing still.","This is exactly the technique real Roman engineers relied on."],
+       ripple:{now:10, later:10}, counterfactual:"Either extreme — too steep or too flat — would have damaged the channel or left the water unsafe to drink.", reteach:null}
+     ]},
+    {type:"decide", prompt:"You have a limited budget of workers and stone. How do you build it?",
+     choices:[
+      {text:"Build quickly with minimal support arches to save money.", outcome:"poor",
+       consequence:["The aqueduct is finished fast and under budget.","A storm the following spring collapses a weak section, and repairs end up costing more than building it right the first time."],
+       ripple:{now:10, later:40}, counterfactual:"Building with proper support from the start would have cost more upfront but avoided the costly collapse.",
+       reteach:"Cutting corners on structural supports often costs more later in repairs than building it solidly the first time."},
+      {text:"Build with strong, well-spaced support arches, even though it costs more.", outcome:"best",
+       consequence:["The construction takes longer and costs more upfront.","But the aqueduct stands solidly through storms and seasons for years to come."],
+       ripple:{now:20, later:10}, counterfactual:"Cutting corners would have saved money now, but likely led to a costly collapse later.", reteach:null},
+      {text:"Spend nearly the entire budget on decoration for the city entrance.", outcome:"poor",
+       consequence:["The entrance looks impressive.","But the treasury is empty, and other city projects — roads, public baths — stall completely for lack of funding."],
+       ripple:{now:15, later:35}, counterfactual:"Investing the budget in solid construction would have kept other city projects funded too.",
+       reteach:"A city's budget has to cover more than one project. Spending it all on appearance for one structure leaves nothing for everything else the city needs."}
+     ]},
+    {type:"create", prompt:"How did the aqueduct change daily life in the city once it was finished?", starter:"Once the water arrived, the city…", badge:"Engineer of Rome"}
+   ]},
+ { id:"firelight", grade:"G6", subject:"The Neolithic Revolution", title:"Firelight: The First Farmers", place:"A river valley at the dawn of agriculture",
+   icon:"🌾", skill:"First Farmer", minutes:10,
+   steps:[
+    {type:"observe", text:"Your band has always followed the herds. Before deciding anything, weigh what each way of life offers.",
+     clues:[
+      {icon:"🏹",label:"Nomadic hunting",detail:"Following herds means fresh meat and freedom to move — but also uncertainty and constant travel."},
+      {icon:"🌱",label:"Wild grains nearby",detail:"A patch of wild wheat grows thick along the riverbank every year, in the same place."},
+      {icon:"🏕️",label:"A fixed camp",detail:"Staying in one place would mean permanent shelter — but no more following the herds."}
+     ]},
+    {type:"decide", prompt:"Your band reaches the river valley with its thick wild grain. Do you stay and settle, or continue following the herds?",
+     choices:[
+      {text:"Keep following the herds — it's worked for generations.", outcome:"mixed",
+       consequence:["The band continues its familiar life, moving with the seasons and the animals.","But this same choice, played out across many other bands, means you'll never know what settling here might have built."],
+       ripple:{now:10, later:15}, counterfactual:"Settling by the river would have traded freedom of movement for the first steps toward permanent food surplus.", reteach:null},
+      {text:"Settle by the river and try planting the wild grain on purpose.", outcome:"best",
+       consequence:["The band builds simple shelters and clears a patch of ground for planting.","It's a completely new way of living — and a risk, since farming has never been tried here before."],
+       ripple:{now:15, later:10}, counterfactual:"Continuing to follow the herds would have felt safer, but never tested whether farming here could work.", reteach:null}
+     ]},
+    {type:"decide", prompt:"It's time to plant. When should the seeds go in the ground?",
+     choices:[
+      {text:"Right away, before studying the river's pattern.", outcome:"poor",
+       consequence:["The seeds go in too early, before the ground is ready.","The young shoots wither, and the first harvest is a disappointment."],
+       ripple:{now:15, later:30}, counterfactual:"Watching the river's yearly pattern first would have shown the right planting window.",
+       reteach:"Early farmers learned to read the land's yearly patterns before planting. Rushing in without watching the signs often meant a failed harvest."},
+      {text:"Wait and watch the river's pattern before planting at the right moment.", outcome:"best",
+       consequence:["The timing pays off. By harvest, the band has more grain than it can eat right away — a surplus, for the first time."],
+       ripple:{now:10, later:10}, counterfactual:"Planting too early would have wasted the season's only chance at a harvest.", reteach:null}
+     ]},
+    {type:"decide", prompt:"With a surplus of grain for the first time, what does the band do with it?",
+     choices:[
+      {text:"Make pottery to store food safely through the winter.", outcome:"best",
+       consequence:["Sealed pottery keeps grain dry and free of pests all winter.","The band eats well even in the coldest months — something nomadic life rarely allowed."],
+       ripple:{now:10, later:10}, counterfactual:"Trading the surplus instead would have brought new goods, but left less stored food for winter.", reteach:null},
+      {text:"Trade the surplus with a neighboring band for new goods.", outcome:"mixed",
+       consequence:["New tools and materials arrive from the trade.","But new visitors also mean new diseases and occasional conflict over land."],
+       ripple:{now:15, later:20}, counterfactual:"Storing the surplus in pottery would have kept more food secure through winter, without inviting outside contact.", reteach:null},
+      {text:"Use the surplus to support more people and grow the village.", outcome:"mixed",
+       consequence:["The village grows larger, with more hands for future harvests.","But now there are more mouths to feed, and a single bad harvest would hurt more people than before."],
+       ripple:{now:10, later:25}, counterfactual:"Storing the surplus safely would have protected the smaller group against a future bad year.", reteach:null}
+     ]},
+    {type:"create", prompt:"Farming gave people more food, but also more work and new risks. Was settling down a clear win, or a tradeoff?", starter:"Settling down meant…", badge:"First Farmer"}
+   ]},
+];
+
+/* ================= State ================= */
+const state = Object.assign({completed:{}, journal:{}, missionProgress:{}, lastActivity:null, voiceOn:true,
+    playCompleted:{}, playBadges:{}, playBest:{}, journalEntries:[]},
+  JSON.parse(localStorage.getItem("timetrek_state") || "null") || {});
+let saveFlagTimer;
+function saveState(){
+  localStorage.setItem("timetrek_state", JSON.stringify(state));
+  const flag = document.getElementById("saveFlag");
+  if(flag){ flag.textContent = "✓ Progress saved"; clearTimeout(saveFlagTimer);
+    saveFlagTimer = setTimeout(()=>{ if(flag) flag.textContent=""; }, 2200); }
+}
+function missionState(id){
+  if(!state.missionProgress[id]) state.missionProgress[id] = {step:0, attempts:{}, journal:state.journal[id]||""};
+  return state.missionProgress[id];
+}
+
+/* ================= Narration ================= */
+function speak(text){
+  if(!state.voiceOn || !("speechSynthesis" in window)) return;
+  try{ window.speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate=0.95; window.speechSynthesis.speak(u); }catch(e){}
+}
+document.getElementById("muteToggle").addEventListener("click",(e)=>{
+  state.voiceOn=!state.voiceOn; saveState();
+  e.target.textContent = state.voiceOn?"🔊":"🔇"; e.target.setAttribute("aria-pressed", String(!state.voiceOn));
+  if(!state.voiceOn && "speechSynthesis" in window) window.speechSynthesis.cancel();
+});
+function speakRow(text){
+  const ok = "speechSynthesis" in window;
+  return `<div class="speak-row"><button class="speak-btn" aria-label="Play narration for this text" ${ok?"":"disabled title=\"Narration not supported on this device\""} onclick='speak(${JSON.stringify(text)})'>▶️</button>
+    <span class="placeholder-note">${ok?"Tap to hear this read aloud.":"Narration isn't available on this device — text is shown below."}</span></div>`;
+}
+
+/* ================= Router ================= */
+let currentMissionId = null;
+let currentPlayId = null;
+let playSession = {};
+function clearPlayTimer(){
+  if(playSession && playSession.timerId){ clearInterval(playSession.timerId); playSession.timerId = null; }
+}
+function openPlayActivity(id){
+  clearPlayTimer();
+  playSession = {};
+  go("playActivity", {playId:id});
+}
+function go(screen, opts={}){
+  clearPlayTimer();
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.querySelectorAll("nav.tabbar button").forEach(b=>b.classList.remove("active"));
+  if(opts.missionId) currentMissionId = opts.missionId;
+  if(opts.playId) currentPlayId = opts.playId;
+  render(screen);
+  const navMap = {activity:"path", results:"path", playActivity:"play"};
+  const navBtn = document.querySelector(`nav.tabbar button[data-screen="${navMap[screen]||screen}"]`);
+  if(navBtn) navBtn.classList.add("active");
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+document.querySelectorAll("nav.tabbar button").forEach(b=> b.addEventListener("click", ()=> go(b.dataset.screen)));
+
+function render(screen){
+  const app = document.getElementById("app");
+  const fns = {home:renderHome, path:renderPath, activity:renderActivity, results:renderResults, resources:renderResources, progress:renderProgress, about:renderAbout, play:renderPlay, playActivity:renderPlayActivity};
+  app.innerHTML = `<div class="screen active" id="screen-${screen}"></div>`;
+  (fns[screen]||renderHome)(document.getElementById(`screen-${screen}`));
+}
+
+/* ================= Home ================= */
+function renderHome(el){
+  const inProgress = MISSIONS.find(m => state.missionProgress[m.id] && state.missionProgress[m.id].step>0 && !state.completed[m.id]);
+  el.innerHTML = `
+    <div class="hero"><div class="scene" aria-hidden="true">⏳</div><h1>Time Trek</h1><p>Decisions That Made History</p>
+      ${speakRow("Welcome to Time Trek. Step into the time machine and make the choices that shaped history.")}
+      <button class="btn" id="startBtn" style="margin-top:10px;">Start Your Journey</button></div>
+    <div class="card">
+      ${inProgress ? `<h3>Continue where you left off</h3><p>You're partway through <strong>${inProgress.title}</strong>.</p>
+        <button class="btn secondary" onclick="go('activity',{missionId:'${inProgress.id}'})">Resume Mission</button>`
+        : `<h3>Welcome back</h3><p class="placeholder-note">No sign-in needed. Your progress saves automatically on this device.</p>`}
+      <p class="save-flag" id="saveFlag" style="margin-top:8px;"></p>
+    </div>`;
+  document.getElementById("startBtn").addEventListener("click", ()=> go("path"));
+}
+
+/* ================= Path ================= */
+const GRADE_ORDER = ["G3","G4","G5","G6"];
+function isGradeUnlocked(grade){
+  const rank = GRADE_ORDER.indexOf(grade);
+  for(let i=0; i<rank; i++){
+    const priorGrade = GRADE_ORDER[i];
+    const priorMissions = MISSIONS.filter(m=>m.grade===priorGrade);
+    if(!priorMissions.every(m=>state.completed[m.id])) return false;
+  }
+  return true;
+}
+let gradeFilter = "ALL";
+function renderPath(el){
+  const grades = ["ALL","G3","G4","G5","G6"];
+  const chips = grades.map(g=>`<button class="chip ${gradeFilter===g?"active":""}" onclick="gradeFilter='${g}'; go('path');">${g==="ALL"?"All Grades":g.replace("G","Grade ")}</button>`).join("");
+  const visible = MISSIONS.filter(m=> gradeFilter==="ALL" || m.grade===gradeFilter);
+  const rows = visible.map((m,i)=>{
+    const idxAll = MISSIONS.indexOf(m);
+    const done = !!state.completed[m.id];
+    const ms = state.missionProgress[m.id];
+    const midway = ms && ms.step>0 && !done;
+    const status = done?"done":(isGradeUnlocked(m.grade)?"":"locked");
+    const label = done?"Replay":midway?"Resume":status==="locked"?"Locked":"Begin";
+    const lockNote = status==="locked" ? `<div class="meta" style="margin-top:2px;">Unlocks after finishing all of Grade ${GRADE_ORDER[GRADE_ORDER.indexOf(m.grade)-1].slice(1)}</div>` : "";
+    return `<div class="stop ${status}"><div class="node">${done?"✓":idxAll+1}</div>
+      <div class="card stop-card"><div><h3 style="margin-bottom:2px;">${m.icon} ${m.title}</h3>
+        <div class="meta">${m.place} · ~${m.minutes} min</div>
+        <span class="badge-pill">${m.grade.replace("G","Grade ")} · ${m.skill}</span>${lockNote}</div>
+        <button class="btn small ${status==="locked"?"ghost":""}" ${status==="locked"?"disabled":""} onclick="go('activity',{missionId:'${m.id}'})">${label}</button></div></div>`;
+  }).join("") || `<p class="placeholder-note">No missions yet for this grade — check back soon.</p>`;
+  el.innerHTML = `<h2>Learning Path</h2><p>Follow the trail through history. Complete each mission to unlock the next.</p>
+    <div class="grade-chips">${chips}</div><div class="trail">${rows}</div>`;
+}
+
+/* ================= Activity engine ================= */
+function renderActivity(el){
+  const m = MISSIONS.find(x=>x.id===currentMissionId) || MISSIONS[0];
+  const ms = missionState(m.id);
+  const step = m.steps[ms.step];
+  const dots = m.steps.map((s,i)=>`<span class="${i<=ms.step?"on":""}"></span>`).join("");
+  let body = "";
+  if(step.type==="observe") body = renderObserveStep(m, step);
+  else if(step.type==="decide") body = renderDecideStep(m, step, ms);
+  else if(step.type==="create") body = renderCreateStep(m, step, ms);
+  const teacherNote = (m.note && ms.step===0) ? `<div class="teacher-note">👩‍🏫 <strong>For your teacher:</strong> ${m.note}</div>` : "";
+  el.innerHTML = `<h2>${m.icon} ${m.title}</h2><div class="step-dots">${dots}</div>
+    <div class="card"><p class="meta placeholder-note">${m.place}</p>${teacherNote}<div id="stepBody">${body}</div></div>
+    <p class="save-flag" id="saveFlag"></p>`;
+}
+
+function renderObserveStep(m, step){
+  const clues = step.clues.map((c,i)=>`<button class="clue-chip" id="clue-${i}" onclick="revealClue(${i})">${c.icon} ${c.label}</button><div id="clueDetail-${i}" class="clue-detail" style="display:none;">${c.detail}</div>`).join("");
+  return `<p>${step.text}</p>${speakRow(step.text)}
+    <div id="clueBox">${clues}</div>
+    <button class="btn" id="nextObsBtn" style="margin-top:14px;" disabled onclick="advanceStep('${m.id}')">Continue</button>
+    <p class="placeholder-note" id="clueHint">Tap every clue to unlock Continue.</p>`;
+}
+window._seenClues = {};
+function revealClue(i){
+  document.getElementById(`clueDetail-${i}`).style.display="block";
+  document.getElementById(`clue-${i}`).classList.add("seen");
+  speak(document.getElementById(`clueDetail-${i}`).textContent);
+  window._seenClues[i]=true;
+  const total = document.querySelectorAll(".clue-chip").length;
+  if(Object.keys(window._seenClues).length>=total){
+    document.getElementById("nextObsBtn").disabled=false;
+    document.getElementById("clueHint").textContent="All clues collected — ready to continue.";
+  }
+}
+function advanceStep(id){
+  const ms = missionState(id); ms.step++; saveState(); render("activity");
+}
+
+function renderDecideStep(m, step, ms){
+  const stepIdx = ms.step;
+  const attempt = ms.attempts[stepIdx] || {tried:[]};
+  const triedList = attempt.tried.map(i=> step.choices[i].text).join("; ");
+  const choices = step.choices.map((c,i)=>`<button class="choice-btn ${attempt.tried.includes(i)?"tried":""}" onclick="chooseOption('${m.id}',${stepIdx},${i})">${c.text}</button>`).join("");
+  const priorNote = attempt.tried.length ? `<p class="attempt-note">You already tried: ${triedList}. You can pick a different path, or try that one again to review what happens.</p>` : "";
+  return `<h3>${step.prompt}</h3>${speakRow(step.prompt)}<div id="choices">${choices}</div>${priorNote}<div id="sceneArea"></div>`;
+}
+
+function chooseOption(missionId, stepIdx, choiceIdx){
+  const m = MISSIONS.find(x=>x.id===missionId);
+  const ms = missionState(missionId);
+  const step = m.steps[stepIdx];
+  const choice = step.choices[choiceIdx];
+  if(!ms.attempts[stepIdx]) ms.attempts[stepIdx] = {tried:[]};
+  if(!ms.attempts[stepIdx].tried.includes(choiceIdx)) ms.attempts[stepIdx].tried.push(choiceIdx);
+  saveState();
+  const later = choice.ripple.later, now = choice.ripple.now;
+  const lines = choice.consequence.map((l,i)=>`<p class="scene-line" style="animation-delay:${i*0.45}s;">${l}</p>`).join("");
+  const canContinue = choice.outcome!=="poor";
+  const box = document.getElementById("sceneArea");
+  box.innerHTML = `<div class="scene-box ${choice.outcome}">
+      ${lines}
+      <div class="ripple-wrap"><div class="ripple-label"><span>Now</span><span>Later</span></div>
+        <div class="ripple-track"><div class="ripple-fill" id="rippleFill"></div></div></div>
+      ${choice.reteach ? `<p><em>${choice.reteach}</em></p>` : ""}
+      <button class="btn small ghost" onclick="toggleCounterfactual(this)">Watch the other path</button>
+      <div class="counterfactual" style="display:none;">${choice.counterfactual}</div>
+      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+        ${canContinue ? `<button class="btn secondary" onclick="advanceStep('${m.id}')">Continue</button>` : `<button class="btn" onclick="renderActivity(document.getElementById('screen-activity'))">Try Again</button>`}
+      </div></div>`;
+  speak(choice.consequence.join(" ") + (choice.reteach ? (" " + choice.reteach) : ""));
+  setTimeout(()=>{ const f=document.getElementById("rippleFill"); if(f) f.style.width = Math.max(now, later) + "%"; }, 60);
+}
+function toggleCounterfactual(btn){
+  const box = btn.nextElementSibling;
+  const showing = box.style.display==="block";
+  box.style.display = showing ? "none" : "block";
+  btn.textContent = showing ? "Watch the other path" : "Hide the other path";
+}
+
+function renderCreateStep(m, step, ms){
+  return `<h3>Time Journal</h3><p>${step.prompt}</p>${speakRow(step.prompt)}
+    <p class="placeholder-note">Sentence starter: "${step.starter}"</p>
+    <textarea id="journalBox" rows="3" placeholder="Write your thoughts here...">${ms.journal||""}</textarea>
+    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn" onclick="completeMission('${m.id}','${step.badge}')">Complete Mission</button>
+    </div>`;
+}
+function completeMission(id, badge){
+  const ms = missionState(id);
+  ms.journal = document.getElementById("journalBox").value;
+  state.journal[id] = ms.journal;
+  state.completed[id] = true; state.lastActivity = id;
+  saveState();
+  go("results", {missionId:id});
+}
+
+/* ================= Results ================= */
+function renderResults(el){
+  const m = MISSIONS.find(x=>x.id===currentMissionId) || MISSIONS[0];
+  el.innerHTML = `<div class="hero"><div class="scene" style="width:100px;height:100px;font-size:2.6rem;">🏅</div><h2>Mission Complete!</h2></div>
+    <div class="card"><p>You earned the <strong>${m.skill}</strong> badge and a new artifact for your locker.</p>
+      <div class="artifact-grid" style="margin:14px 0;"><div class="artifact-tile">📜<br>${m.title} Artifact</div></div>
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" onclick="go('path')">Try Another Mission</button>
+        <button class="btn ghost" onclick="go('progress')">See My Progress</button></div></div>`;
+}
+
+/* ================= Resources / Progress / About ================= */
+const MAP_GLOSSARY = [
+  {term:"Floodplain", def:"The flat land next to a river that gets covered with water when the river floods."},
+  {term:"Settlement", def:"A place where a group of people make their home."},
+  {term:"Trade route", def:"A regular path people travel to buy, sell, or exchange goods."},
+  {term:"Region", def:"An area of land grouped together because it shares things like landscape or climate."},
+  {term:"Coast", def:"Land that sits right next to the ocean or sea."},
+  {term:"Delta / river valley", def:"Low, fertile land along a river, often good for farming."},
+  {term:"Frontier", def:"The edge of settled land, where people are just beginning to move and build."},
+  {term:"Oasis", def:"A spot in the desert with water, where plants can grow and travelers can rest."},
+  {term:"Aqueduct", def:"A built channel that carries water from one place to another, sometimes over long distances."},
+  {term:"Colony", def:"A settlement started by people from another country, who are still connected to it."}
+];
+const MINI_TIMELINE = (function(){
+  // Built from the missions themselves, ordered earliest era to most recent using each mission's own year clues.
+  const eras = [
+    {label:"Ancient river civilizations", missionIds:["nile","hammurabi","firelight"]},
+    {label:"Classical trade & law", missionIds:["silkroad","aqueduct"]},
+    {label:"Early settlements & exploration", missionIds:["river","symbols","marketday","neighborhoodheroes","timecapsule","explorer","regions","treaty"]},
+    {label:"Colonial life & early government", missionIds:["capitolhill","townmeeting"]},
+    {label:"Revolution & a new nation", missionIds:["colonycountdown","declaration","convention"]},
+    {label:"Freedom, growth & the wider country", missionIds:["northstar","supplyline","goldrush"]}
+  ];
+  return eras.map(era=>({
+    label: era.label,
+    missions: era.missionIds.map(id=>MISSIONS.find(m=>m.id===id)).filter(Boolean)
+  })).filter(era=>era.missions.length);
+})();
+function renderResources(el){
+  const glossaryRows = MAP_GLOSSARY.map(g=>`<div class="card" style="padding:14px 18px; margin-bottom:10px;">
+      <strong>${g.term}</strong><p style="margin:4px 0 0;">${g.def}</p></div>`).join("");
+  const timelineRows = MINI_TIMELINE.map(era=>{
+    const chips = era.missions.map(m=>`<span class="badge-pill">${m.icon} ${m.title}</span>`).join(" ");
+    return `<div class="stop"><div class="node">🕰️</div>
+      <div class="card stop-card" style="align-items:flex-start; flex-direction:column;">
+        <h3 style="margin-bottom:6px;">${era.label}</h3>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">${chips}</div>
+      </div></div>`;
+  }).join("");
+  el.innerHTML = `<h2>Resources</h2><p>Helpful materials to explore between missions.</p>
+    <div class="card"><h3 style="margin-top:0;">🗺️ Map Glossary</h3><p class="placeholder-note">Key geography terms used across missions.</p></div>
+    ${glossaryRows}
+    <div class="card" style="margin-top:20px;"><h3 style="margin-top:0;">📖 Mini Timeline</h3><p class="placeholder-note">How each mission's era connects, from oldest to most recent.</p></div>
+    <div class="trail">${timelineRows}</div>`;
+}
+
+/* Skill-mastery mapping used by the Teacher View below. Each mission and Play
+   activity is tagged with the one core skill area it practices most, using the
+   four areas named in the project spec (geography, chronology, civics, cause &
+   effect). A couple of general-purpose activities (like the open-ended Journal
+   and the mixed-topic Trivia Dash) intentionally sit outside all four, since
+   they cut across every skill rather than building one specifically. */
+const SKILL_CATEGORIES = ["Geography","Chronology","Civics","Cause & Effect"];
+const SKILL_CATEGORY_MAP = {
+  river:"Geography", explorer:"Geography", regions:"Geography", nile:"Geography",
+  silkroad:"Geography", aqueduct:"Geography", mapmissions:"Geography",
+  timecapsule:"Chronology", northstar:"Chronology", firelight:"Chronology",
+  artifacthunt:"Chronology", museum:"Chronology", timeline:"Chronology",
+  mysteryartifact:"Chronology", thenvsnow:"Chronology",
+  symbols:"Civics", neighborhoodheroes:"Civics", treaty:"Civics", capitolhill:"Civics",
+  declaration:"Civics", townmeeting:"Civics", convention:"Civics", hammurabi:"Civics",
+  civicscorner:"Civics",
+  marketday:"Cause & Effect", goldrush:"Cause & Effect", colonycountdown:"Cause & Effect",
+  supplyline:"Cause & Effect", civbuilder:"Cause & Effect", tradetycoon:"Cause & Effect"
+};
+function computeSkillMastery(){
+  const result = {};
+  SKILL_CATEGORIES.forEach(c=> result[c] = {done:0, total:0, missing:[]});
+  MISSIONS.forEach(m=>{
+    const cat = SKILL_CATEGORY_MAP[m.id];
+    if(!cat) return;
+    result[cat].total++;
+    if(state.completed[m.id]) result[cat].done++; else result[cat].missing.push(m.title);
+  });
+  PLAY_ACTIVITIES.forEach(a=>{
+    const cat = SKILL_CATEGORY_MAP[a.id];
+    if(!cat) return;
+    result[cat].total++;
+    if(state.playCompleted[a.id]) result[cat].done++; else result[cat].missing.push(a.title);
+  });
+  return result;
+}
+function renderProgress(el){
+  const doneCount = Object.keys(state.completed).length;
+  const byGrade = GRADE_ORDER.map(g=>{
+    const missions = MISSIONS.filter(m=>m.grade===g);
+    const tiles = missions.map(m=>`<div class="artifact-tile">${state.completed[m.id]?"🏅":'<span class="badge-empty"></span>'}<br>${m.skill}</div>`).join("");
+    const gradeDone = missions.filter(m=>state.completed[m.id]).length;
+    return `<h3 style="margin-top:14px;">${g.replace("G","Grade ")} <span class="placeholder-note">(${gradeDone}/${missions.length})</span></h3>
+      <div class="artifact-grid">${tiles}</div>`;
+  }).join("");
+  const playBadgeCount = Object.keys(state.playBadges).length;
+  const playTiles = PLAY_ACTIVITIES.map(pa=>{
+    const earned = state.playCompleted[pa.id];
+    return `<div class="artifact-tile">${earned?"🏅":'<span class="badge-empty"></span>'}<br>${pa.title}</div>`;
+  }).join("");
+  const mastery = computeSkillMastery();
+  const skillRows = SKILL_CATEGORIES.map(cat=>{
+    const {done, total, missing} = mastery[cat];
+    const pct = total ? Math.round((done/total)*100) : 0;
+    let note;
+    if(pct >= 80) note = `Strong footing in ${cat.toLowerCase()}.`;
+    else if(pct >= 40) note = `Building steadily in ${cat.toLowerCase()} — a few more activities will round this out.`;
+    else note = `Could use more practice in ${cat.toLowerCase()}.`;
+    const nextUp = missing.length ? `Not yet tried: ${missing.slice(0,3).join(", ")}${missing.length>3?", …":""}` : "Every activity in this area is complete.";
+    return `<div style="margin-bottom:16px;">
+      <div class="timer-label"><span><strong>${cat}</strong></span><span>${done}/${total}</span></div>
+      <div class="timer-track"><div class="timer-fill" style="width:${pct}%;"></div></div>
+      <p class="placeholder-note" style="margin:4px 0 0;">${note} ${nextUp}</p>
+    </div>`;
+  }).join("");
+  el.innerHTML = `<h2>My Progress</h2><div class="card"><p>${doneCount} of ${MISSIONS.length} missions complete.</p>${byGrade}</div>
+    <div class="card"><h3 style="margin-top:0;">🎲 Play Badges</h3><p>${playBadgeCount} of ${PLAY_ACTIVITIES.length} Play badges earned.</p>
+      <div class="artifact-grid">${playTiles}</div></div>
+    <div class="card"><h3 style="margin-top:0;">🍎 Teacher View</h3>
+      <p class="placeholder-note">A skill-by-skill mastery summary for this device's learner, combining every mission and Play activity completed so far — so you know exactly where to reteach.</p>
+      ${skillRows}
+      <p class="placeholder-note">This is a single-device sample. It reflects whoever has been playing on this device, not a full class roster.</p>
+    </div>`;
+}
+function renderAbout(el){
+  el.innerHTML = `<h2>About Time Trek</h2><div class="card">
+      <p>Time Trek: Decisions That Made History helps students make choices at key moments in history — then see the real consequences, so they understand <em>why</em> history unfolded the way it did.</p>
+      ${speakRow("Time Trek helps students make choices at key moments in history, and see the consequences of those choices.")}</div>
+    <div class="card"><h3>Need help?</h3><p class="placeholder-note">This app uses sample historical scenarios built for classroom use, with no sign-in required. Progress saves automatically on this device. Ask your teacher if you get stuck.</p></div>`;
+}
+
+/* ================= Play Activities ================= */
+const PLAY_ACTIVITIES = [
+  {id:"mapmissions", category:"Explore & Discover", icon:"🗺️", title:"Map Missions", skill:"Geography", minutes:8,
+    blurb:"Explore a historical map and find the best spot for trade, settlement, or resources."},
+  {id:"artifacthunt", category:"Explore & Discover", icon:"🔎", title:"Artifact Hunts", skill:"Primary Sources", minutes:7,
+    blurb:"Search a busy scene for hidden primary sources, then inspect each one to learn its story."},
+  {id:"journaltool", category:"Explore & Discover", icon:"📔", title:"Time Traveler's Journal", skill:"Reflection & Writing", minutes:6,
+    blurb:"Write or draw about history any time you like — with sentence starters if you get stuck."},
+  {id:"civbuilder", category:"Create & Build", icon:"🏛️", title:"Build a Civilization", skill:"Cause & Effect", minutes:10,
+    blurb:"Balance farming, building, and defending as your settlement grows across three seasons."},
+  {id:"museum", category:"Create & Build", icon:"🖼️", title:"Design a Museum Exhibit", skill:"Curation & Evidence", minutes:9,
+    blurb:"Choose artifacts, write captions, and arrange your own gallery wall."},
+  {id:"timeline", category:"Create & Build", icon:"📏", title:"Make Your Own Timeline", skill:"Chronology", minutes:7,
+    blurb:"Put shuffled events back in order and see exactly why each one comes when it does."},
+  {id:"trivia", category:"Play & Compete", icon:"⚡", title:"History Trivia Dash", skill:"Recall & Speed", minutes:5,
+    blurb:"Race the clock in a friendly quiz — correct streaks earn a power-up."},
+  {id:"tradetycoon", category:"Play & Compete", icon:"🐫", title:"Trade Route Tycoon", skill:"Economics", minutes:9,
+    blurb:"Buy, sell, and barter goods along a historic trade route."},
+  {id:"mysteryartifact", category:"Play & Compete", icon:"🕵️", title:"Mystery of the Missing Artifact", skill:"Evidence & Inference", minutes:8,
+    blurb:"Gather clues from documents, maps, and interviews to solve a historical mystery."},
+  {id:"civicscorner", category:"Think & Discuss", icon:"🏘️", title:"Civics Corner", skill:"Civics", minutes:7,
+    blurb:"Vote on a town issue and see how community decisions play out."},
+  {id:"thenvsnow", category:"Think & Discuss", icon:"⏳", title:"Then vs. Now", skill:"Comparison & Reflection", minutes:6,
+    blurb:"Compare daily life across eras, then reflect on what you'd miss most."}
+];
+
+/* ---- shared helpers ---- */
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const tmp=a[i]; a[i]=a[j]; a[j]=tmp; }
+  return a;
+}
+function awardPlayBadge(id, badge){
+  state.playCompleted[id] = true;
+  state.playBadges[id] = badge;
+  saveState();
+}
+function rerenderPlayActivity(){
+  const a = PLAY_ACTIVITIES.find(x=>x.id===currentPlayId);
+  const body = document.getElementById("playBody");
+  if(a && body && PLAY_RENDERERS[a.id]) PLAY_RENDERERS[a.id](body, a);
+}
+function renderPlayComplete(el, a, badge, message){
+  el.innerHTML = `<div class="hero"><div class="scene" style="width:100px;height:100px;font-size:2.6rem;">🏅</div><h2>${a.title} Complete!</h2></div>
+    <div class="card"><p>${message}</p>
+      <p class="play-badge-earned" style="font-size:.9rem;">🏅 You earned: ${badge}</p>
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" onclick="openPlayActivity('${a.id}')">Play Again</button>
+        <button class="btn ghost" onclick="go('play')">Back to Play</button></div></div>`;
+}
+function startPlayTimer(seconds, onTick, onDone){
+  playSession.timeLeft = seconds;
+  onTick(playSession.timeLeft);
+  playSession.timerId = setInterval(()=>{
+    playSession.timeLeft--;
+    if(playSession.timeLeft <= 0){
+      clearPlayTimer();
+      onDone();
+    } else {
+      onTick(playSession.timeLeft);
+    }
+  }, 1000);
+}
+
+/* ---- Play hub ---- */
+function featuredPlayIds(){
+  const n = PLAY_ACTIVITIES.length;
+  const offset = new Date().getDate() % n;
+  const rotated = PLAY_ACTIVITIES.slice(offset).concat(PLAY_ACTIVITIES.slice(0, offset));
+  return rotated.slice(0, 6).map(a=>a.id);
+}
+function playCard(a){
+  const earned = state.playCompleted[a.id];
+  return `<div class="play-card">
+    <span class="category-tag">${a.category}</span>
+    <div class="play-icon">${a.icon}</div>
+    <h3>${a.title}</h3>
+    <p>${a.blurb}</p>
+    <p class="placeholder-note">⏱ ~${a.minutes} min · ${a.skill}</p>
+    ${earned?`<p class="play-badge-earned">🏅 Badge earned: ${state.playBadges[a.id]||""}</p>`:""}
+    <button class="btn" onclick="openPlayActivity('${a.id}')">${earned?"Play Again":"Play"}</button>
+  </div>`;
+}
+function renderPlay(el){
+  const featured = featuredPlayIds();
+  const featuredCards = PLAY_ACTIVITIES.filter(a=>featured.includes(a.id)).map(playCard).join("");
+  const categories = ["Explore & Discover","Create & Build","Play & Compete","Think & Discuss"];
+  const allByCat = categories.map(c=>{
+    const items = PLAY_ACTIVITIES.filter(a=>a.category===c).map(playCard).join("");
+    return `<div class="section-label">${c}</div><div class="play-grid">${items}</div>`;
+  }).join("");
+  const badgeCount = Object.keys(state.playBadges).length;
+  el.innerHTML = `<h2>Play</h2><p>Short activities you can pick any time — no grade lock. Play a few, earn badges, and they'll show up in your Progress tab too.</p>
+    <div class="card"><p><strong>${badgeCount}</strong> Play badge${badgeCount===1?"":"s"} earned so far.</p></div>
+    <div class="section-label">✨ Featured Today</div>
+    <div class="play-grid">${featuredCards}</div>
+    <h3 style="margin-top:26px;">All Activities</h3>
+    ${allByCat}`;
+}
+function renderPlayActivity(el){
+  const a = PLAY_ACTIVITIES.find(x=>x.id===currentPlayId) || PLAY_ACTIVITIES[0];
+  el.innerHTML = `<button class="btn ghost" style="margin-bottom:12px;" onclick="go('play')">← Back to Play</button>
+    <div id="playBody"></div>`;
+  const fn = PLAY_RENDERERS[a.id];
+  const body = document.getElementById("playBody");
+  if(fn) fn(body, a); else body.innerHTML = "<p>Coming soon.</p>";
+}
+
+/* ---- 1. Map Missions ---- */
+const MAP_ROUNDS = [
+  {prompt:"Where's the best spot to found a farming settlement?", spots:[
+    {x:22,y:70,icon:"🏜️",label:"Dry desert",correct:false},
+    {x:55,y:45,icon:"🌊",label:"River valley",correct:true},
+    {x:80,y:20,icon:"⛰️",label:"Steep mountain",correct:false}
+  ], explain:"Rivers provide water for crops and animals, and rich soil for farming — that's why so many early settlements grew up along rivers."},
+  {prompt:"Which spot works best as a trade route stop between two towns?", spots:[
+    {x:30,y:30,icon:"🏝️",label:"Isolated island",correct:false},
+    {x:60,y:60,icon:"⛲",label:"Oasis crossroads",correct:true},
+    {x:85,y:80,icon:"🌲",label:"Dense forest",correct:false}
+  ], explain:"An oasis at a crossroads gives traders water and rest right where routes naturally meet — a classic trade-stop location."},
+  {prompt:"Where would a coastal kingdom build its main harbor?", spots:[
+    {x:20,y:50,icon:"🏔️",label:"Cliffside",correct:false},
+    {x:65,y:75,icon:"🌉",label:"Sheltered bay",correct:true},
+    {x:40,y:20,icon:"🏖️",label:"Open, stormy coast",correct:false}
+  ], explain:"A sheltered bay protects ships from waves and storms, making it much safer to load and unload cargo."},
+  {prompt:"Which location has the natural resource a mining town needs?", spots:[
+    {x:75,y:35,icon:"⛰️",label:"Mineral-rich hills",correct:true},
+    {x:30,y:65,icon:"🏞️",label:"Flat grassland",correct:false},
+    {x:50,y:15,icon:"🧊",label:"Frozen peak",correct:false}
+  ], explain:"Mining towns grow up where valuable minerals are actually found underground — usually in hilly or mountainous terrain."}
+];
+function renderMapMissions(el, a){
+  if(playSession.round === undefined){ playSession.round = 0; playSession.stamps = 0; }
+  const round = MAP_ROUNDS[playSession.round];
+  const picked = playSession.picked;
+  const hotspots = round.spots.map((s,i)=>{
+    const foundCls = (picked!==undefined && s.correct) ? "found" : "";
+    return `<button class="map-hotspot ${foundCls}" style="left:${s.x}%;top:${s.y}%;" ${picked!==undefined?"disabled":""} onclick="mapPick(${i})" aria-label="${s.label}">
+      <span class="mh-icon">${s.icon}</span></button>`;
+  }).join("");
+  el.innerHTML = `<h3>${a.icon} Map Missions</h3>
+    <p class="placeholder-note">Round ${playSession.round+1} of ${MAP_ROUNDS.length} · 🎖️ ${playSession.stamps} stamp${playSession.stamps===1?"":"s"}</p>
+    <p><strong>${round.prompt}</strong></p>${speakRow(round.prompt)}
+    <div class="map-wrap">${hotspots}</div>
+    ${picked!==undefined ? `<div class="card" style="margin-top:12px;"><p>${round.spots[picked].correct ? "🎉 Great choice! " : "Not quite — "}${round.explain}</p>
+      <button class="btn" style="margin-top:8px;" onclick="mapNext()">${playSession.round < MAP_ROUNDS.length-1 ? "Next Round" : "See Results"}</button></div>` : ""}`;
+}
+function mapPick(i){
+  if(playSession.picked!==undefined) return;
+  playSession.picked = i;
+  if(MAP_ROUNDS[playSession.round].spots[i].correct) playSession.stamps++;
+  rerenderPlayActivity();
+}
+function mapNext(){
+  playSession.picked = undefined;
+  playSession.round++;
+  if(playSession.round >= MAP_ROUNDS.length){
+    awardPlayBadge("mapmissions","Explorer's Stamp");
+    renderPlayComplete(document.getElementById("playBody"), PLAY_ACTIVITIES.find(x=>x.id==="mapmissions"), "Explorer's Stamp",
+      `You earned ${playSession.stamps} of ${MAP_ROUNDS.length} explorer stamps for accurate map reading!`);
+    return;
+  }
+  rerenderPlayActivity();
+}
+
+/* ---- 2. Artifact Hunts ---- */
+const HUNT_SCENES = [
+  { name:"A Busy Marketplace", items:[
+    {icon:"🏺", label:"Clay jar", artifact:true, info:"Clay jars like this carried oil, grain, or wine to be traded — cracks and repairs can tell us how far they traveled."},
+    {icon:"🥖", label:"Bread", artifact:false},
+    {icon:"📜", label:"Merchant's scroll", artifact:true, info:"A merchant's scroll recorded prices and debts — it's one of the earliest kinds of written record-keeping."},
+    {icon:"🧺", label:"Basket", artifact:false},
+    {icon:"🪙", label:"Old coin", artifact:true, info:"Coins show us whose ruler was in power, and stamped symbols can tell us what a civilization valued."},
+    {icon:"🐐", label:"Goat", artifact:false},
+    {icon:"🧶", label:"Wool", artifact:false},
+    {icon:"⚖️", label:"Trade scale", artifact:true, info:"A balance scale kept trades fair — it's a clue that this marketplace had rules everyone trusted."},
+    {icon:"🍇", label:"Grapes", artifact:false}
+  ]},
+  { name:"A Sailing Ship", items:[
+    {icon:"🧭", label:"Compass", artifact:true, info:"A compass let sailors navigate even when they couldn't see land — a huge leap for long ocean voyages."},
+    {icon:"🪢", label:"Rope", artifact:false},
+    {icon:"🗺️", label:"Sea chart", artifact:true, info:"Sea charts marked coastlines and dangers — each voyage often made the next one's map more accurate."},
+    {icon:"🪵", label:"Barrel", artifact:false},
+    {icon:"📖", label:"Captain's log", artifact:true, info:"A captain's log recorded the weather, the crew, and daily events — it's a primary source written in the moment."},
+    {icon:"🐟", label:"Fish", artifact:false},
+    {icon:"⚓", label:"Anchor", artifact:false},
+    {icon:"🕯️", label:"Lantern", artifact:false},
+    {icon:"💰", label:"Coin pouch", artifact:true, info:"Coins from different lands found on one ship are a clue about how far — and how widely — this crew traded."}
+  ]},
+  { name:"A Colonial Village", items:[
+    {icon:"🕯️", label:"Candle mold", artifact:true, info:"Candle molds show how colonial families made their own light — a clue about daily, hands-on work."},
+    {icon:"🐓", label:"Chicken", artifact:false},
+    {icon:"📰", label:"Old newspaper", artifact:true, info:"Early newspapers spread news and opinions — and sometimes the arguments that led toward revolution."},
+    {icon:"🪑", label:"Chair", artifact:false},
+    {icon:"🔔", label:"Town bell", artifact:true, info:"A town bell called people together for meetings and emergencies — a clue about how communities organized themselves."},
+    {icon:"🥕", label:"Carrot", artifact:false},
+    {icon:"🧵", label:"Thread", artifact:false},
+    {icon:"✒️", label:"Quill and ink", artifact:true, info:"A quill and ink were used to write letters, laws, and petitions — the tools behind many historic documents."},
+    {icon:"🪣", label:"Bucket", artifact:false}
+  ]}
+];
+function renderArtifactHunt(el, a){
+  if(playSession.sceneIdx === undefined){ playSession.sceneIdx = 0; playSession.found = {}; playSession.checked = {}; playSession.selected = null; }
+  const scene = HUNT_SCENES[playSession.sceneIdx];
+  const totalArtifacts = scene.items.filter(i=>i.artifact).length;
+  const foundCount = Object.keys(playSession.found).filter(k=>playSession.found[k]).length;
+  const grid = scene.items.map((it,i)=>{
+    const wasChecked = playSession.checked[i];
+    const cls = it.artifact && wasChecked ? "found" : (wasChecked ? "checked-empty" : "");
+    return `<button class="scene-obj ${cls}" onclick="huntInspect(${i})">${it.artifact && wasChecked ? "✨":it.icon}<span class="so-label">${wasChecked ? it.label : "?"}</span></button>`;
+  }).join("");
+  const info = playSession.selected!==null ? scene.items[playSession.selected] : null;
+  el.innerHTML = `<h3>${a.icon} Artifact Hunts</h3>
+    <p class="placeholder-note">Scene ${playSession.sceneIdx+1} of ${HUNT_SCENES.length} · Found ${foundCount} of ${totalArtifacts} primary sources</p>
+    <p><strong>${scene.name}</strong> — tap around the scene to search for hidden primary sources.</p>
+    <div class="scene-grid">${grid}</div>
+    ${info ? `<div class="card"><p><strong>${info.label}</strong></p>${info.artifact ? `<p>${info.info}</p>${speakRow(info.info)}` : `<p>Just a ${info.label.toLowerCase()} — nothing historic here. Keep looking!</p>`}</div>` : ""}
+    ${foundCount>=totalArtifacts ? `<button class="btn" style="margin-top:10px;" onclick="huntNextScene()">${playSession.sceneIdx < HUNT_SCENES.length-1 ? "Next Scene" : "See Results"}</button>` : ""}`;
+}
+function huntInspect(i){
+  const scene = HUNT_SCENES[playSession.sceneIdx];
+  playSession.checked[i] = true;
+  playSession.selected = i;
+  if(scene.items[i].artifact) playSession.found[i] = true;
+  rerenderPlayActivity();
+}
+function huntNextScene(){
+  playSession.sceneIdx++;
+  playSession.selected = null;
+  if(playSession.sceneIdx >= HUNT_SCENES.length){
+    awardPlayBadge("artifacthunt","Artifact Detective");
+    renderPlayComplete(document.getElementById("playBody"), PLAY_ACTIVITIES.find(x=>x.id==="artifacthunt"), "Artifact Detective",
+      "You searched every scene and uncovered all the hidden primary sources!");
+    return;
+  }
+  playSession.found = {}; playSession.checked = {};
+  rerenderPlayActivity();
+}
+
+/* ---- 3. Time Traveler's Journal ---- */
+const JOURNAL_STARTERS = [
+  "If I traveled back in time, I would want to see…",
+  "The bravest choice in history I've learned about is…",
+  "One thing from the past I'm glad we don't do anymore is…",
+  "If I lived long ago, my job might have been…",
+  "A place in history I'd love to visit is…"
+];
+function renderJournalTool(el, a){
+  if(playSession.starterIdx === undefined) playSession.starterIdx = Math.floor(Math.random()*JOURNAL_STARTERS.length);
+  if(playSession.color === undefined) playSession.color = "#3D2B1F";
+  const starter = JOURNAL_STARTERS[playSession.starterIdx];
+  const entries = state.journalEntries.slice().reverse().slice(0,5).map(e=>`
+    <div class="journal-entry"><p>${e.text}</p>${e.drawing ? `<img src="${e.drawing}" alt="Student drawing">` : ""}</div>`).join("");
+  const colors = [
+    {hex:"#3D2B1F", name:"brown"}, {hex:"#C6704F", name:"clay orange"}, {hex:"#7A8B69", name:"sage green"},
+    {hex:"#D4A24C", name:"gold"}, {hex:"#4B6B8A", name:"blue"}, {hex:"#ffffff", name:"white"}
+  ];
+  el.innerHTML = `<h3>${a.icon} Time Traveler's Journal</h3>
+    <p class="placeholder-note">Sentence starter: "${starter}"</p>${speakRow(starter)}
+    <textarea id="journalToolBox" rows="3" placeholder="Write your thoughts here...">${playSession.draftText||""}</textarea>
+    <p class="placeholder-note" style="margin-top:10px;">Optional: draw a picture to go with your entry.</p>
+    <div class="draw-wrap">
+      <canvas id="journalCanvas" class="draw-canvas" width="320" height="200" role="img" aria-label="Drawing area — optional, use the color buttons and drag to draw"></canvas>
+      <div class="swatch-row">
+        ${colors.map(c=>`<button class="swatch ${playSession.color===c.hex?"active":""}" style="background:${c.hex};" onclick="journalSetColor('${c.hex}', this)" aria-pressed="${playSession.color===c.hex}" aria-label="Choose ${c.name} drawing color"></button>`).join("")}
+        <button class="btn small ghost" onclick="journalClearCanvas()">Clear Drawing</button>
+      </div>
+    </div>
+    <div style="margin-top:14px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn ghost" onclick="journalNewStarter()">New Starter</button>
+      <button class="btn" onclick="journalSaveEntry()">Save Entry</button>
+    </div>
+    ${entries ? `<h3 style="margin-top:24px;">My Recent Entries</h3>${entries}` : ""}`;
+  journalInitCanvas();
+}
+function journalInitCanvas(){
+  const canvas = document.getElementById("journalCanvas");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  if(playSession.drawingData){ const img = new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src = playSession.drawingData; }
+  let drawing = false;
+  function pos(e){
+    const rect = canvas.getBoundingClientRect();
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top;
+    return {x: cx * (canvas.width/rect.width), y: cy * (canvas.height/rect.height)};
+  }
+  function start(e){ drawing = true; const p = pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); }
+  function move(e){ if(!drawing) return; const p = pos(e); ctx.lineTo(p.x,p.y); ctx.strokeStyle = playSession.color; ctx.lineWidth = 4; ctx.lineCap="round"; ctx.stroke(); e.preventDefault(); }
+  function end(){ drawing = false; playSession.drawingData = canvas.toDataURL(); }
+  canvas.onmousedown = start; canvas.onmousemove = move; canvas.onmouseup = end; canvas.onmouseleave = end;
+  canvas.ontouchstart = start; canvas.ontouchmove = move; canvas.ontouchend = end;
+}
+function journalSetColor(c, btn){
+  playSession.color = c;
+  document.querySelectorAll("#playBody .swatch").forEach(s=>{ s.classList.remove("active"); s.setAttribute("aria-pressed","false"); });
+  if(btn){ btn.classList.add("active"); btn.setAttribute("aria-pressed","true"); }
+}
+function journalClearCanvas(){
+  const canvas = document.getElementById("journalCanvas");
+  if(!canvas) return;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "#ffffff"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  playSession.drawingData = null;
+}
+function journalNewStarter(){
+  playSession.draftText = document.getElementById("journalToolBox").value;
+  playSession.starterIdx = Math.floor(Math.random()*JOURNAL_STARTERS.length);
+  rerenderPlayActivity();
+}
+function journalSaveEntry(){
+  const text = document.getElementById("journalToolBox").value.trim();
+  if(!text) return;
+  state.journalEntries.push({text, drawing: playSession.drawingData || null, ts: Date.now()});
+  awardPlayBadge("journaltool","Time Traveler");
+  playSession.draftText = ""; playSession.drawingData = null;
+  saveState();
+  rerenderPlayActivity();
+}
+
+/* ---- 4. Build a Civilization ---- */
+const CIV_EVENTS = [
+  {name:"Good Rains", food:2, note:"Steady rain helped every crop planted this season."},
+  {name:"Dry Spell", food:-2, note:"A dry spell meant your farmers got a smaller harvest than hoped."},
+  {name:"Traveling Traders Arrive", prosperity:2, note:"Traders passed through, trading goods for a boost in prosperity."},
+  {name:"Raiders Spotted", defenseNeed:true, note:"Raiders were seen near the settlement — defenses were tested."},
+  {name:"Calm Season", note:"Nothing unusual happened — a quiet, steady season."}
+];
+function civStepperHtml(key,label,icon,totalUsed,cap){
+  const val = playSession.workers[key];
+  return `<div class="stepper" style="margin:6px 8px 6px 0;">
+    <button onclick="civAdjust('${key}',-1)" ${val<=0?"disabled":""} aria-label="Fewer ${label} workers">−</button>
+    <span class="qty">${icon} ${val}</span>
+    <button onclick="civAdjust('${key}',1)" ${totalUsed>=cap?"disabled":""} aria-label="More ${label} workers">+</button>
+  </div>`;
+}
+function renderCivBuilder(el, a){
+  if(playSession.season === undefined){
+    playSession.season = 1;
+    playSession.workers = {farm:2, build:2, defend:2};
+    playSession.stats = {population:10, food:6, prosperity:4, defense:4};
+    playSession.log = [];
+  }
+  const w = playSession.workers, s = playSession.stats;
+  const total = w.farm+w.build+w.defend;
+  const logHtml = playSession.log.length ? `<div class="card">${playSession.log.map(l=>`<p class="scene-line">${l}</p>`).join("")}</div>` : "";
+  el.innerHTML = `<h3>${a.icon} Build a Civilization</h3>
+    <p class="placeholder-note">Season ${playSession.season} of 3 · Population ${s.population} · Food ${s.food} · Prosperity ${s.prosperity} · Defense ${s.defense}</p>
+    <p>You have <strong>6 workers</strong> to assign this season. Where should they go?</p>
+    <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:flex-start; margin:12px 0;">
+      <div><div class="placeholder-note">🌾 Farming</div>${civStepperHtml("farm","farming","🌾",total,6)}</div>
+      <div><div class="placeholder-note">🏘️ Building &amp; Trade</div>${civStepperHtml("build","building","🏘️",total,6)}</div>
+      <div><div class="placeholder-note">🛡️ Defense</div>${civStepperHtml("defend","defense","🛡️",total,6)}</div>
+    </div>
+    <p class="placeholder-note">Workers assigned: ${total} / 6</p>
+    <button class="btn" style="margin-top:10px;" ${total!==6?"disabled":""} onclick="civAdvanceSeason()">Advance Season</button>
+    ${logHtml}`;
+}
+function civAdjust(key, delta){
+  const w = playSession.workers;
+  const total = w.farm+w.build+w.defend;
+  if(delta>0 && total>=6) return;
+  if(delta<0 && w[key]<=0) return;
+  w[key] += delta;
+  rerenderPlayActivity();
+}
+function civAdvanceSeason(){
+  const w = playSession.workers, s = playSession.stats;
+  const event = CIV_EVENTS[Math.floor(Math.random()*CIV_EVENTS.length)];
+  let food = s.food + w.farm*2 - Math.round(s.population*0.4) + (event.food||0);
+  let prosperity = s.prosperity + w.build*2 + (event.prosperity||0);
+  let defense = s.defense + w.defend*2 - 2;
+  let population = s.population;
+  let notes = [`<strong>Season ${playSession.season} event:</strong> ${event.name} — ${event.note}`];
+  if(event.defenseNeed && defense < 6){
+    population = Math.max(4, population - 2);
+    notes.push("Defenses weren't strong enough, and the raid cost the settlement some people and supplies.");
+  } else if(event.defenseNeed){
+    notes.push("Your defenses held strong, and the raid was turned away!");
+  }
+  if(food > s.food + 2){ population += 2; notes.push("With plenty of food, your settlement grew — new families arrived!"); }
+  else if(food < 2){ population = Math.max(4, population - 1); notes.push("Food ran short, and a few families moved on to find better land."); food = Math.max(0, food); }
+  s.food = Math.max(0, food); s.prosperity = Math.max(0, prosperity); s.defense = Math.max(0, defense); s.population = population;
+  playSession.log = notes;
+  playSession.season++;
+  playSession.workers = {farm:2, build:2, defend:2};
+  if(playSession.season > 3){
+    const total = s.population + s.prosperity + s.defense;
+    let tier = "Steady Village";
+    if(total > 34) tier = "Thriving Kingdom"; else if(total < 20) tier = "Humble Outpost";
+    awardPlayBadge("civbuilder", tier);
+    renderPlayComplete(document.getElementById("playBody"), PLAY_ACTIVITIES.find(x=>x.id==="civbuilder"), tier,
+      `After three seasons, your settlement became a ${tier.toLowerCase()} — population ${s.population}, prosperity ${s.prosperity}, defense ${s.defense}. Every choice about where to send workers shaped what happened next.`);
+    return;
+  }
+  rerenderPlayActivity();
+}
+
+/* ---- 5. Design a Museum Exhibit ---- */
+const MUSEUM_BANK = [
+  {icon:"🏺", label:"Ancient Clay Jar"},
+  {icon:"📜", label:"Ancient Scroll"},
+  {icon:"🗡️", label:"Bronze Sword"},
+  {icon:"🪙", label:"Old Coin"},
+  {icon:"🧭", label:"Sailor's Compass"},
+  {icon:"🔔", label:"Town Bell"},
+  {icon:"✒️", label:"Quill and Ink"},
+  {icon:"🏹", label:"Hunting Bow"},
+  {icon:"🪶", label:"Ceremonial Feather"},
+  {icon:"⚱️", label:"Burial Urn"},
+  {icon:"🗿", label:"Stone Carving"},
+  {icon:"🧵", label:"Woven Textile"}
+];
+function renderMuseumExhibit(el, a){
+  if(!playSession.stage){ playSession.stage="pick"; playSession.selected=[]; playSession.captions={}; }
+  if(playSession.stage==="pick"){
+    const grid = MUSEUM_BANK.map((it,i)=>{
+      const sel = playSession.selected.includes(i);
+      return `<button class="artifact-pick ${sel?"selected":""}" onclick="museumToggle(${i})"><span class="ap-icon">${it.icon}</span>${it.label}</button>`;
+    }).join("");
+    el.innerHTML = `<h3>${a.icon} Design a Museum Exhibit</h3>
+      <p>Choose up to 4 artifacts for your exhibit.</p>
+      <div class="artifact-pick-grid">${grid}</div>
+      <p class="placeholder-note">Selected: ${playSession.selected.length} / 4</p>
+      <button class="btn" ${playSession.selected.length===0?"disabled":""} onclick="museumGoCaption()">Next: Write Captions</button>`;
+    return;
+  }
+  if(playSession.stage==="caption"){
+    const items = playSession.selected.map(i=>{
+      const it = MUSEUM_BANK[i];
+      return `<div class="card"><p><span class="ap-icon">${it.icon}</span> <strong>${it.label}</strong></p>
+        <textarea rows="2" placeholder="Write a short museum caption..." oninput="museumSetCaption(${i}, this.value)">${playSession.captions[i]||""}</textarea></div>`;
+    }).join("");
+    el.innerHTML = `<h3>${a.icon} Write Your Captions</h3>${items}
+      <div style="margin-top:12px; display:flex; gap:10px;">
+        <button class="btn ghost" onclick="museumBackToPick()">Back</button>
+        <button class="btn" onclick="museumGoArrange()">Next: Arrange Gallery</button></div>`;
+    return;
+  }
+  if(playSession.stage==="arrange"){
+    if(!playSession.order) playSession.order = playSession.selected.slice();
+    const rows = playSession.order.map((i,pos)=>{
+      const it = MUSEUM_BANK[i];
+      return `<div class="reorder-item"><span class="re-icon">${it.icon}</span><span class="re-text">${it.label}</span>
+        <div class="re-btns">
+          <button onclick="museumMove(${pos},-1)" ${pos===0?"disabled":""} aria-label="Move up">▲</button>
+          <button onclick="museumMove(${pos},1)" ${pos===playSession.order.length-1?"disabled":""} aria-label="Move down">▼</button>
+        </div></div>`;
+    }).join("");
+    el.innerHTML = `<h3>${a.icon} Arrange Your Gallery Wall</h3>
+      <p class="placeholder-note">Use the arrows to put your artifacts in the order visitors will see them.</p>
+      <div class="reorder-list">${rows}</div>
+      <div style="margin-top:12px; display:flex; gap:10px;">
+        <button class="btn ghost" onclick="museumBackToCaption()">Back</button>
+        <button class="btn" onclick="museumFinish()">Open My Gallery</button></div>`;
+    return;
+  }
+  if(playSession.stage==="done"){
+    const frames = playSession.order.map(i=>{
+      const it = MUSEUM_BANK[i];
+      return `<div class="gallery-frame"><div class="gf-icon">${it.icon}</div><h4>${it.label}</h4><p>${playSession.captions[i]||"(no caption written)"}</p></div>`;
+    }).join("");
+    el.innerHTML = `<h3>${a.icon} Your Museum Exhibit</h3>
+      <div class="gallery-wall">${frames}</div>
+      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" onclick="openPlayActivity('museum')">Design Another Exhibit</button>
+        <button class="btn ghost" onclick="go('play')">Back to Play</button></div>`;
+  }
+}
+function museumToggle(i){
+  const sel = playSession.selected;
+  const idx = sel.indexOf(i);
+  if(idx>=0) sel.splice(idx,1);
+  else if(sel.length<4) sel.push(i);
+  rerenderPlayActivity();
+}
+function museumGoCaption(){ playSession.stage="caption"; rerenderPlayActivity(); }
+function museumBackToPick(){ playSession.stage="pick"; rerenderPlayActivity(); }
+function museumSetCaption(i, val){ playSession.captions[i] = val; }
+function museumGoArrange(){ playSession.stage="arrange"; rerenderPlayActivity(); }
+function museumBackToCaption(){ playSession.stage="caption"; rerenderPlayActivity(); }
+function museumMove(pos, dir){
+  const arr = playSession.order;
+  const newPos = pos+dir;
+  if(newPos<0 || newPos>=arr.length) return;
+  const tmp = arr[pos]; arr[pos]=arr[newPos]; arr[newPos]=tmp;
+  rerenderPlayActivity();
+}
+function museumFinish(){
+  playSession.stage = "done";
+  awardPlayBadge("museum","Museum Curator");
+  rerenderPlayActivity();
+}
+
+/* ---- 6. Make Your Own Timeline ---- */
+const TIMELINE_SETS = [
+  { name:"American Revolution", events:[
+    {text:"Britain taxes the colonies (Stamp Act)", year:1765},
+    {text:"Colonists protest by dumping tea into Boston Harbor", year:1773},
+    {text:"The Declaration of Independence is signed", year:1776},
+    {text:"The Constitutional Convention meets", year:1787}
+  ]},
+  { name:"Ancient Civilizations", events:[
+    {text:"Early farmers settle along the Nile River", year:-6000},
+    {text:"Egyptians build the great pyramids", year:-2560},
+    {text:"Hammurabi writes his code of laws in Babylon", year:-1750},
+    {text:"The Silk Road connects traders across Asia", year:-130}
+  ]},
+  { name:"Colonial Life to Nationhood", events:[
+    {text:"Jamestown is founded as an English colony", year:1607},
+    {text:"The first town meetings begin in New England", year:1630},
+    {text:"The Albany Plan proposes uniting the colonies", year:1754},
+    {text:"George Washington becomes the first President", year:1789}
+  ]}
+];
+function renderTimelineBuilder(el, a){
+  if(playSession.setIdx===undefined){
+    el.innerHTML = `<h3>${a.icon} Make Your Own Timeline</h3><p>Choose a set of events to put in order.</p>
+      <div class="play-grid">${TIMELINE_SETS.map((s,i)=>`<div class="play-card"><h3>${s.name}</h3><p>${s.events.length} events</p><button class="btn" onclick="timelinePick(${i})">Choose</button></div>`).join("")}</div>`;
+    return;
+  }
+  const set = TIMELINE_SETS[playSession.setIdx];
+  if(!playSession.checked){
+    const rows = playSession.order.map((i,pos)=>{
+      const ev = set.events[i];
+      return `<div class="reorder-item"><span class="re-text">${ev.text}</span>
+        <div class="re-btns">
+          <button onclick="timelineMove(${pos},-1)" ${pos===0?"disabled":""} aria-label="Move earlier">▲</button>
+          <button onclick="timelineMove(${pos},1)" ${pos===playSession.order.length-1?"disabled":""} aria-label="Move later">▼</button>
+        </div></div>`;
+    }).join("");
+    el.innerHTML = `<h3>${a.icon} ${set.name}</h3>
+      <p class="placeholder-note">Arrange the events from earliest (top) to most recent (bottom).</p>
+      <div class="reorder-list">${rows}</div>
+      <button class="btn" style="margin-top:12px;" onclick="timelineCheck()">Check My Timeline</button>`;
+    return;
+  }
+  const correctOrder = set.events.map((e,i)=>i).sort((x,y)=>set.events[x].year - set.events[y].year);
+  const allCorrect = playSession.order.every((v,i)=>v===correctOrder[i]);
+  const rows = playSession.order.map((i,pos)=>{
+    const ev = set.events[i];
+    const isRight = i===correctOrder[pos];
+    return `<div class="reorder-item" style="border-color:${isRight?'var(--sage)':'var(--clay)'};"><span class="re-text">${isRight?"✅":"↕️"} ${ev.text}</span></div>`;
+  }).join("");
+  el.innerHTML = `<h3>${a.icon} ${set.name}</h3>
+    <div class="reorder-list">${rows}</div>
+    <div class="card" style="margin-top:12px;">
+      ${allCorrect ? `<p>🎉 Perfect! That's the correct order.</p>` : `<p>Some events are out of order (marked ↕️). Here's the correct order and why:</p>
+      <ol>${correctOrder.map(i=>`<li>${set.events[i].text}</li>`).join("")}</ol>`}
+    </div>
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      ${allCorrect ? "" : `<button class="btn" onclick="timelineRetry()">Try Rearranging Again</button>`}
+      <button class="btn ${allCorrect?"":"ghost"}" onclick="timelineFinish(${allCorrect})">${allCorrect?"Finish":"Finish Anyway"}</button>
+    </div>`;
+}
+function timelinePick(i){ playSession.setIdx=i; playSession.order = shuffleArr(TIMELINE_SETS[i].events.map((e,idx)=>idx)); playSession.checked=false; rerenderPlayActivity(); }
+function timelineMove(pos,dir){
+  const arr = playSession.order; const newPos = pos+dir;
+  if(newPos<0||newPos>=arr.length) return;
+  const tmp = arr[pos]; arr[pos]=arr[newPos]; arr[newPos]=tmp;
+  rerenderPlayActivity();
+}
+function timelineCheck(){ playSession.checked = true; rerenderPlayActivity(); }
+function timelineRetry(){ playSession.checked = false; rerenderPlayActivity(); }
+function timelineFinish(allCorrect){
+  const tier = allCorrect ? "Timeline Master" : "Timeline Builder";
+  awardPlayBadge("timeline", tier);
+  renderPlayComplete(document.getElementById("playBody"), PLAY_ACTIVITIES.find(x=>x.id==="timeline"), tier,
+    allCorrect ? "You put every event in the exact right order!" : "You built a timeline and learned the correct order along the way.");
+}
+
+/* ---- 7. History Trivia Dash ---- */
+const TRIVIA_BANK = [
+  {q:"Which river's yearly floods helped ancient Egyptian farms grow?", choices:["The Nile","The Amazon","The Thames","The Mississippi"], answer:0},
+  {q:"What was the Silk Road mainly used for?", choices:["Trading goods and ideas","Racing horses","Mining gold","Fighting wars"], answer:0},
+  {q:"Who wrote one of the earliest known law codes?", choices:["Hammurabi","Julius Caesar","George Washington","Christopher Columbus"], answer:0},
+  {q:"What did early farmers need most to settle in one place?", choices:["Reliable water and food","Tall mountains","Cold weather","Gold mines"], answer:0},
+  {q:"What event led colonists to protest by dumping tea into Boston Harbor?", choices:["Unfair taxes","A bad harvest","A pirate attack","A royal wedding"], answer:0},
+  {q:"What document declared the American colonies independent?", choices:["The Declaration of Independence","The Constitution","The Bill of Rights","The Magna Carta"], answer:0},
+  {q:"What was the Underground Railroad?", choices:["A secret network that helped enslaved people escape to freedom","An actual underground train","A mining tunnel system","A postal route"], answer:0},
+  {q:"Why was compromise important at the Constitutional Convention?", choices:["Delegates disagreed and needed a plan everyone could accept","No one showed up","There was only one idea proposed","They were building a monument"], answer:0},
+  {q:"What does an aqueduct carry?", choices:["Water","Soldiers","Letters","Gold"], answer:0},
+  {q:"What made the Gold Rush risky for many who joined it?", choices:["Most spent more than they earned and rarely found much gold","Gold was illegal to own","There was no gold at all","Only doctors were allowed to mine"], answer:0},
+  {q:"What is a primary source?", choices:["Something made during the time being studied, like a letter or photo","A textbook written last year","A movie about history","A made-up story"], answer:0},
+  {q:"What did a town meeting let colonists do?", choices:["Vote and decide on local rules together","Only listen, never speak","Buy land from the king","Watch a parade"], answer:0},
+  {q:"Why did people build settlements near rivers?", choices:["For water, farming, and transportation","Rivers looked pretty","To avoid all other people","Because mountains were required"], answer:0},
+  {q:"What is chronology?", choices:["The order events happened in time","A type of ancient coin","A map-making tool","A kind of trade good"], answer:0},
+  {q:"What did explorers use to figure out direction at sea?", choices:["A compass","A telephone","A calendar","A drum"], answer:0},
+  {q:"What's one reason trade routes like the Silk Road mattered?", choices:["Ideas and inventions spread between cultures, not just goods","Nothing ever changed along them","They were only used once","They connected only two cities"], answer:0},
+  {q:"What was a consequence of the Three-Fifths Compromise?", choices:["It counted enslaved people unfairly for political power while denying them rights","It gave every person full and equal rights","It ended slavery immediately","It had no lasting effect"], answer:0},
+  {q:"What does a historian mean by a 'ripple effect'?", choices:["One event causing other events later on","A wave in the ocean","A type of ancient boat","A song from the past"], answer:0},
+  {q:"Why did some colonies want to unite under one plan?", choices:["It's easier to solve big problems and defend land together","They wanted to build a giant statue","They disliked farming","They wanted fewer people"], answer:0},
+  {q:"What can studying artifacts tell historians?", choices:["Clues about how people lived, worked, and traded long ago","Nothing useful","Only how old something is","Only who owned it"], answer:0}
+];
+function triviaPrepQuestion(){
+  const q = playSession.questions[playSession.qIdx];
+  const correctText = q.choices[q.answer];
+  playSession.currentChoices = shuffleArr(q.choices);
+  playSession.currentCorrectText = correctText;
+}
+function renderTriviaDash(el, a){
+  if(playSession.qIdx===undefined){
+    playSession.questions = shuffleArr(TRIVIA_BANK).slice(0,10);
+    playSession.qIdx = 0; playSession.score = 0; playSession.streak = 0; playSession.answered=false;
+    triviaPrepQuestion();
+    el.innerHTML = `<h3>${a.icon} History Trivia Dash</h3>
+      <p>10 quick questions. Answer 3 in a row correctly for a bonus! Ready?</p>
+      <button class="btn" onclick="triviaStart()">Start</button>`;
+    return;
+  }
+  if(playSession.qIdx >= playSession.questions.length){
+    const pct = playSession.score/playSession.questions.length;
+    let tier = "Trivia Rookie";
+    if(pct>=0.8) tier="Trivia Champion"; else if(pct>=0.5) tier="Trivia Scholar";
+    awardPlayBadge("trivia", tier);
+    renderPlayComplete(document.getElementById("playBody"), a, tier, `You answered ${playSession.score} of ${playSession.questions.length} correctly!`);
+    return;
+  }
+  const q = playSession.questions[playSession.qIdx];
+  const baseSeconds = 20 + (playSession.bonusTime||0);
+  const timeLeft = playSession.timeLeft===undefined?baseSeconds:playSession.timeLeft;
+  const pct2 = Math.max(0, Math.round((timeLeft/baseSeconds)*100));
+  el.innerHTML = `<h3>${a.icon} History Trivia Dash</h3>
+    <p class="placeholder-note">Question ${playSession.qIdx+1} of ${playSession.questions.length} · Score ${playSession.score} · 🔥 Streak ${playSession.streak}</p>
+    <div class="timer-wrap"><div class="timer-label"><span>Time</span><span id="triviaTimeLabel">${timeLeft}s</span></div>
+      <div class="timer-track"><div class="timer-fill" id="triviaTimeFill" style="width:${pct2}%;"></div></div></div>
+    <p><strong>${q.q}</strong></p>${speakRow(q.q)}
+    <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+      ${playSession.currentChoices.map((c,idx)=>`<button class="vote-btn" ${playSession.answered?"disabled":""} onclick="triviaAnswer(${idx})">${c}</button>`).join("")}
+    </div>
+    ${playSession.feedback ? `<div class="card" style="margin-top:12px;">${playSession.feedback}</div>` : ""}
+    ${playSession.answered ? `<button class="btn" style="margin-top:10px;" onclick="triviaNext()">Next Question</button>` : ""}`;
+  if(!playSession.answered && !playSession.timerId){
+    const startSeconds = baseSeconds;
+    playSession.bonusTime = 0;
+    startPlayTimer(startSeconds, (t)=>{
+      const fill=document.getElementById("triviaTimeFill"), label=document.getElementById("triviaTimeLabel");
+      if(fill) fill.style.width = Math.round((t/startSeconds)*100)+"%";
+      if(label) label.textContent = t+"s";
+    }, ()=>{ triviaTimeUp(); });
+  }
+}
+function triviaStart(){ rerenderPlayActivity(); }
+function triviaAnswer(idx){
+  if(playSession.answered) return;
+  clearPlayTimer();
+  const picked = playSession.currentChoices[idx];
+  const correct = picked === playSession.currentCorrectText;
+  playSession.answered = true;
+  if(correct){
+    playSession.score++; playSession.streak++;
+    let bonus = "";
+    if(playSession.streak>0 && playSession.streak%3===0){ bonus = " 🔥 3 in a row — power-up! Next question starts with extra time."; playSession.bonusTime = 8; }
+    playSession.feedback = `✅ Correct!${bonus}`;
+  } else {
+    playSession.streak = 0;
+    playSession.feedback = `The correct answer was "${playSession.currentCorrectText}."`;
+  }
+  rerenderPlayActivity();
+}
+function triviaTimeUp(){
+  playSession.answered = true;
+  playSession.streak = 0;
+  playSession.feedback = `⏰ Time's up! The correct answer was "${playSession.currentCorrectText}."`;
+  rerenderPlayActivity();
+}
+function triviaNext(){
+  playSession.qIdx++;
+  playSession.answered=false; playSession.feedback=null;
+  playSession.timeLeft = undefined; playSession.timerId=null;
+  if(playSession.qIdx < playSession.questions.length) triviaPrepQuestion();
+  rerenderPlayActivity();
+}
+
+/* ---- 8. Trade Route Tycoon ---- */
+const TRADE_STOPS = [
+  { name:"Chang'an Market", note:"Chinese silk and paper begin their journey west here.", prices:{Silk:6, Spices:3, Tea:2} },
+  { name:"Desert Oasis Bazaar", note:"Camel caravans rest and trade at oases like this one.", prices:{Silk:9, Spices:4, Tea:3} },
+  { name:"Samarkand Crossroads", note:"Ideas, religions, and inventions mixed here as much as goods.", prices:{Silk:8, Spices:7, Tea:5} },
+  { name:"Mediterranean Port", note:"Goods are loaded onto ships bound for Europe.", prices:{Silk:13, Spices:10, Tea:6} }
+];
+const TRADE_GOODS = ["Silk","Spices","Tea"];
+function renderTradeTycoon(el, a){
+  if(playSession.stopIdx===undefined){
+    playSession.stopIdx = 0; playSession.cash = 20;
+    playSession.inventory = {Silk:0,Spices:0,Tea:0};
+    playSession.phase = "buy";
+  }
+  const stop = TRADE_STOPS[playSession.stopIdx];
+  const isLast = playSession.stopIdx === TRADE_STOPS.length-1;
+  const invSummary = TRADE_GOODS.map(g=>`${g}: ${playSession.inventory[g]}`).join(" · ");
+
+  if(playSession.phase === "sell"){
+    const rows = TRADE_GOODS.map(g=>{
+      const have = playSession.inventory[g];
+      const price = stop.prices[g];
+      return `<div class="card"><p><strong>${g}</strong> — you have ${have}, sells here for 🪙${price} each</p>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn small" onclick="tradeSell('${g}',1)" ${have<=0?"disabled":""}>Sell 1</button>
+          <button class="btn small ghost" onclick="tradeSell('${g}','all')" ${have<=0?"disabled":""}>Sell All</button>
+        </div></div>`;
+    }).join("");
+    el.innerHTML = `<h3>${a.icon} Trade Route Tycoon</h3>
+      <p class="placeholder-note">Stop ${playSession.stopIdx+1} of ${TRADE_STOPS.length}: ${stop.name} · 🪙 ${playSession.cash} coins</p>
+      <p>${stop.note}</p>${speakRow(stop.note)}
+      <p class="placeholder-note">Your cargo: ${invSummary}</p>
+      <h4 style="margin-top:10px;">Sell your goods here</h4>${rows}
+      <button class="btn" style="margin-top:12px;" onclick="tradeGoToBuy()">${isLast ? "See Final Results" : "Continue to Buying"}</button>`;
+    return;
+  }
+
+  const rows = TRADE_GOODS.map(g=>{
+    const price = stop.prices[g];
+    const afford = Math.floor(playSession.cash / price);
+    return `<div class="card"><p><strong>${g}</strong> — costs 🪙${price} each here</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button class="btn small" onclick="tradeBuy('${g}')" ${afford<1?"disabled":""}>Buy 1</button>
+      </div></div>`;
+  }).join("");
+  el.innerHTML = `<h3>${a.icon} Trade Route Tycoon</h3>
+    <p class="placeholder-note">Stop ${playSession.stopIdx+1} of ${TRADE_STOPS.length}: ${stop.name} · 🪙 ${playSession.cash} coins</p>
+    <p>${stop.note}</p>${speakRow(stop.note)}
+    <p class="placeholder-note">Your cargo: ${invSummary}</p>
+    <h4 style="margin-top:10px;">Buy goods to carry to the next stop</h4>${rows}
+    <button class="btn" style="margin-top:12px;" onclick="tradeNextStop()">Travel to Next Stop</button>`;
+}
+function tradeBuy(g){
+  const stop = TRADE_STOPS[playSession.stopIdx];
+  const price = stop.prices[g];
+  if(playSession.cash < price) return;
+  playSession.cash -= price;
+  playSession.inventory[g]++;
+  rerenderPlayActivity();
+}
+function tradeSell(g, amount){
+  const stop = TRADE_STOPS[playSession.stopIdx];
+  const price = stop.prices[g];
+  const qty = amount === "all" ? playSession.inventory[g] : Math.min(1, playSession.inventory[g]);
+  playSession.inventory[g] -= qty;
+  playSession.cash += qty*price;
+  rerenderPlayActivity();
+}
+function tradeGoToBuy(){
+  if(playSession.stopIdx >= TRADE_STOPS.length-1){ tradeFinish(); return; }
+  playSession.phase = "buy";
+  rerenderPlayActivity();
+}
+function tradeNextStop(){
+  playSession.stopIdx++;
+  playSession.phase = "sell";
+  rerenderPlayActivity();
+}
+function tradeFinish(){
+  const profit = playSession.cash - 20;
+  let tier = "Apprentice Trader";
+  if(profit >= 15) tier = "Master Trader"; else if(profit >= 5) tier = "Savvy Trader";
+  awardPlayBadge("tradetycoon", tier);
+  renderPlayComplete(document.getElementById("playBody"), PLAY_ACTIVITIES.find(x=>x.id==="tradetycoon"), tier,
+    `You started with 🪙20 and finished the route with 🪙${playSession.cash} — buying low, selling high, and learning how supply and demand shift prices from stop to stop.`);
+}
+
+/* ---- 9. Mystery of the Missing Artifact ---- */
+const MYSTERY_CASES = [
+  { title:"The Missing Museum Scroll", intro:"A visiting museum's ancient scroll has vanished overnight! Gather clues to figure out what most likely happened.",
+    clues:[
+      {icon:"📄", label:"Guest Log", text:"The guest log shows the museum had extra visitors yesterday for a school tour."},
+      {icon:"🪟", label:"Window Latch", text:"A side window latch was found unlocked, though nothing else in the room was disturbed."},
+      {icon:"🧤", label:"White Gloves", text:"A pair of the museum's own display gloves was left folded neatly on the desk — usually a sign someone official handled an item."},
+      {icon:"🗒️", label:"Conservator's Note", text:"A note on the desk says: 'Scroll #12 moved to climate-controlled storage for repair — will return by Friday.'"}
+    ],
+    question:"Based on the clues, what most likely happened to the scroll?",
+    choices:[
+      {text:"A museum conservator moved it for repair, following normal procedure", correct:true},
+      {text:"A ghost took it", correct:false},
+      {text:"It was stolen by the school tour group with no other evidence", correct:false},
+      {text:"It was never in the museum at all", correct:false}
+    ],
+    explain:"The gloves and the conservator's note are strong evidence it was moved for repair — historians look for the clue that best fits ALL the evidence, not just one detail."
+  },
+  { title:"The Vanished Village Bell", intro:"A colonial village's town bell disappeared from the town square. Investigate what the evidence suggests.",
+    clues:[
+      {icon:"📜", label:"Town Record", text:"The town record shows the council voted to melt down an old, cracked bell to cast a new, larger one."},
+      {icon:"🔨", label:"Blacksmith's Ledger", text:"The blacksmith's ledger lists a delivery of 'old bell metal' the same week the bell disappeared."},
+      {icon:"🗣️", label:"Neighbor's Account", text:"A neighbor recalled hearing the bell was cracked and rang poorly for months before it vanished."},
+      {icon:"🕵️", label:"Empty Bell Tower", text:"The bell tower shows no signs of forced entry — the ropes were removed carefully, not cut."}
+    ],
+    question:"What does the evidence best support?",
+    choices:[
+      {text:"The town intentionally melted the old, cracked bell to make a new one", correct:true},
+      {text:"Raiders stole the bell in the night", correct:false},
+      {text:"The bell simply disappeared with no explanation", correct:false},
+      {text:"An animal carried the bell away", correct:false}
+    ],
+    explain:"The town record, the blacksmith's ledger, and the careful (not forced) removal all point to a planned, ordinary town decision — not a mystery at all once you connect every clue."
+  }
+];
+function renderMysteryArtifact(el, a){
+  if(playSession.caseIdx===undefined){
+    el.innerHTML = `<h3>${a.icon} Mystery of the Missing Artifact</h3><p>Choose a case to investigate.</p>
+      <div class="play-grid">${MYSTERY_CASES.map((c,i)=>`<div class="play-card"><h3>${c.title}</h3><p>${c.intro}</p><button class="btn" onclick="mysteryPick(${i})">Investigate</button></div>`).join("")}</div>`;
+    return;
+  }
+  const c = MYSTERY_CASES[playSession.caseIdx];
+  if(playSession.stage === "clues"){
+    const revealed = playSession.revealed || {};
+    const allRevealed = c.clues.every((_,i)=>revealed[i]);
+    const grid = c.clues.map((clue,i)=>`<button class="scene-obj ${revealed[i]?"found":""}" onclick="mysteryReveal(${i})">${revealed[i]?"🔎":clue.icon}<span class="so-label">${clue.label}</span></button>`).join("");
+    const selected = playSession.selectedClue!==undefined ? c.clues[playSession.selectedClue] : null;
+    el.innerHTML = `<h3>${a.icon} ${c.title}</h3><p>${c.intro}</p>${speakRow(c.intro)}
+      <div class="scene-grid">${grid}</div>
+      ${selected ? `<div class="card"><p><strong>${selected.label}:</strong> ${selected.text}</p></div>` : ""}
+      <button class="btn" style="margin-top:12px;" ${allRevealed?"":"disabled"} onclick="mysteryGoSolve()">Solve the Mystery</button>`;
+    return;
+  }
+  if(playSession.stage === "solve"){
+    el.innerHTML = `<h3>${a.icon} ${c.title}</h3><p><strong>${c.question}</strong></p>
+      <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+        ${c.choices.map((ch,i)=>`<button class="vote-btn" onclick="mysterySolve(${i})">${ch.text}</button>`).join("")}
+      </div>`;
+    return;
+  }
+  if(playSession.stage === "result"){
+    const picked = c.choices[playSession.pickedChoice];
+    el.innerHTML = `<h3>${a.icon} Case ${picked.correct ? "Solved!":"Review"}</h3>
+      <div class="card"><p>${picked.correct ? "🎉 You solved it! " : "Not quite — here's what the evidence really shows: "}${c.explain}</p></div>
+      <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" onclick="mysteryFinish()">Continue</button>
+      </div>`;
+  }
+}
+function mysteryPick(i){ playSession.caseIdx=i; playSession.stage="clues"; playSession.revealed={}; rerenderPlayActivity(); }
+function mysteryReveal(i){ playSession.revealed[i]=true; playSession.selectedClue=i; rerenderPlayActivity(); }
+function mysteryGoSolve(){ playSession.stage="solve"; rerenderPlayActivity(); }
+function mysterySolve(i){ playSession.pickedChoice=i; playSession.stage="result"; rerenderPlayActivity(); }
+function mysteryFinish(){
+  awardPlayBadge("mysteryartifact","Junior Detective");
+  renderPlayComplete(document.getElementById("playBody"), PLAY_ACTIVITIES.find(x=>x.id==="mysteryartifact"), "Junior Detective",
+    "You gathered clues and reasoned through a historical mystery like a real detective!");
+}
+
+/* ---- 10. Civics Corner ---- */
+const CIVICS_SCENARIOS = [
+  { issue:"Should the town spend its savings on a new well, or a new schoolhouse?",
+    options:[
+      {text:"Build the well — clean water first", pct:54, outcome:"The town votes for the well. Families no longer have to walk far for clean water, though the schoolhouse will have to wait another year."},
+      {text:"Build the schoolhouse — education first", pct:46, outcome:"The town votes for the schoolhouse. More children can attend school, though the town keeps relying on the old, distant well a while longer."}
+    ]},
+  { issue:"A new road would help trade but would cut through a farmer's best field. Should the town build it?",
+    options:[
+      {text:"Build the road on the planned route", pct:38, outcome:"The road is built as planned. Trade becomes easier, but the farmer loses valuable land and the town debates whether to repay them."},
+      {text:"Reroute the road around the field, even though it costs more", pct:62, outcome:"The town pays extra to reroute the road. It takes longer to build, but the farmer keeps their field and trust in the council grows."}
+    ]},
+  { issue:"Should the town require every shop to close on the same day each week for a shared day of rest?",
+    options:[
+      {text:"Yes — require a shared closing day", pct:58, outcome:"Shops close together one day a week. Families get more time together, though some shop owners worry about lost sales."},
+      {text:"No — let each shop owner choose their own hours", pct:42, outcome:"Shops keep their own schedules. Owners have more freedom, but it's harder for families to plan a day when everyone is off together."}
+    ]}
+];
+function renderCivicsCorner(el, a){
+  if(playSession.scenIdx===undefined){ playSession.scenIdx=0; }
+  if(playSession.scenIdx >= CIVICS_SCENARIOS.length){
+    awardPlayBadge("civicscorner","Community Voter");
+    renderPlayComplete(document.getElementById("playBody"), a, "Community Voter",
+      "You voted on every town issue and saw how community decisions ripple out to real people.");
+    return;
+  }
+  const s = CIVICS_SCENARIOS[playSession.scenIdx];
+  if(playSession.voted){
+    const opt = s.options[playSession.votedIdx];
+    el.innerHTML = `<h3>${a.icon} Civics Corner</h3>
+      <p><strong>${s.issue}</strong></p>
+      <div class="card"><p>Town vote result: <strong>${opt.pct}%</strong> in favor of "${opt.text}"</p>
+      <p class="perspective-quote">${opt.outcome}</p></div>
+      <button class="btn" style="margin-top:12px;" onclick="civicsNext()">${playSession.scenIdx<CIVICS_SCENARIOS.length-1?"Next Issue":"See Results"}</button>`;
+    return;
+  }
+  el.innerHTML = `<h3>${a.icon} Civics Corner</h3>
+    <p class="placeholder-note">Town Issue ${playSession.scenIdx+1} of ${CIVICS_SCENARIOS.length}</p>
+    <p><strong>${s.issue}</strong></p>${speakRow(s.issue)}
+    <div style="display:flex; flex-direction:column; gap:8px; margin-top:10px;">
+      ${s.options.map((o,i)=>`<button class="vote-btn" onclick="civicsVote(${i})">${o.text}</button>`).join("")}
+    </div>`;
+}
+function civicsVote(i){ playSession.voted=true; playSession.votedIdx=i; rerenderPlayActivity(); }
+function civicsNext(){ playSession.scenIdx++; playSession.voted=false; rerenderPlayActivity(); }
+
+/* ---- 11. Then vs. Now ---- */
+const THEN_NOW_TOPICS = [
+  { topic:"School", then:["One-room schoolhouse for all ages","Slate boards instead of paper","Long walks to get to school","Learned mostly reading, writing, and arithmetic"],
+    now:["Separate classrooms by grade","Laptops, tablets, and paper","Buses or short rides to school","Wide range of subjects, art, and technology"]},
+  { topic:"Food", then:["Grew or hunted most of your own food","No refrigeration — food preserved by salting or drying","Cooking over an open fire","Ate mostly what was in season locally"],
+    now:["Buy food from grocery stores","Refrigerators and freezers keep food fresh","Stoves, microwaves, and ovens","Foods shipped in from all over the world, any season"]},
+  { topic:"Travel", then:["Walked or rode horses and wagons","A trip of 50 miles could take days","Ships took weeks or months to cross oceans","News traveled only as fast as a horse or ship"],
+    now:["Cars, trains, and planes","A trip of 50 miles takes under an hour","Planes cross oceans in hours","News travels instantly, worldwide"]},
+  { topic:"Communication", then:["Letters could take weeks to arrive","News spread by town criers or newspapers","Only in-person or written conversations","Messages depended on someone traveling"],
+    now:["Instant messages and video calls","News spreads in seconds online","Can talk to anyone, anywhere, instantly","Messages travel without anyone physically moving"]}
+];
+function renderThenVsNow(el, a){
+  if(playSession.topicIdx===undefined){
+    el.innerHTML = `<h3>${a.icon} Then vs. Now</h3><p>Choose a topic to compare across eras.</p>
+      <div class="play-grid">${THEN_NOW_TOPICS.map((t,i)=>`<div class="play-card"><h3>${t.topic}</h3><button class="btn" onclick="thenNowPick(${i})">Compare</button></div>`).join("")}</div>`;
+    return;
+  }
+  const t = THEN_NOW_TOPICS[playSession.topicIdx];
+  if(!playSession.reflecting){
+    el.innerHTML = `<h3>${a.icon} ${t.topic}: Then vs. Now</h3>
+      <div class="compare-cols">
+        <div class="compare-card"><h4>🕰️ Then</h4><ul>${t.then.map(li=>`<li>${li}</li>`).join("")}</ul></div>
+        <div class="compare-card now"><h4>📱 Now</h4><ul>${t.now.map(li=>`<li>${li}</li>`).join("")}</ul></div>
+      </div>
+      <button class="btn" style="margin-top:12px;" onclick="thenNowReflect()">Reflect</button>`;
+    return;
+  }
+  el.innerHTML = `<h3>${a.icon} ${t.topic}: Reflect</h3>
+    <p class="placeholder-note">Sentence starter: "About ${t.topic.toLowerCase()} long ago, what I'd miss most about today is…"</p>
+    <textarea id="thenNowBox" rows="3" placeholder="Write your reflection here...">${playSession.reflectionText||""}</textarea>
+    <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+      <button class="btn ghost" onclick="thenNowBack()">Back to Comparison</button>
+      <button class="btn" onclick="thenNowSave()">Save &amp; Continue</button>
+    </div>`;
+}
+function thenNowPick(i){ playSession.topicIdx=i; playSession.reflecting=false; rerenderPlayActivity(); }
+function thenNowReflect(){ playSession.reflecting=true; rerenderPlayActivity(); }
+function thenNowBack(){
+  const box = document.getElementById("thenNowBox");
+  playSession.reflectionText = box ? box.value : "";
+  playSession.reflecting=false;
+  rerenderPlayActivity();
+}
+function thenNowSave(){
+  const text = document.getElementById("thenNowBox").value.trim();
+  const t = THEN_NOW_TOPICS[playSession.topicIdx];
+  if(text) state.journalEntries.push({text:`(${t.topic}: Then vs. Now) ${text}`, drawing:null, ts:Date.now()});
+  awardPlayBadge("thenvsnow","Time Comparer");
+  playSession.topicIdx = undefined; playSession.reflecting=false; playSession.reflectionText="";
+  renderPlayComplete(document.getElementById("playBody"), PLAY_ACTIVITIES.find(x=>x.id==="thenvsnow"), "Time Comparer",
+    "Nice comparison! Your reflection was saved to your Time Traveler's Journal too.");
+}
+
+/* ---- Play dispatch table (after all render fns are declared) ---- */
+const PLAY_RENDERERS = {
+  mapmissions: renderMapMissions,
+  artifacthunt: renderArtifactHunt,
+  journaltool: renderJournalTool,
+  civbuilder: renderCivBuilder,
+  museum: renderMuseumExhibit,
+  timeline: renderTimelineBuilder,
+  trivia: renderTriviaDash,
+  tradetycoon: renderTradeTycoon,
+  mysteryartifact: renderMysteryArtifact,
+  civicscorner: renderCivicsCorner,
+  thenvsnow: renderThenVsNow
+};
+
+
+/* ================= Init ================= */
+document.getElementById("muteToggle").textContent = state.voiceOn?"🔊":"🔇";
+document.getElementById("muteToggle").setAttribute("aria-pressed", String(!state.voiceOn));
+go("home");
+</script>
+</body>
+</html>
