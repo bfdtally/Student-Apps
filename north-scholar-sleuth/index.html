@@ -1,179 +1,459 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Scholar Sleuth — a middle school ELA mystery game for practicing context clues, supporting details, tone, mood, figurative language, symbolism, and text structure.">
-  <title>Scholar Sleuth</title>
-  <link rel="stylesheet" href="styles.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Scholar Sleuth — a middle school ELA mystery game for practicing context clues, supporting details, tone, mood, figurative language, and evidence-based reasoning.">
+<title>Scholar Sleuth | Read. Reason. Solve.</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --plum-950: #241126;
+  --plum-900: #321638;
+  --plum-800: #47204e;
+  --plum-700: #622b69;
+  --plum-600: #793879;
+  --plum-500: #91508e;
+  --gold-500: #d6aa36;
+  --gold-400: #e3be59;
+  --gold-200: #f3e2a7;
+  --ink: light-dark(#241126,#fff7ff);
+  --muted: light-dark(#67596a,#d8cad8);
+  --surface: light-dark(#fffaff,#2c1b30);
+  --surface-2: light-dark(#f6eef7,#39253e);
+  --surface-3: light-dark(#efe3f0,#49314e);
+  --border: light-dark(#dbcbdc,#64466a);
+  --accent: light-dark(#622b69,#e3be59);
+  --accent-soft: light-dark(#f4e9f5,#52305a);
+  --success: light-dark(#256b4a,#6fcea0);
+  --success-soft: light-dark(#e4f5ec,#244c3b);
+  --warning: light-dark(#9a6911,#f2cc67);
+  --warning-soft: light-dark(#fff5d6,#55431c);
+  --danger: light-dark(#9e3f44,#ff9aa0);
+  --danger-soft: light-dark(#fae7e7,#522b30);
+  --shadow: 0 12px 30px rgba(36,17,38,.10);
+  --radius: 20px;
+  --radius-sm: 14px;
+  --max: 1180px;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #fffaff; color: var(--ink); line-height:1.55; }
+button, a, input { font: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor:pointer; }
+button:disabled { cursor:not-allowed; opacity:.58; }
+:focus-visible { outline: 3px solid var(--gold-400); outline-offset: 3px; }
+.skip-link { position:fixed; left:1rem; top:-4rem; z-index:100; background:var(--gold-400); color:var(--plum-950); padding:.75rem 1rem; border-radius:12px; font-weight:800; }
+.skip-link:focus { top:1rem; }
+#app { min-height:100vh; width:100%; background-color: light-dark(#fffaff,#1f1222); border-radius:0; }
+.container { width:min(calc(100% - 2rem), var(--max)); margin-inline:auto; }
+.topbar { position:sticky; top:0; z-index:50; background:light-dark(rgba(255,250,255,.94),rgba(31,18,34,.94)); backdrop-filter: blur(12px); border-bottom:1px solid var(--border); }
+.topbar-inner { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.8rem 0; }
+.brand { color:var(--ink); text-decoration:none; display:flex; gap:.7rem; align-items:center; min-width:max-content; }
+.brand-mark { width:44px; height:44px; border-radius:14px; display:grid; place-items:center; background:var(--plum-900); color:#fff; font-size:1.35rem; box-shadow:0 6px 14px rgba(50,22,56,.22); }
+.brand-text { display:grid; line-height:1.1; }
+.brand-text strong { font-size:1.05rem; letter-spacing:.01em; }
+.brand-text small { color:var(--muted); font-weight:650; margin-top:.15rem; }
+.nav { display:flex; gap:.2rem; flex-wrap:wrap; justify-content:flex-end; }
+.nav a { text-decoration:none; color:var(--muted); font-weight:760; padding:.55rem .7rem; border-radius:10px; }
+.nav a:hover, .nav a.active { color:var(--accent); background:var(--accent-soft); }
+.view { display:none; padding:2.2rem 0 3rem; }
+.view.active { display:block; }
+.hero { padding-top:3rem; }
+.hero-grid { display:grid; grid-template-columns:1.08fr .92fr; gap:1.4rem; align-items:stretch; }
+.eyebrow { display:inline-flex; align-items:center; gap:.35rem; font-size:.74rem; font-weight:900; letter-spacing:.12em; color:var(--accent); text-transform:uppercase; }
+h1 { margin:.55rem 0 .8rem; font-size:clamp(2.55rem, 5vw, 4.5rem); line-height:1.02; letter-spacing:-.045em; max-width:11ch; }
+h1 em { color:var(--accent); font-style:normal; }
+.lead { font-size:1.12rem; color:var(--muted); max-width:60ch; }
+.button-row { display:flex; flex-wrap:wrap; gap:.7rem; margin-top:1.2rem; }
+.button { display:inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height:46px; padding:.72rem 1rem; border-radius:14px; border:2px solid transparent; text-decoration:none; font-weight:850; transition:.18s ease; }
+.button:hover { transform:translateY(-1px); }
+.button.primary { color:#fff; background:var(--plum-900); }
+.button.secondary { color:var(--accent); background:var(--accent-soft); border-color:var(--border); }
+.button.ghost { color:var(--ink); background:transparent; border-color:var(--border); }
+.button.full { width:100%; }
+.goal-card, .panel, .card, .result-card, .progress-card, .resource-card, .check-card, .activity-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow); }
+.goal-card { margin-top:1.45rem; padding:1rem 1.05rem; display:flex; gap:.9rem; align-items:flex-start; }
+.goal-badge { width:42px; height:42px; border-radius:14px; background:var(--gold-200); color:var(--plum-950); display:grid; place-items:center; font-weight:950; flex:0 0 auto; }
+.goal-card h2 { margin:0; font-size:1rem; }
+.goal-card p { margin:.2rem 0 0; color:var(--muted); font-size:.96rem; }
+.hero-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:.7rem; margin-top:1.25rem; }
+.stat { background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:.9rem; }
+.stat strong { display:block; font-size:1.22rem; }
+.stat span { color:var(--muted); font-size:.82rem; font-weight:720; }
+.scene-card { position:relative; min-height:470px; overflow:hidden; background:linear-gradient(145deg,var(--plum-950),var(--plum-700)); border-radius:28px; border:1px solid #6f4872; color:#fff; box-shadow:0 20px 40px rgba(50,22,56,.26); }
+.scene-card::before { content:""; position:absolute; inset:0; background:radial-gradient(circle at 70% 15%, rgba(227,190,89,.36), transparent 26%), radial-gradient(circle at 15% 80%, rgba(255,255,255,.10), transparent 28%); }
+.scene-window { position:absolute; left:12%; right:12%; top:12%; height:36%; border:6px solid rgba(227,190,89,.86); border-radius:18px; background:linear-gradient(135deg,#efe3f0 0 30%, #d8cad8 30% 32%, #f8f0f7 32% 100%); box-shadow:inset 0 -30px 40px rgba(50,22,56,.18); }
+.scene-window::after { content:"214"; position:absolute; top:14px; right:16px; color:var(--plum-900); font-weight:950; font-size:1.8rem; }
+.desk { position:absolute; left:8%; right:8%; bottom:11%; height:30%; border-radius:24px 24px 10px 10px; background:#6e4a3b; box-shadow:0 22px 0 rgba(0,0,0,.15); }
+.clue { position:absolute; display:grid; place-items:center; width:68px; height:68px; background:#fff; border-radius:18px; color:var(--plum-900); font-size:2rem; box-shadow:0 14px 28px rgba(0,0,0,.2); }
+.clue-a { left:18%; bottom:23%; transform:rotate(-8deg); }
+.clue-b { right:20%; bottom:28%; transform:rotate(8deg); }
+.scene-note { position:absolute; left:50%; top:58%; transform:translateX(-50%); width:70%; padding:1rem; border-radius:16px; background:var(--gold-200); color:var(--plum-950); font-size:.82rem; font-weight:850; text-align:center; box-shadow:0 10px 20px rgba(0,0,0,.18); }
+.scene-note b { font-size:1.1rem; line-height:1.1; display:block; margin-top:.2rem; }
+.scene-caption { position:absolute; bottom:4%; left:0; right:0; text-align:center; color:#ead9ea; font-weight:760; font-size:.9rem; }
+.section-head { display:flex; justify-content:space-between; gap:1rem; align-items:flex-end; margin-bottom:1.15rem; }
+.section-head h2 { margin:.35rem 0 0; font-size:clamp(1.9rem,4vw,2.5rem); line-height:1.05; }
+.section-head p { color:var(--muted); max-width:52ch; margin:0; }
+.path-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:.85rem; }
+.path-card { min-height:260px; padding:1rem; border-radius:20px; background:var(--surface); border:1px solid var(--border); position:relative; display:flex; flex-direction:column; }
+.path-card.active { border-color:var(--gold-400); box-shadow:0 16px 28px rgba(50,22,56,.11); }
+.path-card.locked { opacity:.68; }
+.card-icon { width:48px; height:48px; border-radius:15px; display:grid; place-items:center; background:var(--accent-soft); font-size:1.55rem; }
+.status-pill { margin-top:.8rem; display:inline-flex; align-self:flex-start; background:var(--surface-3); color:var(--muted); padding:.28rem .55rem; border-radius:999px; font-size:.68rem; font-weight:900; letter-spacing:.07em; }
+.path-card h3 { margin:.65rem 0 .35rem; font-size:1.1rem; }
+.path-card p { margin:0; color:var(--muted); font-size:.93rem; }
+.path-card button { margin-top:auto; }
+.text-button { background:none; border:0; padding:.7rem 0 0; color:var(--accent); text-align:left; font-weight:900; }
+.progress-panel { margin-top:1rem; padding:1rem; border-radius:18px; background:var(--surface); border:1px solid var(--border); }
+.progress-line { display:flex; justify-content:space-between; gap:1rem; align-items:center; font-weight:850; }
+.progress-track { height:12px; background:var(--surface-3); border-radius:999px; overflow:hidden; }
+.progress-fill { height:100%; width:0%; background:linear-gradient(90deg,var(--plum-600),var(--gold-400)); border-radius:inherit; transition:width .25s ease; }
+.progress-note { color:var(--muted); font-size:.86rem; margin-top:.4rem; }
+.activity-header { display:flex; align-items:flex-end; justify-content:space-between; gap:1rem; margin-bottom:1rem; }
+.activity-header h2 { margin:.35rem 0 0; font-size:clamp(1.9rem,4vw,2.6rem); }
+.audio-btn { min-height:44px; border-radius:13px; border:2px solid var(--border); background:var(--accent-soft); color:var(--accent); padding:.6rem .8rem; font-weight:900; }
+.steps { display:flex; gap:.4rem; overflow:auto; padding-bottom:.2rem; margin-bottom:1rem; }
+.step { flex:1 1 0; min-width:120px; padding:.7rem .8rem; border-radius:14px; border:1px solid var(--border); background:var(--surface); color:var(--muted); text-align:center; font-weight:900; font-size:.84rem; }
+.step.active { background:var(--plum-900); color:#fff; border-color:var(--plum-900); }
+.activity-layout { display:grid; grid-template-columns:1.02fr .98fr; gap:1rem; align-items:start; }
+.activity-card { padding:1.15rem; }
+.evidence-label { color:var(--accent); font-weight:900; letter-spacing:.08em; font-size:.73rem; }
+.activity-card h3 { margin:.4rem 0 .65rem; font-size:1.2rem; }
+.passage { color:var(--ink); font-size:1.03rem; }
+.passage strong { background:var(--gold-200); color:var(--plum-950); padding:.08rem .24rem; border-radius:5px; }
+.tip-box { margin-top:1rem; padding:.8rem; background:var(--accent-soft); border-left:4px solid var(--gold-400); border-radius:0 12px 12px 0; color:var(--muted); }
+.example-box { margin-top:1rem; padding:1rem; border-radius:16px; background:var(--surface-2); border:1px dashed var(--border); }
+.example-box h4 { margin:0 0 .3rem; }
+.example-box p { margin:.25rem 0; color:var(--muted); }
+.challenge-meta { display:flex; justify-content:space-between; gap:1rem; color:var(--muted); font-weight:800; font-size:.84rem; }
+.question { margin:.7rem 0 1rem; font-size:1.23rem; line-height:1.3; }
+.answers { display:grid; gap:.65rem; }
+.answer { width:100%; min-height:52px; text-align:left; border:2px solid var(--border); background:var(--surface); color:var(--ink); border-radius:14px; padding:.75rem .9rem; font-weight:800; }
+.answer:hover { border-color:var(--gold-400); background:var(--accent-soft); }
+.answer.correct { border-color:var(--success); background:var(--success-soft); }
+.answer.wrong { border-color:var(--danger); background:var(--danger-soft); }
+.feedback { margin-top:.9rem; padding:.8rem; border-radius:13px; font-weight:760; }
+.feedback.success { background:var(--success-soft); color:var(--success); }
+.feedback.hint { background:var(--warning-soft); color:var(--warning); }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.results-grid { display:grid; grid-template-columns:1.15fr .85fr; gap:1rem; align-items:start; }
+.result-card { padding:1.4rem; text-align:center; }
+.result-hero { font-size:3rem; }
+.score { font-size:3.1rem; font-weight:950; color:var(--accent); line-height:1; }
+.result-card h2 { margin:.5rem 0 .5rem; font-size:2rem; }
+.result-card p { color:var(--muted); max-width:50ch; margin:.5rem auto 0; }
+.evidence-review { padding:1.1rem; }
+.evidence-review h3 { margin:.1rem 0 .8rem; }
+.review-item { display:flex; gap:.6rem; align-items:flex-start; padding:.75rem 0; border-top:1px solid var(--border); }
+.review-item:first-of-type { border-top:0; }
+.review-icon { width:28px; height:28px; border-radius:9px; display:grid; place-items:center; background:var(--accent-soft); flex:0 0 auto; }
+.gallery { display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; }
+.gallery-card { overflow:hidden; background:var(--surface); border:1px solid var(--border); border-radius:20px; }
+.gallery-art { aspect-ratio:4/3; background:var(--plum-950); position:relative; overflow:hidden; }
+.gallery-art .shape { position:absolute; border-radius:14px; }
+.gallery-label { padding:.9rem; }
+.gallery-label strong { display:block; }
+.gallery-label span { display:block; margin-top:.2rem; color:var(--muted); font-size:.84rem; }
+.toolkit { display:grid; grid-template-columns:repeat(4,1fr); gap:.9rem; margin-top:1.1rem; }
+.resource-card { padding:1rem; }
+.resource-icon { font-size:1.6rem; }
+.resource-card h3 { margin:.35rem 0 .25rem; font-size:1.03rem; }
+.resource-card p { color:var(--muted); margin:.3rem 0 .7rem; font-size:.92rem; }
+.resource-card button { min-height:42px; border:1px solid var(--border); background:var(--accent-soft); color:var(--accent); border-radius:12px; padding:.5rem .7rem; font-weight:850; }
+.check-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; margin-top:1rem; }
+.check-card { padding:1rem; }
+.check-card h3 { margin:.2rem 0 .35rem; }
+.check-card p { color:var(--muted); margin:.2rem 0 .7rem; font-size:.9rem; }
+.check-options { display:grid; gap:.5rem; }
+.check-option { min-height:44px; text-align:left; border:2px solid var(--border); border-radius:12px; background:var(--surface); padding:.55rem .7rem; font-weight:800; }
+.check-option.selected { border-color:var(--gold-400); background:var(--accent-soft); }
+.check-feedback { min-height:1.4rem; margin-top:.55rem; font-size:.82rem; font-weight:800; color:var(--muted); }
+.progress-overview { display:grid; grid-template-columns:.8fr 1.2fr 1fr; gap:.9rem; }
+.progress-card { padding:1rem; }
+.big-percent { font-size:2.7rem; font-weight:950; color:var(--accent); }
+.progress-card h3 { margin:.2rem 0 .25rem; }
+.large-number { font-size:1.5rem; font-weight:950; }
+.badges { display:grid; grid-template-columns:repeat(3,1fr); gap:.9rem; margin-top:.95rem; }
+.badge { padding:1rem; border-radius:18px; background:var(--surface); border:1px solid var(--border); opacity:.56; }
+.badge.earned { opacity:1; border-color:var(--gold-400); box-shadow:0 12px 24px rgba(50,22,56,.08); }
+.badge-icon { font-size:1.8rem; }
+.badge strong { display:block; margin-top:.25rem; }
+.badge span { display:block; color:var(--muted); font-size:.83rem; margin-top:.15rem; }
+.help-grid { display:grid; grid-template-columns:1.05fr .95fr; gap:1rem; }
+.help-card { padding:1.2rem; }
+.help-card h2 { margin:.3rem 0 .55rem; font-size:2rem; }
+.help-card p, .help-card li { color:var(--muted); }
+.help-card ul { padding-left:1.2rem; }
+.footer { border-top:1px solid var(--border); padding:1.2rem 0 2rem; color:var(--muted); font-size:.85rem; }
+.toast { position:fixed; right:1rem; bottom:1rem; z-index:100; background:var(--plum-900); color:#fff; padding:.8rem 1rem; border-radius:14px; box-shadow:0 18px 30px rgba(0,0,0,.18); max-width:340px; }
+@media (max-width: 980px) {
+  .hero-grid, .activity-layout, .results-grid, .help-grid { grid-template-columns:1fr; }
+  .path-grid { grid-template-columns:repeat(2,1fr); }
+  .toolkit { grid-template-columns:repeat(2,1fr); }
+  .progress-overview { grid-template-columns:1fr 1fr; }
+}
+@media (max-width: 720px) {
+  .topbar-inner { align-items:flex-start; flex-direction:column; }
+  .nav { width:100%; justify-content:flex-start; overflow:auto; flex-wrap:nowrap; padding-bottom:.15rem; }
+  .nav a { flex:0 0 auto; }
+  .hero { padding-top:2rem; }
+  .hero-stats, .gallery, .check-grid, .badges, .progress-overview, .toolkit { grid-template-columns:1fr; }
+  .path-grid { grid-template-columns:1fr; }
+  .scene-card { min-height:360px; }
+  .section-head, .activity-header { align-items:flex-start; flex-direction:column; }
+  .steps { gap:.3rem; }
+  .step { min-width:100px; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior:auto !important; transition:none !important; } }
+</style>
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
-
-  <header class="topbar">
-    <a class="brand" href="#home" aria-label="Scholar Sleuth home">
+<a class="skip-link" href="#main">Skip to content</a>
+<div id="app">
+<header class="topbar">
+  <div class="container topbar-inner">
+    <a class="brand" href="#home" data-nav="home" aria-label="Scholar Sleuth home">
       <span class="brand-mark" aria-hidden="true">🔎</span>
-      <span><strong>Scholar Sleuth</strong><small>Read. Reason. Solve.</small></span>
+      <span class="brand-text"><strong>Scholar Sleuth</strong><small>Read. Reason. Solve.</small></span>
     </a>
-    <nav aria-label="Main navigation">
-      <a href="#home">Home</a>
-      <a href="#path">Learning Path</a>
-      <a href="#resources">Resources</a>
-      <a href="#progress">My Progress</a>
-      <a href="#help">About & Help</a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="#home" data-nav="home">Home</a>
+      <a href="#path" data-nav="path">Learning Path</a>
+      <a href="#resources" data-nav="resources">Resources</a>
+      <a href="#progress" data-nav="progress">My Progress</a>
+      <a href="#help" data-nav="help">About &amp; Help</a>
     </nav>
-  </header>
-
-  <main id="main" tabindex="-1">
-    <section id="home" class="page hero">
-      <div class="hero-copy">
+  </div>
+</header>
+<main id="main" tabindex="-1">
+  <section id="home" class="view active">
+    <div class="container hero-grid">
+      <div>
         <span class="eyebrow">MIDDLE SCHOOL ELA • MYSTERY 01</span>
-        <h1>There’s a mystery at school.<br><em>Can you crack the clues?</em></h1>
-        <p>Read carefully, spot what the text is telling you, and use evidence to move the investigation forward.</p>
+        <h1>There’s a mystery at school. <em>Can you crack the clues?</em></h1>
+        <p class="lead">Scholar Sleuth turns reading into an investigation. Read the evidence, find the clues, explain your thinking, and help solve the missing science trophy case.</p>
         <div class="button-row">
-          <a class="button primary" href="#activity" onclick="startMystery()">Start the Mystery <span>→</span></a>
-          <a class="button secondary" href="#path">View Learning Path</a>
+          <button class="button primary" type="button" data-action="start">Start the Mystery <span aria-hidden="true">→</span></button>
+          <a class="button secondary" href="#path" data-nav="path">View Learning Path</a>
+          <button class="audio-btn" type="button" data-speak="Your mission is to find clues, support your thinking with evidence, and explain what the text means." aria-label="Hear the learning goal">🔊 Hear the goal</button>
         </div>
-        <div class="mini-stats" aria-label="Sample progress">
-          <div><strong id="homeClues">0/4</strong><span>clues solved</span></div>
-          <div><strong>1</strong><span>mystery active</span></div>
-          <div><strong>6–8</strong><span>grades</span></div>
+        <div class="goal-card">
+          <div class="goal-badge" aria-hidden="true">GO</div>
+          <div><h2>Your mission</h2><p>Find clues, support your thinking with evidence, explain tone or mood, spot figurative language, and use the evidence to solve the mystery.</p></div>
+        </div>
+        <div class="hero-stats" aria-label="Current sample progress">
+          <div class="stat"><strong id="homeClues">0/4</strong><span>clues solved</span></div>
+          <div class="stat"><strong id="homeChecks">0/3</strong><span>quick checks</span></div>
+          <div class="stat"><strong>6–8</strong><span>grade range</span></div>
         </div>
       </div>
-      <div class="scene-card" aria-label="Mystery scene illustration">
+      <div class="scene-card" aria-label="Illustrated case scene for the missing science trophy">
         <div class="scene-window"></div>
         <div class="desk"></div>
-        <div class="clue clue-a">📄</div>
-        <div class="clue clue-b">🗝️</div>
+        <div class="clue clue-a" aria-hidden="true">📄</div>
+        <div class="clue clue-b" aria-hidden="true">🗝️</div>
         <div class="scene-note">CASE FILE<br><b>THE MISSING<br>SCIENCE TROPHY</b></div>
         <div class="scene-caption">Room 214 • After School</div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="path" class="page">
-      <div class="section-heading">
-        <div><span class="eyebrow">YOUR INVESTIGATION</span><h2>Learning Path</h2></div>
-        <p>Each milestone gives you a new reading skill to help solve the case.</p>
-      </div>
+  <section id="path" class="view">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">YOUR INVESTIGATION</span><h2>Learning Path</h2></div><p>Follow the case from first clue to final conclusion. Each milestone names the reading move you are practicing.</p></div>
       <div class="path-grid">
-        <article class="path-card active">
-          <div class="card-icon">🕵️</div><span class="status">READY</span>
-          <h3>01. The First Clue</h3>
-          <p>Use context clues and supporting details to infer what happened.</p>
-          <button class="text-button" onclick="startMystery()">Investigate →</button>
-        </article>
-        <article class="path-card locked">
-          <div class="card-icon">🎭</div><span class="status">UNLOCKS NEXT</span>
-          <h3>02. The Hidden Tone</h3>
-          <p>Identify tone and mood, then connect them to the author's purpose.</p>
-          <button class="text-button" disabled>Locked</button>
-        </article>
-        <article class="path-card locked">
-          <div class="card-icon">✨</div><span class="status">LOCKED</span>
-          <h3>03. Words in Disguise</h3>
-          <p>Compare figurative language and uncover a symbolic message.</p>
-          <button class="text-button" disabled>Locked</button>
-        </article>
-        <article class="path-card locked">
-          <div class="card-icon">🏆</div><span class="status">FINAL CASE</span>
-          <h3>04. Solve the Mystery</h3>
-          <p>Combine evidence from the investigation to explain your conclusion.</p>
-          <button class="text-button" disabled>Locked</button>
-        </article>
+        <article class="path-card active"><div class="card-icon" aria-hidden="true">🕵️</div><span class="status-pill">START HERE</span><h3>01. The First Clue</h3><p>Use context clues and supporting details to infer what happened.</p><button class="text-button" type="button" data-action="start">Investigate →</button></article>
+        <article class="path-card" id="pathTone"><div class="card-icon" aria-hidden="true">🎭</div><span class="status-pill">MILESTONE</span><h3>02. The Hidden Tone</h3><p>Explain tone and mood and connect them to the author's purpose.</p><button class="text-button" type="button" data-action="focus-tip">See the skill →</button></article>
+        <article class="path-card" id="pathFig"><div class="card-icon" aria-hidden="true">✨</div><span class="status-pill">MILESTONE</span><h3>03. Words in Disguise</h3><p>Compare figurative language and uncover the meaning behind a phrase.</p><button class="text-button" type="button" data-action="focus-tip">See the skill →</button></article>
+        <article class="path-card" id="pathSolve"><div class="card-icon" aria-hidden="true">🏆</div><span class="status-pill">FINAL CASE</span><h3>04. Solve the Mystery</h3><p>Combine the evidence and explain why your conclusion is supported.</p><button class="text-button" type="button" data-action="focus-tip">See the skill →</button></article>
       </div>
-      <div class="progress-banner">
-        <div><span>Case progress</span><strong id="pathProgress">0%</strong></div>
-        <div class="progress-track"><div id="pathBar" class="progress-fill"></div></div>
-        <small>Complete clues to unlock the next milestone.</small>
+      <div class="progress-panel" aria-label="Case progress">
+        <div class="progress-line"><span>Case progress</span><strong id="pathProgress">0%</strong></div>
+        <div class="progress-track" aria-hidden="true"><div id="pathBar" class="progress-fill"></div></div>
+        <div class="progress-note">Solve clues and complete quick checks to build your evidence trail.</div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="activity" class="page activity-page">
-      <div class="case-top">
-        <div><span class="eyebrow">CASE FILE 01</span><h2>The Missing Science Trophy</h2></div>
-        <button class="audio-button" onclick="speakCurrent()" aria-label="Read the current directions or passage aloud">🔊 Read aloud</button>
-      </div>
+  <section id="activity" class="view">
+    <div class="container">
+      <div class="activity-header"><div><span class="eyebrow">CASE FILE 01</span><h2>The Missing Science Trophy</h2></div><button class="audio-btn" type="button" data-action="read-case" aria-label="Read the current case passage aloud">🔊 Read the case</button></div>
+      <div class="steps" aria-label="Challenge steps"><div class="step active" id="stepRead">1. Read</div><div class="step" id="stepModel">2. Model</div><div class="step" id="stepTry">3. Try</div><div class="step" id="stepCheck">4. Check</div></div>
       <div class="activity-layout">
-        <article class="passage-card">
-          <div class="passage-label">EVIDENCE A • ROOM 214</div>
+        <article class="activity-card">
+          <span class="evidence-label">EVIDENCE A • ROOM 214</span>
           <h3>The hallway after the bell</h3>
-          <p id="passageText">The science trophy was supposed to be locked inside Room 214 before the final bell. When Maya arrived after school, the display case was empty. A trail of silver paper stars led from the case toward the library. Near the doorway, Maya noticed a note that said, “Look where stories sleep.”</p>
-          <div class="vocab-callout"><strong>Investigator tip:</strong> When a word or clue is unfamiliar, look at the surrounding details. The author often leaves hints nearby.</div>
+          <p class="passage" id="passageText">The science trophy was supposed to be locked inside Room 214 before the final bell. When Maya arrived after school, the display case was empty. A trail of silver paper stars led from the case toward the library. Near the doorway, Maya noticed a note that said, <strong>“Look where stories sleep.”</strong></p>
+          <div class="tip-box"><strong>Investigator tip:</strong> Look at the words around a clue. Supporting details can help you infer what the author means.</div>
+          <div class="example-box"><h4>Worked example</h4><p><strong>Sentence:</strong> “The classroom was freezing, so Jordan zipped his coat all the way up.”</p><p><strong>Think:</strong> The detail about zipping a coat gives a clue that <em>freezing</em> means very cold.</p><button class="audio-btn" type="button" data-speak="In the example, the detail about zipping a coat gives a clue that freezing means very cold." aria-label="Hear the worked example">🔊 Hear example</button></div>
         </article>
-
-        <article class="question-card">
-          <div class="question-meta"><span id="questionCount">CLUE 1 OF 4</span><span id="scoreLabel">0 correct</span></div>
-          <h3 id="question">What does the phrase “Look where stories sleep” most likely suggest?</h3>
-          <div id="answers" class="answers">
-            <button onclick="answer(0)">A. The gym</button>
-            <button onclick="answer(1)">B. The library</button>
-            <button onclick="answer(2)">C. The cafeteria</button>
-            <button onclick="answer(3)">D. The science lab</button>
-          </div>
+        <article class="activity-card" aria-labelledby="questionHeading">
+          <div class="challenge-meta"><span id="questionCount">CLUE 1 OF 4</span><span id="scoreLabel">0 correct</span></div>
+          <h3 id="questionHeading" class="question">What does the phrase “Look where stories sleep” most likely suggest?</h3>
+          <div id="answers" class="answers"></div>
           <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
-          <button id="nextButton" class="button primary full" onclick="nextClue()" hidden>Next clue →</button>
+          <button id="nextButton" class="button primary full" type="button" hidden data-action="next">Next clue →</button>
+          <button id="restartClue" class="button ghost full" type="button" hidden data-action="retry">Try this clue again</button>
         </article>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section id="results" class="page results-page">
-      <div class="result-card">
-        <div class="result-icon">🔓</div>
-        <span class="eyebrow">CLUE SET COMPLETE</span>
-        <h2>Nice work, detective!</h2>
-        <p id="resultMessage">You used evidence from the passage to solve the clue set.</p>
-        <div class="result-number"><strong id="resultScore">0/4</strong><span>clues solved correctly</span></div>
-        <div class="button-row">
-          <a class="button primary" href="#progress">See My Progress</a>
-          <a class="button secondary" href="#resources">Review Resources</a>
-        </div>
-      </div>
-    </section>
+  <section id="results" class="view">
+    <div class="container results-grid">
+      <article class="result-card">
+        <div class="result-hero" aria-hidden="true">🔓</div><span class="eyebrow">CLUE SET COMPLETE</span>
+        <h2>Nice work, detective!</h2><div class="score" id="resultScore">0/4</div><p id="resultMessage">You used the passage and feedback to work through the evidence. Review your clues below, then keep building your reading toolkit.</p>
+        <div class="button-row" style="justify-content:center"><a class="button primary" href="#resources" data-nav="resources">Review Resources</a><a class="button secondary" href="#progress" data-nav="progress">See My Progress</a></div>
+      </article>
+      <article class="activity-card evidence-review"><h3>Evidence review</h3><div id="evidenceReview"></div></article>
+    </div>
+  </section>
 
-    <section id="resources" class="page">
-      <div class="section-heading">
-        <div><span class="eyebrow">SLEUTH TOOLKIT</span><h2>Resources</h2></div>
-        <p>Quick references to use while you investigate.</p>
+  <section id="resources" class="view">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">SLEUTH TOOLKIT</span><h2>Resources</h2></div><p>Use these quick references and mini-checks while you investigate. Nothing here replaces the passage—you still need evidence from the text.</p></div>
+      <div class="gallery" aria-label="Case evidence gallery">
+        <div class="gallery-card"><div class="gallery-art"><div class="shape" style="left:14%;right:14%;top:15%;bottom:18%;background:#eee4ef;border:5px solid #e3be59"></div><div class="shape" style="width:56px;height:34px;left:25%;bottom:23%;background:#d6aa36;transform:rotate(-8deg)"></div><div class="shape" style="width:44px;height:44px;right:17%;bottom:26%;background:#fff;border-radius:12px"></div></div><div class="gallery-label"><strong>Room 214</strong><span>The empty case is the starting point for the investigation.</span></div></div>
+        <div class="gallery-card"><div class="gallery-art"><div class="shape" style="width:82%;height:26px;left:9%;top:52%;background:#e3be59;transform:rotate(-12deg)"></div><div class="shape" style="width:22px;height:22px;left:27%;top:45%;background:#fff;border-radius:50%"></div><div class="shape" style="width:22px;height:22px;left:50%;top:42%;background:#fff;border-radius:50%"></div><div class="shape" style="width:22px;height:22px;left:73%;top:37%;background:#fff;border-radius:50%"></div></div><div class="gallery-label"><strong>Star Trail</strong><span>A supporting detail points from the display case toward the library.</span></div></div>
+        <div class="gallery-card"><div class="gallery-art"><div class="shape" style="left:18%;right:18%;top:17%;bottom:22%;background:#fff9e5;border-radius:6px;transform:rotate(-3deg)"></div><div class="shape" style="left:27%;right:27%;top:37%;height:8px;background:#622b69;border-radius:6px;box-shadow:0 25px 0 #622b69,0 50px 0 #622b69"></div></div><div class="gallery-label"><strong>Mystery Note</strong><span>“Look where stories sleep” uses figurative language to point to books.</span></div></div>
       </div>
-      <div class="resource-grid">
-        <article class="resource-card"><span>🧩</span><h3>Context Clues</h3><p>Look for definitions, examples, contrasts, and nearby details that help explain an unfamiliar word or idea.</p><button onclick="speak('Context clues are hints around an unfamiliar word or idea that help you figure out its meaning.')">🔊 Hear it</button></article>
-        <article class="resource-card"><span>🎯</span><h3>Supporting Details</h3><p>Ask: Which sentences give evidence for the main idea or help prove a character's motive?</p><button onclick="speak('Supporting details are pieces of evidence that explain or support the main idea.')">🔊 Hear it</button></article>
-        <article class="resource-card"><span>🎭</span><h3>Tone & Mood</h3><p>Tone is the author's attitude. Mood is the feeling the text creates for the reader.</p><button onclick="speak('Tone is the author’s attitude. Mood is the feeling a text creates for the reader.')">🔊 Hear it</button></article>
-        <article class="resource-card"><span>✨</span><h3>Figurative Language</h3><p>Watch for comparisons and images that mean more than their literal words, such as similes, metaphors, and personification.</p><button onclick="speak('Figurative language uses words in a creative way to create meaning or imagery.')">🔊 Hear it</button></article>
+      <div class="toolkit">
+        <article class="resource-card"><div class="resource-icon" aria-hidden="true">🧩</div><h3>Context Clues</h3><p>Look for definitions, examples, contrasts, or nearby details that explain an unfamiliar word or phrase.</p><button type="button" data-speak="Context clues are hints around an unfamiliar word or idea that help you figure out its meaning." aria-label="Hear the context clues reminder">🔊 Hear it</button></article>
+        <article class="resource-card"><div class="resource-icon" aria-hidden="true">🎯</div><h3>Supporting Details</h3><p>Ask: Which sentence gives evidence for the main idea or helps prove a character's motive?</p><button type="button" data-speak="Supporting details are pieces of evidence that explain or support a main idea or claim." aria-label="Hear the supporting details reminder">🔊 Hear it</button></article>
+        <article class="resource-card"><div class="resource-icon" aria-hidden="true">🎭</div><h3>Tone &amp; Mood</h3><p>Tone is the author’s attitude. Mood is the feeling the text creates for the reader.</p><button type="button" data-speak="Tone is the author's attitude. Mood is the feeling a text creates for the reader." aria-label="Hear the tone and mood reminder">🔊 Hear it</button></article>
+        <article class="resource-card"><div class="resource-icon" aria-hidden="true">✨</div><h3>Figurative Language</h3><p>Notice phrases that give human actions to objects or compare unlike things to create meaning.</p><button type="button" data-speak="Figurative language uses words in a creative way to create meaning or imagery." aria-label="Hear the figurative language reminder">🔊 Hear it</button></article>
       </div>
-    </section>
+      <div class="section-head" style="margin-top:2rem"><div><span class="eyebrow">QUICK KNOWLEDGE CHECKS</span><h2>Check your sleuth skills</h2></div><p>Three fast questions give you another chance to practice the same reading moves.</p></div>
+      <div class="check-grid" id="checkGrid"></div>
+    </div>
+  </section>
 
-    <section id="progress" class="page">
-      <div class="section-heading">
-        <div><span class="eyebrow">YOUR CASE LOG</span><h2>My Progress</h2></div>
-        <p>A simple snapshot of practice and completed evidence.</p>
-      </div>
+  <section id="progress" class="view">
+    <div class="container">
+      <div class="section-head"><div><span class="eyebrow">YOUR CASE LOG</span><h2>My Progress</h2></div><p>Your progress uses sample local browser data only. No names, grades, or school records are collected.</p></div>
       <div class="progress-overview">
-        <div class="big-progress"><strong id="bigPercent">0%</strong><span>case progress</span></div>
-        <div><h3>Clues solved</h3><strong class="large" id="progressScore">0 / 4</strong><div class="progress-track"><div id="bigBar" class="progress-fill"></div></div></div>
-        <div><h3>Milestone</h3><strong class="large" id="milestone">First Clue</strong><span>Current investigation</span></div>
+        <article class="progress-card"><div class="big-percent" id="bigPercent">0%</div><div>overall practice progress</div></article>
+        <article class="progress-card"><h3>Clues solved</h3><div class="large-number" id="progressScore">0 / 4</div><div class="progress-track" style="margin-top:.7rem" aria-hidden="true"><div id="bigBar" class="progress-fill"></div></div></article>
+        <article class="progress-card"><h3>Quick checks</h3><div class="large-number" id="progressChecks">0 / 3</div><div class="progress-note">Use Resources for another practice round.</div></article>
       </div>
-      <div class="badge-row">
-        <div class="badge earned"><span>🔎</span><strong>Sharp Eyes</strong><small>Started a case</small></div>
-        <div class="badge" id="badgeEvidence"><span>🧠</span><strong>Evidence Expert</strong><small>Solve 4 clues</small></div>
-        <div class="badge"><span>🏆</span><strong>Case Closer</strong><small>Complete all milestones</small></div>
+      <div class="badges" aria-label="Badges and achievements">
+        <article class="badge earned" id="badgeStarter"><div class="badge-icon" aria-hidden="true">🔎</div><strong>Sharp Eyes</strong><span>Start a case</span></article>
+        <article class="badge" id="badgeEvidence"><div class="badge-icon" aria-hidden="true">🧠</div><strong>Evidence Expert</strong><span>Solve all 4 clues</span></article>
+        <article class="badge" id="badgeCloser"><div class="badge-icon" aria-hidden="true">🏆</div><strong>Case Closer</strong><span>Finish the mystery and checks</span></article>
       </div>
-    </section>
+      <div class="button-row"><button class="button ghost" type="button" data-action="reset">Reset sample progress</button><a class="button primary" href="#activity" data-nav="activity">Return to the case</a></div>
+    </div>
+  </section>
 
-    <section id="help" class="page help-page">
-      <div class="help-card">
-        <span class="eyebrow">ABOUT SCHOLAR SLEUTH</span>
-        <h2>Reading can be an investigation.</h2>
-        <p>Scholar Sleuth is a focused course prototype for grades 6–8. It turns reading skills into a mystery challenge so learners practice finding evidence, making inferences, and explaining their thinking.</p>
-        <div class="help-columns">
-          <div><h3>How it works</h3><ol><li>Read the evidence.</li><li>Choose the answer that best fits the clues.</li><li>Use feedback to rethink an incorrect answer.</li><li>Track your progress as you solve.</li></ol></div>
-          <div><h3>Accessibility</h3><p>Text stays visible alongside speech. Buttons are keyboard-friendly and clearly labeled. Speech uses the browser's built-in SpeechSynthesis API when available and never replaces written content.</p><button class="button secondary" onclick="speak('Scholar Sleuth helps readers investigate passages by finding clues and supporting evidence.')">🔊 Test voice</button></div>
-        </div>
-      </div>
-    </section>
-  </main>
+  <section id="help" class="view">
+    <div class="container help-grid">
+      <article class="activity-card help-card"><span class="eyebrow">ABOUT SCHOLAR SLEUTH</span><h2>Reading can be an investigation.</h2><p>Scholar Sleuth is a focused course prototype for grades 6–8. It turns reading skills into a mystery challenge so learners practice finding evidence, making inferences, and explaining their thinking.</p><h3>How it works</h3><ol><li>Read the evidence.</li><li>Use the worked example to see one way to think.</li><li>Choose the answer that best fits the text.</li><li>Use feedback to rethink an incorrect answer.</li><li>Track your progress and revisit the toolkit.</li></ol></article>
+      <article class="activity-card help-card"><span class="eyebrow">HELP &amp; ACCESSIBILITY</span><h2>Built to support different readers.</h2><ul><li>Visible text stays on screen with spoken directions.</li><li>Buttons have clear labels and large touch targets.</li><li>Keyboard focus is visible.</li><li>The layout adapts to phone, tablet, and desktop widths.</li><li>Speech uses the browser’s built-in SpeechSynthesis API when available; it never replaces the written content.</li></ul><button class="button secondary" type="button" data-speak="Scholar Sleuth helps readers investigate passages by finding clues and supporting evidence." aria-label="Test the browser voice">🔊 Test voice</button><div style="margin-top:1rem"><button class="button ghost" type="button" data-action="reset">Reset sample progress</button></div></article>
+    </div>
+  </section>
+</main>
+<footer class="footer"><div class="container" style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap"><span>Scholar Sleuth • Focused educational prototype</span><span>Sample data only • No student information collected</span></div></footer>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+<script>
+(() => {
+  const STORAGE_KEY = 'scholarSleuthProgressV1';
+  const questions = [
+    { q:'What does the phrase “Look where stories sleep” most likely suggest?', options:['The gym','The library','The cafeteria','The science lab'], answer:1, skill:'Context clues', explain:'“Stories” are found in books, so the phrase points toward the library.' },
+    { q:'Which detail best supports the idea that someone left the room and moved toward the library?', options:['The final bell rang.','Maya arrived after school.','A trail of silver paper stars led toward the library.','The display case was empty.'], answer:2, skill:'Supporting details', explain:'The star trail is direct evidence that connects the empty case to the library.' },
+    { q:'The note and empty case make the scene feel mysterious and suspenseful. What is the author’s main effect on the reader?', options:['To make the reader curious about what happens next','To explain how to clean a display case','To persuade readers to visit the library','To describe a science experiment'], answer:0, skill:'Tone & mood', explain:'The mystery and unanswered clue create curiosity and suspense, pulling the reader forward.' },
+    { q:'In “Look where stories sleep,” giving stories the human action of sleeping is an example of which figurative language?', options:['Simile','Personification','Hyperbole','Alliteration'], answer:1, skill:'Figurative language', explain:'Stories cannot literally sleep. Giving a nonhuman thing a human action is personification.' }
+  ];
+  const checks = [
+    { q:'Which sentence gives a context clue for the word “reluctant”?', opts:['Mia was reluctant to speak; she kept her hand down and avoided eye contact.','Mia was reluctant.','Mia carried a blue backpack.'], a:0, why:'The second part gives a behavior clue that shows reluctant means hesitant or unwilling.' },
+    { q:'Which detail is strongest support for the idea that a character is nervous?', opts:['He tapped his foot and kept checking the clock.','He wore a green hoodie.','He sat near the window.'], a:0, why:'The repeated actions provide evidence of nervousness.' },
+    { q:'Which phrase uses personification?', opts:['The wind whispered through the trees.','The backpack was heavy.','The book was on the desk.'], a:0, why:'The wind is given the human action of whispering.' }
+  ];
+  let state = { clues:[null,null,null,null], checks:[null,null,null], caseStarted:false, currentClue:0, wrongAttempts:0 };
 
-  <footer><span>Scholar Sleuth • Focused educational prototype</span><span>Sample data only • No student information collected</span></footer>
-  <script src="app.js"></script>
+  function loadState() {
+    try { const saved = JSON.parse(localStorage.getItem(STORAGE_KEY)); if (saved) state = {...state, ...saved}; } catch(e) {}
+    state.clues = Array.isArray(state.clues) && state.clues.length === 4 ? state.clues : [null,null,null,null];
+    state.checks = Array.isArray(state.checks) && state.checks.length === 3 ? state.checks : [null,null,null];
+  }
+  function saveState() { localStorage.setItem(STORAGE_KEY, JSON.stringify({clues:state.clues,checks:state.checks,caseStarted:state.caseStarted})); }
+  function solvedCount() { return state.clues.filter(Boolean).length; }
+  function checkCount() { return state.checks.filter(v => v === true).length; }
+  function overallPercent() { return Math.round(((solvedCount()/4)*.75 + (checkCount()/3)*.25)*100); }
+  function route() { return location.hash.replace('#','') || 'home'; }
+  function showView(id, focus=true) {
+    const target = document.getElementById(id) || document.getElementById('home');
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('active', v===target));
+    document.querySelectorAll('[data-nav]').forEach(a => a.classList.toggle('active', a.dataset.nav === target.id));
+    if (focus) { target.scrollIntoView({block:'start'}); document.getElementById('main').focus({preventScroll:true}); }
+    if (target.id === 'activity') renderClue();
+    if (target.id === 'progress' || target.id === 'home' || target.id === 'path') updateProgress();
+    if (target.id === 'resources') renderChecks();
+  }
+  function toast(msg) { const t=document.getElementById('toast'); t.textContent=msg; t.hidden=false; clearTimeout(window.__toast); window.__toast=setTimeout(()=>t.hidden=true,2800); }
+  function speak(text) { if (!('speechSynthesis' in window)) { toast('Speech is unavailable in this browser. The written text remains available.'); return; } try { speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text); u.rate=.96; u.pitch=1; speechSynthesis.speak(u); } catch(e) { toast('Speech could not start. You can still use all written content.'); } }
+  function startCase() { state.caseStarted=true; saveState(); location.hash='#activity'; }
+  function renderClue() {
+    const idx = Math.min(Math.max(Number(state.currentClue)||0,0),3); const item=questions[idx];
+    document.getElementById('questionCount').textContent = `CLUE ${idx+1} OF 4`;
+    document.getElementById('scoreLabel').textContent = `${solvedCount()} correct`;
+    document.getElementById('questionHeading').textContent = item.q;
+    const answers=document.getElementById('answers'); answers.innerHTML='';
+    item.options.forEach((opt,i)=>{ const b=document.createElement('button'); b.className='answer'; b.type='button'; b.textContent=String.fromCharCode(65+i)+'. '+opt; b.dataset.answer=i; b.addEventListener('click',()=>selectAnswer(i)); answers.appendChild(b); });
+    const fb=document.getElementById('feedback'); fb.hidden=true; fb.className='feedback'; fb.textContent='';
+    document.getElementById('nextButton').hidden=true; document.getElementById('restartClue').hidden=true;
+    ['stepRead','stepModel','stepTry','stepCheck'].forEach(id=>document.getElementById(id).classList.remove('active'));
+    document.getElementById(idx===0?'stepRead':idx===1?'stepModel':idx===2?'stepTry':'stepCheck').classList.add('active');
+    if (state.clues[idx]===true) {
+      [...answers.children].forEach((b,i)=>{b.disabled=true; if(i===item.answer)b.classList.add('correct')});
+      fb.hidden=false; fb.className='feedback success'; fb.textContent='Already solved. Nice evidence choice!'; document.getElementById('nextButton').hidden=false; document.getElementById('nextButton').textContent=idx===3?'See Results →':'Next clue →';
+    }
+  }
+  function selectAnswer(i) {
+    const idx=state.currentClue; const item=questions[idx]; const buttons=[...document.querySelectorAll('.answer')]; const fb=document.getElementById('feedback');
+    buttons.forEach((b)=>b.disabled=true);
+    if (i===item.answer) {
+      state.clues[idx]=true; state.wrongAttempts=0; saveState(); buttons[i].classList.add('correct'); fb.hidden=false; fb.className='feedback success'; fb.textContent='Correct! '+item.explain; document.getElementById('nextButton').hidden=false; document.getElementById('nextButton').textContent=idx===3?'See Results →':'Next clue →'; updateProgress(); speak('Correct. '+item.explain);
+    } else {
+      state.wrongAttempts=(state.wrongAttempts||0)+1; buttons[i].classList.add('wrong'); fb.hidden=false; fb.className='feedback hint'; fb.textContent='Good first try. Re-read the sentence and look for the detail that points to the answer. Hint: '+item.explain; document.getElementById('restartClue').hidden=false; buttons.forEach((b,j)=>{if(j!==i)b.disabled=false;}); toast('Use the hint, then try the clue again.');
+    }
+  }
+  function nextClue() {
+    if (state.currentClue < 3) { state.currentClue += 1; renderClue(); } else { showResults(); location.hash='#results'; }
+  }
+  function retryClue() { renderClue(); }
+  function showResults() {
+    document.getElementById('resultScore').textContent = solvedCount()+'/4';
+    document.getElementById('resultMessage').textContent = solvedCount()===4 ? 'You used context clues, supporting evidence, tone and mood, and figurative language to solve the case.' : 'You made it through the challenge. Review the clues you missed, use the toolkit, and try again.';
+    const box=document.getElementById('evidenceReview'); box.innerHTML='';
+    questions.forEach((q,i)=>{ const row=document.createElement('div'); row.className='review-item'; row.innerHTML=`<div class="review-icon">${state.clues[i]?'✓':'↺'}</div><div><strong>Clue ${i+1} — ${q.skill}</strong><div style="color:var(--muted);font-size:.9rem">${state.clues[i]?'Solved with evidence.':'Review: '+q.explain}</div></div>`; box.appendChild(row); });
+    updateProgress();
+  }
+  function updateProgress() {
+    const clues=solvedCount(), checks=checkCount(), pct=overallPercent();
+    document.getElementById('homeClues').textContent=clues+'/4'; document.getElementById('homeChecks').textContent=checks+'/3';
+    document.getElementById('pathProgress').textContent=pct+'%'; document.getElementById('pathBar').style.width=pct+'%';
+    document.getElementById('bigPercent').textContent=pct+'%'; document.getElementById('progressScore').textContent=clues+' / 4'; document.getElementById('progressChecks').textContent=checks+' / 3'; document.getElementById('bigBar').style.width=(clues/4*100)+'%';
+    document.getElementById('badgeEvidence').classList.toggle('earned', clues===4); document.getElementById('badgeCloser').classList.toggle('earned', clues===4 && checks===3);
+    document.getElementById('pathTone').style.opacity=clues>=1?'1':'.68'; document.getElementById('pathFig').style.opacity=clues>=2?'1':'.68'; document.getElementById('pathSolve').style.opacity=clues===4?'1':'.68';
+  }
+  function renderChecks() {
+    const grid=document.getElementById('checkGrid'); grid.innerHTML='';
+    checks.forEach((c,idx)=>{ const card=document.createElement('article'); card.className='check-card'; const selected=state.checks[idx]; card.innerHTML=`<span class="eyebrow">CHECK ${idx+1}</span><h3>${c.q}</h3><div class="check-options"></div><div class="check-feedback" id="checkfb-${idx}"></div>`; const opts=card.querySelector('.check-options'); c.opts.forEach((o,i)=>{ const b=document.createElement('button'); b.type='button'; b.className='check-option'+(selected===true && i===c.a?' selected':''); b.textContent=o; b.dataset.i=i; b.addEventListener('click',()=>answerCheck(idx,i)); opts.appendChild(b); }); if(selected===true) card.querySelector('.check-feedback').textContent='Correct. '+c.why; grid.appendChild(card); });
+  }
+  function answerCheck(idx,i) { const c=checks[idx]; const fb=document.getElementById('checkfb-'+idx); const buttons=[...document.getElementById('checkGrid').children[idx].querySelectorAll('.check-option')]; if(i===c.a) {state.checks[idx]=true; saveState(); buttons[i].classList.add('selected'); buttons.forEach(b=>b.disabled=true); fb.textContent='Correct. '+c.why; speak('Correct. '+c.why); updateProgress(); toast('Quick check complete.');} else {fb.textContent='Not quite. Look for the sentence that gives evidence or a clue.'; toast('Use the context clue and try again.');} }
+  function reset() { localStorage.removeItem(STORAGE_KEY); state={clues:[null,null,null,null],checks:[null,null,null],caseStarted:false,currentClue:0,wrongAttempts:0}; showView('home'); location.hash='#home'; updateProgress(); renderChecks(); toast('Sample progress reset.'); }
+  function focusTip() { toast('Tip: state what the text shows, then explain why that detail supports your idea.'); }
+  document.addEventListener('click',(e)=>{ const nav=e.target.closest('[data-nav]'); if(nav) { const id=nav.dataset.nav; setTimeout(()=>showView(id),0); } const action=e.target.closest('[data-action]'); if(action) { const a=action.dataset.action; if(a==='start') startCase(); if(a==='next') nextClue(); if(a==='retry') retryClue(); if(a==='reset') reset(); if(a==='focus-tip') focusTip(); if(a==='read-case') speak(document.getElementById('passageText').textContent); } const say=e.target.closest('[data-speak]'); if(say) speak(say.dataset.speak); });
+  window.addEventListener('hashchange',()=>showView(route()));
+  window.addEventListener('keydown',(e)=>{ if(e.key==='/' && document.activeElement.tagName!=='INPUT') { document.querySelector('a[data-nav="path"]').focus(); } });
+  loadState();
+  if (state.clues.every(Boolean)) location.hash='#results';
+  showView(route(),false); updateProgress(); renderChecks();
+})();
+</script>
+</div>
 </body>
 </html>
