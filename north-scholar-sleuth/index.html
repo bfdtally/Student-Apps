@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Scholar Sleuth — a middle school ELA mystery game for practicing context clues, supporting details, tone, mood, figurative language, symbolism, and text structure.">
+  <title>Scholar Sleuth</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="Scholar Sleuth home">
+      <span class="brand-mark" aria-hidden="true">🔎</span>
+      <span><strong>Scholar Sleuth</strong><small>Read. Reason. Solve.</small></span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#home">Home</a>
+      <a href="#path">Learning Path</a>
+      <a href="#resources">Resources</a>
+      <a href="#progress">My Progress</a>
+      <a href="#help">About & Help</a>
+    </nav>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section id="home" class="page hero">
+      <div class="hero-copy">
+        <span class="eyebrow">MIDDLE SCHOOL ELA • MYSTERY 01</span>
+        <h1>There’s a mystery at school.<br><em>Can you crack the clues?</em></h1>
+        <p>Read carefully, spot what the text is telling you, and use evidence to move the investigation forward.</p>
+        <div class="button-row">
+          <a class="button primary" href="#activity" onclick="startMystery()">Start the Mystery <span>→</span></a>
+          <a class="button secondary" href="#path">View Learning Path</a>
+        </div>
+        <div class="mini-stats" aria-label="Sample progress">
+          <div><strong id="homeClues">0/4</strong><span>clues solved</span></div>
+          <div><strong>1</strong><span>mystery active</span></div>
+          <div><strong>6–8</strong><span>grades</span></div>
+        </div>
+      </div>
+      <div class="scene-card" aria-label="Mystery scene illustration">
+        <div class="scene-window"></div>
+        <div class="desk"></div>
+        <div class="clue clue-a">📄</div>
+        <div class="clue clue-b">🗝️</div>
+        <div class="scene-note">CASE FILE<br><b>THE MISSING<br>SCIENCE TROPHY</b></div>
+        <div class="scene-caption">Room 214 • After School</div>
+      </div>
+    </section>
+
+    <section id="path" class="page">
+      <div class="section-heading">
+        <div><span class="eyebrow">YOUR INVESTIGATION</span><h2>Learning Path</h2></div>
+        <p>Each milestone gives you a new reading skill to help solve the case.</p>
+      </div>
+      <div class="path-grid">
+        <article class="path-card active">
+          <div class="card-icon">🕵️</div><span class="status">READY</span>
+          <h3>01. The First Clue</h3>
+          <p>Use context clues and supporting details to infer what happened.</p>
+          <button class="text-button" onclick="startMystery()">Investigate →</button>
+        </article>
+        <article class="path-card locked">
+          <div class="card-icon">🎭</div><span class="status">UNLOCKS NEXT</span>
+          <h3>02. The Hidden Tone</h3>
+          <p>Identify tone and mood, then connect them to the author's purpose.</p>
+          <button class="text-button" disabled>Locked</button>
+        </article>
+        <article class="path-card locked">
+          <div class="card-icon">✨</div><span class="status">LOCKED</span>
+          <h3>03. Words in Disguise</h3>
+          <p>Compare figurative language and uncover a symbolic message.</p>
+          <button class="text-button" disabled>Locked</button>
+        </article>
+        <article class="path-card locked">
+          <div class="card-icon">🏆</div><span class="status">FINAL CASE</span>
+          <h3>04. Solve the Mystery</h3>
+          <p>Combine evidence from the investigation to explain your conclusion.</p>
+          <button class="text-button" disabled>Locked</button>
+        </article>
+      </div>
+      <div class="progress-banner">
+        <div><span>Case progress</span><strong id="pathProgress">0%</strong></div>
+        <div class="progress-track"><div id="pathBar" class="progress-fill"></div></div>
+        <small>Complete clues to unlock the next milestone.</small>
+      </div>
+    </section>
+
+    <section id="activity" class="page activity-page">
+      <div class="case-top">
+        <div><span class="eyebrow">CASE FILE 01</span><h2>The Missing Science Trophy</h2></div>
+        <button class="audio-button" onclick="speakCurrent()" aria-label="Read the current directions or passage aloud">🔊 Read aloud</button>
+      </div>
+      <div class="activity-layout">
+        <article class="passage-card">
+          <div class="passage-label">EVIDENCE A • ROOM 214</div>
+          <h3>The hallway after the bell</h3>
+          <p id="passageText">The science trophy was supposed to be locked inside Room 214 before the final bell. When Maya arrived after school, the display case was empty. A trail of silver paper stars led from the case toward the library. Near the doorway, Maya noticed a note that said, “Look where stories sleep.”</p>
+          <div class="vocab-callout"><strong>Investigator tip:</strong> When a word or clue is unfamiliar, look at the surrounding details. The author often leaves hints nearby.</div>
+        </article>
+
+        <article class="question-card">
+          <div class="question-meta"><span id="questionCount">CLUE 1 OF 4</span><span id="scoreLabel">0 correct</span></div>
+          <h3 id="question">What does the phrase “Look where stories sleep” most likely suggest?</h3>
+          <div id="answers" class="answers">
+            <button onclick="answer(0)">A. The gym</button>
+            <button onclick="answer(1)">B. The library</button>
+            <button onclick="answer(2)">C. The cafeteria</button>
+            <button onclick="answer(3)">D. The science lab</button>
+          </div>
+          <div id="feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+          <button id="nextButton" class="button primary full" onclick="nextClue()" hidden>Next clue →</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="results" class="page results-page">
+      <div class="result-card">
+        <div class="result-icon">🔓</div>
+        <span class="eyebrow">CLUE SET COMPLETE</span>
+        <h2>Nice work, detective!</h2>
+        <p id="resultMessage">You used evidence from the passage to solve the clue set.</p>
+        <div class="result-number"><strong id="resultScore">0/4</strong><span>clues solved correctly</span></div>
+        <div class="button-row">
+          <a class="button primary" href="#progress">See My Progress</a>
+          <a class="button secondary" href="#resources">Review Resources</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources" class="page">
+      <div class="section-heading">
+        <div><span class="eyebrow">SLEUTH TOOLKIT</span><h2>Resources</h2></div>
+        <p>Quick references to use while you investigate.</p>
+      </div>
+      <div class="resource-grid">
+        <article class="resource-card"><span>🧩</span><h3>Context Clues</h3><p>Look for definitions, examples, contrasts, and nearby details that help explain an unfamiliar word or idea.</p><button onclick="speak('Context clues are hints around an unfamiliar word or idea that help you figure out its meaning.')">🔊 Hear it</button></article>
+        <article class="resource-card"><span>🎯</span><h3>Supporting Details</h3><p>Ask: Which sentences give evidence for the main idea or help prove a character's motive?</p><button onclick="speak('Supporting details are pieces of evidence that explain or support the main idea.')">🔊 Hear it</button></article>
+        <article class="resource-card"><span>🎭</span><h3>Tone & Mood</h3><p>Tone is the author's attitude. Mood is the feeling the text creates for the reader.</p><button onclick="speak('Tone is the author’s attitude. Mood is the feeling a text creates for the reader.')">🔊 Hear it</button></article>
+        <article class="resource-card"><span>✨</span><h3>Figurative Language</h3><p>Watch for comparisons and images that mean more than their literal words, such as similes, metaphors, and personification.</p><button onclick="speak('Figurative language uses words in a creative way to create meaning or imagery.')">🔊 Hear it</button></article>
+      </div>
+    </section>
+
+    <section id="progress" class="page">
+      <div class="section-heading">
+        <div><span class="eyebrow">YOUR CASE LOG</span><h2>My Progress</h2></div>
+        <p>A simple snapshot of practice and completed evidence.</p>
+      </div>
+      <div class="progress-overview">
+        <div class="big-progress"><strong id="bigPercent">0%</strong><span>case progress</span></div>
+        <div><h3>Clues solved</h3><strong class="large" id="progressScore">0 / 4</strong><div class="progress-track"><div id="bigBar" class="progress-fill"></div></div></div>
+        <div><h3>Milestone</h3><strong class="large" id="milestone">First Clue</strong><span>Current investigation</span></div>
+      </div>
+      <div class="badge-row">
+        <div class="badge earned"><span>🔎</span><strong>Sharp Eyes</strong><small>Started a case</small></div>
+        <div class="badge" id="badgeEvidence"><span>🧠</span><strong>Evidence Expert</strong><small>Solve 4 clues</small></div>
+        <div class="badge"><span>🏆</span><strong>Case Closer</strong><small>Complete all milestones</small></div>
+      </div>
+    </section>
+
+    <section id="help" class="page help-page">
+      <div class="help-card">
+        <span class="eyebrow">ABOUT SCHOLAR SLEUTH</span>
+        <h2>Reading can be an investigation.</h2>
+        <p>Scholar Sleuth is a focused course prototype for grades 6–8. It turns reading skills into a mystery challenge so learners practice finding evidence, making inferences, and explaining their thinking.</p>
+        <div class="help-columns">
+          <div><h3>How it works</h3><ol><li>Read the evidence.</li><li>Choose the answer that best fits the clues.</li><li>Use feedback to rethink an incorrect answer.</li><li>Track your progress as you solve.</li></ol></div>
+          <div><h3>Accessibility</h3><p>Text stays visible alongside speech. Buttons are keyboard-friendly and clearly labeled. Speech uses the browser's built-in SpeechSynthesis API when available and never replaces written content.</p><button class="button secondary" onclick="speak('Scholar Sleuth helps readers investigate passages by finding clues and supporting evidence.')">🔊 Test voice</button></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><span>Scholar Sleuth • Focused educational prototype</span><span>Sample data only • No student information collected</span></footer>
+  <script src="app.js"></script>
+</body>
+</html>
